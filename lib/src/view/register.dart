@@ -29,12 +29,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF3B82F6), // Blue background for the top part
+      backgroundColor: const Color(
+        0xFF3B82F6,
+      ), // Blue background for the top part
       body: Column(
         children: [
           // Top blue section (adjust height as needed)
-          SizedBox(height: screenHeight * 0.25), // Approximately 25% of screen height for blue area
-
+          SizedBox(
+            height: screenHeight * 0.25,
+          ), // Approximately 25% of screen height for blue area
           // White container for the form
           Expanded(
             child: Container(
@@ -48,8 +51,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.08, // 8% of screen width for horizontal padding
-                  vertical: screenHeight * 0.04, // 4% of screen height for vertical padding
+                  horizontal:
+                      screenWidth *
+                      0.08, // 8% of screen width for horizontal padding
+                  vertical:
+                      screenHeight *
+                      0.04, // 4% of screen height for vertical padding
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,14 +67,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Text(
                         'Register',
                         style: TextStyle(
-                          fontSize: screenWidth * 0.065, // Adjust font size based on screen width
+                          fontSize:
+                              screenWidth *
+                              0.065, // Adjust font size based on screen width
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF2D3748), // Dark text color
                         ),
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.04), // Spacing below title
-
+                    SizedBox(
+                      height: screenHeight * 0.04,
+                    ), // Spacing below title
                     // First name input
                     Text(
                       'First name',
@@ -78,9 +88,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.01),
-                    _buildTextField(_firstNameController, 'First name', screenWidth),
-                    SizedBox(height: screenHeight * 0.02), // Spacing between fields
-
+                    _buildTextField(
+                      _firstNameController,
+                      'First name',
+                      screenWidth,
+                    ),
+                    SizedBox(
+                      height: screenHeight * 0.02,
+                    ), // Spacing between fields
                     // Last name input
                     Text(
                       'Last name',
@@ -91,7 +106,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.01),
-                    _buildTextField(_lastNameController, 'Last name', screenWidth),
+                    _buildTextField(
+                      _lastNameController,
+                      'Last name',
+                      screenWidth,
+                    ),
                     SizedBox(height: screenHeight * 0.02),
 
                     // Email Address input
@@ -104,7 +123,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.01),
-                    _buildTextField(_emailController, 'Email', screenWidth, keyboardType: TextInputType.emailAddress),
+                    _buildTextField(
+                      _emailController,
+                      'Email',
+                      screenWidth,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
                     SizedBox(height: screenHeight * 0.02),
 
                     // Password input
@@ -117,13 +141,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.01),
-                    _buildPasswordField(_passwordController, 'Password', screenWidth),
-                    SizedBox(height: screenHeight * 0.04), // Spacing before register button
-
+                    _buildPasswordField(
+                      _passwordController,
+                      'Password',
+                      screenWidth,
+                    ),
+                    SizedBox(
+                      height: screenHeight * 0.04,
+                    ), // Spacing before register button
                     // Register Button
                     SizedBox(
                       width: double.infinity,
-                      height: screenWidth * 0.13, // Consistent height for buttons
+                      height:
+                          screenWidth * 0.13, // Consistent height for buttons
                       child: ElevatedButton(
                         onPressed: () {
                           print('Register button pressed');
@@ -134,10 +164,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           // Implement registration logic here
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3B82F6), // Blue background
+                          backgroundColor: const Color(
+                            0xFF3B82F6,
+                          ), // Blue background
                           foregroundColor: Colors.white, // White text
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(screenWidth * 0.13 / 2),
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.13 / 2,
+                            ),
                           ),
                           elevation: 0,
                         ),
@@ -150,8 +184,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.03), // Spacing below register button
-
+                    SizedBox(
+                      height: screenHeight * 0.03,
+                    ), // Spacing below register button
                     // Or continue with text
                     Align(
                       alignment: Alignment.center,
@@ -163,17 +198,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.025), // Spacing above social icons
-
+                    SizedBox(
+                      height: screenHeight * 0.025,
+                    ), // Spacing above social icons
                     // Social login icons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildSocialIcon(Icons.g_mobiledata_outlined, Colors.blueGrey, screenWidth), // Google
+                        _buildSocialIcon(
+                          Icons.g_mobiledata_outlined,
+                          Colors.blueGrey,
+                          screenWidth,
+                        ), // Google
                         SizedBox(width: screenWidth * 0.05),
-                        _buildSocialIcon(Icons.apple, Colors.black, screenWidth), // Apple
+                        _buildSocialIcon(
+                          Icons.apple,
+                          Colors.black,
+                          screenWidth,
+                        ), // Apple
                         SizedBox(width: screenWidth * 0.05),
-                        _buildSocialIcon(Icons.facebook, const Color(0xFF1877F2), screenWidth), // Facebook
+                        _buildSocialIcon(
+                          Icons.facebook,
+                          const Color(0xFF1877F2),
+                          screenWidth,
+                        ), // Facebook
                       ],
                     ),
                     SizedBox(height: screenHeight * 0.02), // Bottom padding
@@ -188,22 +236,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   // Helper method to build a standard text field
-  Widget _buildTextField(TextEditingController controller, String hintText, double screenWidth, {TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hintText,
+    double screenWidth, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
     return Container(
       height: screenWidth * 0.13, // Consistent height for text fields
       decoration: BoxDecoration(
         color: const Color(0xFFF9FAFB), // Light grey background
         borderRadius: BorderRadius.circular(screenWidth * 0.13 / 2),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1), // Light border
+        border: Border.all(
+          color: const Color(0xFFE5E7EB),
+          width: 1,
+        ), // Light border
       ),
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: const Color(0xFF9CA3AF), fontSize: screenWidth * 0.04), // Grey hint text
+          hintStyle: TextStyle(
+            color: const Color(0xFF9CA3AF),
+            fontSize: screenWidth * 0.04,
+          ), // Grey hint text
           border: InputBorder.none, // Remove default border
-          contentPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05), // Adjust padding
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.05,
+          ), // Adjust padding
         ),
         style: TextStyle(
           color: const Color(0xFF2D3748),
@@ -214,7 +275,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   // Helper method to build a password field with toggle visibility
-  Widget _buildPasswordField(TextEditingController controller, String hintText, double screenWidth) {
+  Widget _buildPasswordField(
+    TextEditingController controller,
+    String hintText,
+    double screenWidth,
+  ) {
     return Container(
       height: screenWidth * 0.13,
       decoration: BoxDecoration(
@@ -227,7 +292,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         obscureText: !_isPasswordVisible, // Toggle visibility
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: const Color(0xFF9CA3AF), fontSize: screenWidth * 0.04),
+          hintStyle: TextStyle(
+            color: const Color(0xFF9CA3AF),
+            fontSize: screenWidth * 0.04,
+          ),
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
           suffixIcon: IconButton(
@@ -263,7 +331,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // Implement social login logic here
       },
       child: Container(
-        width: screenWidth * 0.15, // Size of the circular container for the icon
+        width:
+            screenWidth * 0.15, // Size of the circular container for the icon
         height: screenWidth * 0.15,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
