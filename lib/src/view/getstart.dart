@@ -1,5 +1,6 @@
-import 'package:estate_/src/view/onboard.dart';
+
 import 'package:flutter/material.dart';
+import 'package:rinex/src/view/onboard.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({Key? key}) : super(key: key);

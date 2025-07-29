@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Map<String, dynamic>> _mockProperties = [
     {
-      'image': 'https://images.unsplash.com/photo-1582268481186-0618037b567b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTc2Mjl8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBidWlsZGluZ3xlbnwwfHx8fDE3MjIxNjAzOTZ8MA&ixlib=rb-4.0.3&q=80&w=1080',
+      'image': 'lib/assets/building.jpg',
       'name': 'Sky Dandelions Apartment',
       'rating': 4.9,
       'location': 'Jakarta, Indonesia',
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'price': '\$290/month',
     },
     {
-      'image': 'https://images.unsplash.com/photo-1596409605786-bb51e185848e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTc2Mjl8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBwdW9sfGVufDB8fHx8MTcyMjE2MDQ3N3ww&ixlib=rb-4.0.3&q=80&w=1080',
+      'image': 'lib/assets/property4.jpg',
       'name': 'Green Lake Residence',
       'rating': 4.7,
       'location': 'Bali, Indonesia',
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'price': '\$250/month',
     },
     {
-      'image': 'https://images.unsplash.com/photo-1560518883-ffcd14365392?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTc2Mjl8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvcnxlbnwwfHx8fDE3MjIxNjA1MTl8MA&ixlib=rb-4.0.3&q=80&w=1080',
+      'image': 'lib/assets/property2.jpg',
       'name': 'City View Apartment',
       'rating': 4.5,
       'location': 'Yogyakarta, Indonesia',
@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'price': '\$180/month',
     },
     {
-      'image': 'https://images.unsplash.com/photo-1502672260268-ad2be141a029?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'image': 'lib/assets/property4.jpg',
       'name': 'Sunset Villa',
       'rating': 4.8,
       'location': 'Lombok, Indonesia',
@@ -52,10 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final List<Map<String, String>> _mockLocations = [
-    {'name': 'Bali', 'image': 'https://images.unsplash.com/photo-1579624536701-d707b99824c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTc2Mjl8MHwxfHNlYXJjaHwxfHxCb2F8ZW58MHx8fHwxNzIyMTYwNjYyfDA&ixlib=rb-4.0.3&q=80&w=1080'},
-    {'name': 'Jakarta', 'image': 'https://images.unsplash.com/photo-1542456041-39ed9f5c490a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'},
-    {'name': 'Yogyakarta', 'image': 'https://images.unsplash.com/photo-1627916960810-9118c7c9339e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'},
-    {'name': 'Surabaya', 'image': 'https://images.unsplash.com/photo-1533230677-7096d26d7f08?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'},
+    {'name': 'Bali', 'image': 'lib/assets/property2.jpg'},
+    {'name': 'Jakarta', 'image': 'lib/assets/property2.jpg'},
+    {'name': 'Yogyakarta', 'image': 'lib/assets/property2.jpg'},
+    {'name': 'Surabaya', 'image': 'lib/assets/property2.jpg'},
   ];
 
 
@@ -291,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
             right: -screenSize.width * 0.1, // Adjusted for responsiveness
             bottom: -screenSize.height * 0.05, // Adjusted for responsiveness
             child: Image.asset(
-              'assets/images/agent.jpg',
+              'lib/assets/agent.jpg',
               height: screenSize.height * 0.25, // Responsive height
               width: screenSize.width * 0.5, // Responsive width
               fit: BoxFit.contain,

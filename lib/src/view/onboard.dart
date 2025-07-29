@@ -1,6 +1,7 @@
-import 'package:estate_/src/view/login.dart';
-import 'package:estate_/src/view/register.dart'; // Make sure this path is correct for your RegisterScreen
+ // Make sure this path is correct for your RegisterScreen
 import 'package:flutter/material.dart';
+import 'package:rinex/src/view/login.dart';
+import 'package:rinex/src/view/register.dart';
 
 
 class OnboardingScreen extends StatefulWidget {

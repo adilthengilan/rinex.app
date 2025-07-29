@@ -1,5 +1,6 @@
-import 'package:estate_/src/view/screens/home.dart';
+
 import 'package:flutter/material.dart';
+import 'package:rinex/src/view/screens/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

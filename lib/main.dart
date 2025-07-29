@@ -1,5 +1,6 @@
-import 'package:estate_/src/view/getstart.dart';
+
 import 'package:flutter/material.dart';
+import 'package:rinex/src/view/getstart.dart';
  // Create this file
 
 void main() {
