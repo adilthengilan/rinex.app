@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
 
@@ -29,7 +28,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       message: 'Your property has been successfully added!',
       timestamp: 'Now',
       isVerified: true,
-      avatarAsset: 'lib/assets/renx.jpg',
+      avatarAsset: 'lib/assets/renex.jpg',
       isRead: false,
       isAppNotification: true,
     ),
@@ -56,7 +55,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF2C2C2C), // Dark background
+      backgroundColor: Colors.white, // Changed to white background
       body: SafeArea(
         child: Column(
           children: [
@@ -70,34 +69,47 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ],
         ),
       ),
-      
-    
     );
   }
 
-  /// Builds the custom app bar with notification title
+  /// Builds the custom app bar with back button and notification title
   Widget _buildAppBar() {
     return Container(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
+          // Back Button
+          IconButton(
+            onPressed: _navigateToHome,
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black87,
+              size: 24,
+            ),
+            tooltip: 'Back to Home',
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+          
+          const SizedBox(width: 12.0),
+          
           // Title
           const Text(
             'Notification',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: Colors.black87, // Changed to dark color for white background
             ),
           ),
           const Spacer(),
           
-          // Optional: Add more actions here (settings, search, etc.)
+          // Clear all notifications button
           IconButton(
             onPressed: _clearAllNotifications,
             icon: const Icon(
               Icons.clear_all,
-              color: Colors.white70,
+              color: Colors.black54, // Changed to dark color for white background
             ),
             tooltip: 'Clear all notifications',
           ),
@@ -124,11 +136,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[50], // Light grey background for cards
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -309,7 +321,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
   }
 
- 
   // Event Handlers
 
   /// Handles notification tap - marks as read and navigates
@@ -398,10 +409,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   // Navigation Methods
 
-  /// Navigate to home screen
+  /// Navigate to home screen - Updated to actually navigate back
   void _navigateToHome() {
-    debugPrint('Navigating to Home');
-    // Navigator.pushReplacementNamed(context, '/home');
+    debugPrint('Navigating back to Home');
+    Navigator.of(context).pop(); // Goes back to previous screen (home)
+    // Alternative: Navigator.pushReplacementNamed(context, '/home');
   }
 
   /// Navigate to properties list
@@ -516,26 +528,4 @@ class NotificationItem {
     this.isRead = false,
     this.isAppNotification = false,
   });
-}
-
-/// Example usage in main.dart
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Renex Notifications',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Roboto',
-      ),
-      home: const NotificationScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
 }
