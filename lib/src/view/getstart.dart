@@ -1,4 +1,5 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/onboard.dart';
 
@@ -28,7 +29,7 @@ class GetStartedScreen extends StatelessWidget {
             children: [
               // Top spacer
               const Expanded(flex: 2, child: SizedBox()),
-              
+
               // Centered RenX Logo
               Expanded(
                 flex: 3,
@@ -76,10 +77,10 @@ class GetStartedScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Bottom spacer
               const Expanded(flex: 1, child: SizedBox()),
-              
+
               // Get Started button
               Padding(
                 padding: const EdgeInsets.all(40.0),

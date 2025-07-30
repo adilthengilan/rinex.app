@@ -1,8 +1,8 @@
- // Make sure this path is correct for your RegisterScreen
+
+
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/login.dart';
 import 'package:rinex/src/view/register.dart';
-
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -18,26 +18,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // Define your onboarding data
   final List<Map<String, String>> onboardingData = [
     {
-      'image': 'lib/assets/property.jpg', // Using your provided image for the map illustration
+      'image':
+          'lib/assets/property.jpg', // Using your provided image for the map illustration
       'title_part1': 'Lorem ',
       'title_part2': 'Ipsum is simply',
       'title_part3': '\ndummy text printing',
-      'description': 'Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry.',
+      'description':
+          'Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry.',
     },
     {
-      'image': 'lib/assets/onboard2.jpg', // Using your provided image for the calendar illustration
+      'image':
+          'lib/assets/onboard2.jpg', // Using your provided image for the calendar illustration
       'title_part1': 'Lorem ',
       'title_part2': 'Ipsum is simply',
       'title_part3': '\ndummy text printing',
-      'description': 'Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry.',
+      'description':
+          'Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry.',
     },
     // The last page will have the Register and Log In buttons
     {
-      'image': 'lib/assets/property3.jpg', // Re-using 4th.jpg or use a different one if you have it for the last page
+      'image':
+          'lib/assets/property3.jpg', // Re-using 4th.jpg or use a different one if you have it for the last page
       'title_part1': 'Lorem ',
       'title_part2': 'Ipsum is simply',
       'title_part3': '\ndummy text printing',
-      'description': 'Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry.',
+      'description':
+          'Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry.',
     },
   ];
 
@@ -48,7 +54,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.black, // Background color outside the rounded container
+      backgroundColor:
+          Colors.black, // Background color outside the rounded container
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -74,15 +81,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         return SingleChildScrollView(
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
-                              minHeight: constraints.maxHeight -
+                              minHeight:
+                                  constraints.maxHeight -
                                   (currentPageIndex == onboardingData.length - 1
-                                      ? (screenHeight * 0.015 + screenHeight * 0.03 + screenHeight * 0.025 + (screenWidth * 0.13 * 2 + screenHeight * 0.02)) // Adjusted for two buttons and spacing
-                                      : (screenHeight * 0.015 + screenHeight * 0.03 + screenHeight * 0.025 + (screenWidth * 0.13))), // Original for navigation buttons
+                                      ? (screenHeight * 0.015 +
+                                            screenHeight * 0.03 +
+                                            screenHeight * 0.025 +
+                                            (screenWidth * 0.13 * 2 +
+                                                screenHeight *
+                                                    0.02)) // Adjusted for two buttons and spacing
+                                      : (screenHeight * 0.015 +
+                                            screenHeight * 0.03 +
+                                            screenHeight * 0.025 +
+                                            (screenWidth *
+                                                0.13))), // Original for navigation buttons
                             ),
                             child: IntrinsicHeight(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: screenWidth * 0.08, // 8% of screen width
+                                  horizontal:
+                                      screenWidth * 0.08, // 8% of screen width
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -91,72 +109,102 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                                     // Illustration
                                     Container(
-                                      height: screenHeight * 0.35, // 35% of screen height
+                                      height:
+                                          screenHeight *
+                                          0.35, // 35% of screen height
                                       width: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[50], // Light grey background for image area
+                                        color: Colors
+                                            .grey[50], // Light grey background for image area
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Center(
                                         child: Image.asset(
                                           onboardingData[index]['image']!,
-                                          height: screenHeight * 0.28, // 28% of screen height
-                                          width: screenWidth * 0.7, // 70% of screen width
+                                          height:
+                                              screenHeight *
+                                              0.28, // 28% of screen height
+                                          width:
+                                              screenWidth *
+                                              0.7, // 70% of screen width
                                           fit: BoxFit.contain,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            // Fallback if image is not found
-                                            return Container(
-                                              height: screenHeight * 0.28,
-                                              width: screenWidth * 0.7,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[100],
-                                                borderRadius: BorderRadius.circular(15),
-                                              ),
-                                              child: const Icon(
-                                                Icons.image,
-                                                size: 80,
-                                                color: Colors.grey,
-                                              ),
-                                            );
-                                          },
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                // Fallback if image is not found
+                                                return Container(
+                                                  height: screenHeight * 0.28,
+                                                  width: screenWidth * 0.7,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[100],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          15,
+                                                        ),
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.image,
+                                                    size: 80,
+                                                    color: Colors.grey,
+                                                  ),
+                                                );
+                                              },
                                         ),
                                       ),
                                     ),
 
-                                    SizedBox(height: screenHeight * 0.04), // 4% of screen height
-
+                                    SizedBox(
+                                      height: screenHeight * 0.04,
+                                    ), // 4% of screen height
                                     // Title
                                     RichText(
                                       textAlign: TextAlign.center,
                                       text: TextSpan(
                                         style: TextStyle(
-                                          fontSize: screenWidth * 0.075, // 7.5% of screen width
+                                          fontSize:
+                                              screenWidth *
+                                              0.075, // 7.5% of screen width
                                           fontWeight: FontWeight.bold,
                                           height: 1.2,
-                                          color: const Color(0xFF2D3748), // Dark text color
+                                          color: const Color(
+                                            0xFF2D3748,
+                                          ), // Dark text color
                                         ),
                                         children: [
-                                          TextSpan(text: onboardingData[index]['title_part1']!),
                                           TextSpan(
-                                            text: onboardingData[index]['title_part2']!,
+                                            text:
+                                                onboardingData[index]['title_part1']!,
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                onboardingData[index]['title_part2']!,
                                             style: const TextStyle(
-                                              color: Color(0xFF3B82F6), // Blue text for "Ipsum is simply"
+                                              color: Color(
+                                                0xFF3B82F6,
+                                              ), // Blue text for "Ipsum is simply"
                                             ),
                                           ),
-                                          TextSpan(text: onboardingData[index]['title_part3']!),
+                                          TextSpan(
+                                            text:
+                                                onboardingData[index]['title_part3']!,
+                                          ),
                                         ],
                                       ),
                                     ),
 
-                                    SizedBox(height: screenHeight * 0.02), // 2% of screen height
-
+                                    SizedBox(
+                                      height: screenHeight * 0.02,
+                                    ), // 2% of screen height
                                     // Description
                                     Text(
                                       onboardingData[index]['description']!,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontSize: screenWidth * 0.035, // 3.5% of screen width
-                                        color: const Color(0xFF9CA3AF), // Grey text color
+                                        fontSize:
+                                            screenWidth *
+                                            0.035, // 3.5% of screen width
+                                        color: const Color(
+                                          0xFF9CA3AF,
+                                        ), // Grey text color
                                         height: 1.5,
                                         fontWeight: FontWeight.w400,
                                       ),
@@ -186,7 +234,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         // Page indicators
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(onboardingData.length, (index) {
+                          children: List.generate(onboardingData.length, (
+                            index,
+                          ) {
                             return AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
                               margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -195,15 +245,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               decoration: BoxDecoration(
                                 color: index == currentPageIndex
                                     ? const Color(0xFF3B82F6) // Blue for active
-                                    : const Color(0xFFE5E7EB), // Light grey for inactive
+                                    : const Color(
+                                        0xFFE5E7EB,
+                                      ), // Light grey for inactive
                                 borderRadius: BorderRadius.circular(4),
                               ),
                             );
                           }),
                         ),
 
-                        SizedBox(height: screenHeight * 0.025), // 2.5% of screen height
-
+                        SizedBox(
+                          height: screenHeight * 0.025,
+                        ), // 2.5% of screen height
                         // Conditional rendering of navigation or login/register buttons
                         if (currentPageIndex < onboardingData.length - 1)
                           // Navigation buttons for all pages except the last one
@@ -213,30 +266,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               // Back button
                               if (currentPageIndex > 0)
                                 Container(
-                                  width: screenWidth * 0.13, // 13% of screen width
+                                  width:
+                                      screenWidth * 0.13, // 13% of screen width
                                   height: screenWidth * 0.13, // Keep it square
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFE5E7EB), // Light grey background
+                                    color: const Color(
+                                      0xFFE5E7EB,
+                                    ), // Light grey background
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: const Color(0xFF3B82F6), width: 2), // Blue border
+                                    border: Border.all(
+                                      color: const Color(0xFF3B82F6),
+                                      width: 2,
+                                    ), // Blue border
                                   ),
                                   child: IconButton(
                                     onPressed: () {
                                       _pageController.previousPage(
-                                        duration: const Duration(milliseconds: 300),
+                                        duration: const Duration(
+                                          milliseconds: 300,
+                                        ),
                                         curve: Curves.easeIn,
                                       );
                                     },
                                     icon: Icon(
                                       Icons.arrow_back,
-                                      color: const Color(0xFF3B82F6), // Blue icon color
+                                      color: const Color(
+                                        0xFF3B82F6,
+                                      ), // Blue icon color
                                       size: screenWidth * 0.05,
                                     ),
                                   ),
                                 )
                               else
-                                SizedBox(width: screenWidth * 0.13), // Placeholder for alignment
-
+                                SizedBox(
+                                  width: screenWidth * 0.13,
+                                ), // Placeholder for alignment
                               // Skip button
                               TextButton(
                                 onPressed: () {
@@ -252,7 +316,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   'Skip',
                                   style: TextStyle(
                                     fontSize: screenWidth * 0.04,
-                                    color: const Color(0xFF3B82F6), // Blue text color
+                                    color: const Color(
+                                      0xFF3B82F6,
+                                    ), // Blue text color
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -260,7 +326,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                               // Next button
                               Container(
-                                width: screenWidth * 0.13, // 13% of screen width
+                                width:
+                                    screenWidth * 0.13, // 13% of screen width
                                 height: screenWidth * 0.13, // Keep it square
                                 decoration: const BoxDecoration(
                                   color: Color(0xFF3B82F6), // Blue background
@@ -269,7 +336,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 child: IconButton(
                                   onPressed: () {
                                     _pageController.nextPage(
-                                      duration: const Duration(milliseconds: 300),
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
                                       curve: Curves.easeIn,
                                     );
                                   },
@@ -289,50 +358,77 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               // Register Button
                               SizedBox(
                                 width: double.infinity,
-                                height: screenWidth * 0.13, // Same height as circular buttons for consistency
+                                height:
+                                    screenWidth *
+                                    0.13, // Same height as circular buttons for consistency
                                 child: OutlinedButton(
                                   onPressed: () {
-                                    print('Register pressed, navigating to RegisterScreen');
+                                    print(
+                                      'Register pressed, navigating to RegisterScreen',
+                                    );
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const RegisterScreen(),
+                                      ),
                                     );
                                   },
                                   style: OutlinedButton.styleFrom(
-                                    foregroundColor: const Color(0xFF3B82F6), // Text color
-                                    side: const BorderSide(color: Color(0xFF3B82F6), width: 2), // Border color and width
+                                    foregroundColor: const Color(
+                                      0xFF3B82F6,
+                                    ), // Text color
+                                    side: const BorderSide(
+                                      color: Color(0xFF3B82F6),
+                                      width: 2,
+                                    ), // Border color and width
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(screenWidth * 0.13 / 2), // Half of height for fully rounded corners
+                                      borderRadius: BorderRadius.circular(
+                                        screenWidth * 0.13 / 2,
+                                      ), // Half of height for fully rounded corners
                                     ),
                                   ),
                                   child: Text(
                                     'Register',
                                     style: TextStyle(
-                                      fontSize: screenWidth * 0.045, // Slightly larger font for buttons
+                                      fontSize:
+                                          screenWidth *
+                                          0.045, // Slightly larger font for buttons
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ),
                               ),
-                              SizedBox(height: screenHeight * 0.02), // Spacing between buttons
+                              SizedBox(
+                                height: screenHeight * 0.02,
+                              ), // Spacing between buttons
                               // Log In Button
                               SizedBox(
                                 width: double.infinity,
                                 height: screenWidth * 0.13,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    print('Log In pressed, navigating to LoginScreen');
+                                    print(
+                                      'Log In pressed, navigating to LoginScreen',
+                                    );
                                     // Navigate to the LoginScreen
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen(),
+                                      ),
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF3B82F6), // Background color
+                                    backgroundColor: const Color(
+                                      0xFF3B82F6,
+                                    ), // Background color
                                     foregroundColor: Colors.white, // Text color
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(screenWidth * 0.13 / 2), // Half of height for fully rounded corners
+                                      borderRadius: BorderRadius.circular(
+                                        screenWidth * 0.13 / 2,
+                                      ), // Half of height for fully rounded corners
                                     ),
                                     elevation: 0, // No shadow
                                   ),
