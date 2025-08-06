@@ -38,6 +38,7 @@ dependencies:
   geolocator: ^14.0.2
   shimmer: ^3.0.0
   cached_network_image: ^3.4.1
+  smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
