@@ -1,7 +1,6 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-
 
 class ProfilePage extends StatefulWidget {
   @override

@@ -1,8 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-
 import 'package:rinex/src/view/screens/editprofile.dart';
 import 'package:rinex/src/view/screens/favourites.dart';
 import 'package:rinex/src/view/screens/notifications.dart';
