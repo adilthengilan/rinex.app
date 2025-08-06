@@ -2,11 +2,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+
 import 'package:rinex/src/view/screens/editprofile.dart';
 import 'package:rinex/src/view/screens/favourites.dart';
 import 'package:rinex/src/view/screens/notifications.dart';
 import 'package:rinex/src/view/screens/profile.dart';
 import 'package:rinex/src/view/screens/propertylist.dart';
+import 'package:rinex/src/view/screens/searchpage.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -96,11 +98,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final List<Map<String, String>> _mockLocations = [
     {'name': 'Bali', 'image': 'lib/assets/bali.jpg', 'properties': '120+'},
     {'name': 'Jakarta', 'image': 'lib/assets/jakarta.jpg', 'properties': '85+'},
-    {'name': 'Yogyakarta', 'image': 'lib/assets/yogyakarta.jpg', 'properties': '45+'},
-    {'name': 'Bandung', 'image': 'lib/assets/building.jpg', 'properties': '67+'},
+    {
+      'name': 'Yogyakarta',
+      'image': 'lib/assets/yogyakarta.jpg',
+      'properties': '45+',
+    },
+    {
+      'name': 'Bandung',
+      'image': 'lib/assets/building.jpg',
+      'properties': '67+',
+    },
   ];
 
   final List<Map<String, dynamic>> _categories = [
+    {'icon': Icons.home_outlined, 'label': 'Home'},
+    {'icon': Icons.apartment_outlined, 'label': 'Apartments'},
+    {'icon': Icons.business_outlined, 'label': 'Commercial'},
+    {'icon': Icons.domain_outlined, 'label': 'Offices'},
     {'icon': Icons.home_outlined, 'label': 'Home'},
     {'icon': Icons.apartment_outlined, 'label': 'Apartments'},
     {'icon': Icons.business_outlined, 'label': 'Commercial'},
@@ -250,13 +264,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Editprofile()),
+          MaterialPageRoute(builder: (context) => EditProfilePage()),
         );
         break;
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(builder: (context) =>  ProfilePage()),
         );
         break;
     }
@@ -267,117 +281,118 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-        ),
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(3),
-              ),
+      builder:
+          (context) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
             ),
-            const SizedBox(height: 30),
-
-            // Two main action buttons
-            Row(
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // Post your property button (Blue/Filled)
-                Expanded(
-                  child: Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4A90E2), // Blue color
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF4A90E2).withOpacity(0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                // Handle bar
+                Container(
+                  width: 50,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(height: 30),
+
+                // Two main action buttons
+                Row(
+                  children: [
+                    // Post your property button (Blue/Filled)
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF4A90E2), // Blue color
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF4A90E2).withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {
-                          Navigator.pop(context);
-                          _showPropertyOptions();
-                        },
-                        child: const Center(
-                          child: Text(
-                            'Post your property',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(15),
+                            onTap: () {
+                              Navigator.pop(context);
+                              _showPropertyOptions();
+                            },
+                            child: const Center(
+                              child: Text(
+                                'Post your property',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
 
-                const SizedBox(width: 15),
+                    const SizedBox(width: 15),
 
-                // Post your Wants button (White/Outlined)
-                Expanded(
-                  child: Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: const Color(0xFF4A90E2).withOpacity(0.3),
-                        width: 1.5,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                    // Post your Wants button (White/Outlined)
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: const Color(0xFF4A90E2).withOpacity(0.3),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {
-                          Navigator.pop(context);
-                          _showWantsOptions();
-                        },
-                        child: const Center(
-                          child: Text(
-                            'Post your Wants',
-                            style: TextStyle(
-                              color: Color(0xFF4A90E2),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(15),
+                            onTap: () {
+                              Navigator.pop(context);
+                              _showWantsOptions();
+                            },
+                            child: const Center(
+                              child: Text(
+                                'Post your Wants',
+                                style: TextStyle(
+                                  color: Color(0xFF4A90E2),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
+
+                const SizedBox(height: 25),
               ],
             ),
-
-            const SizedBox(height: 25),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
@@ -387,141 +402,142 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-        ),
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(3),
-              ),
+      builder:
+          (context) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
             ),
-            const SizedBox(height: 25),
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle bar
+                Container(
+                  width: 50,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(height: 25),
 
-            const Text(
-              'Post Your Property',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF2C3E50),
-              ),
-            ),
-            const SizedBox(height: 25),
+                const Text(
+                  'Post Your Property',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF2C3E50),
+                  ),
+                ),
+                const SizedBox(height: 25),
 
-            // Property options
-            ...[
-              {
-                'icon': Icons.camera_alt_outlined,
-                'title': 'Take Photo',
-                'subtitle': 'Capture property images',
-                'color': const Color(0xFF4A90E2),
-              },
-              {
-                'icon': Icons.photo_library_outlined,
-                'title': 'Choose from Gallery',
-                'subtitle': 'Select existing photos',
-                'color': const Color(0xFF27AE60),
-              },
-              {
-                'icon': Icons.edit_outlined,
-                'title': 'Manual Entry',
-                'subtitle': 'Enter details manually',
-                'color': const Color(0xFFE74C3C),
-              },
-            ]
-                .map(
-                  (item) => Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: Colors.grey.withOpacity(0.2),
-                        width: 1,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.08),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                // Property options
+                ...[
+                      {
+                        'icon': Icons.camera_alt_outlined,
+                        'title': 'Take Photo',
+                        'subtitle': 'Capture property images',
+                        'color': const Color(0xFF4A90E2),
+                      },
+                      {
+                        'icon': Icons.photo_library_outlined,
+                        'title': 'Choose from Gallery',
+                        'subtitle': 'Select existing photos',
+                        'color': const Color(0xFF27AE60),
+                      },
+                      {
+                        'icon': Icons.edit_outlined,
+                        'title': 'Manual Entry',
+                        'subtitle': 'Enter details manually',
+                        'color': const Color(0xFFE74C3C),
+                      },
+                    ]
+                    .map(
+                      (item) => Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.2),
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.08),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () => Navigator.pop(context),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: (item['color'] as Color)
-                                      .withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Icon(
-                                  item['icon'] as IconData,
-                                  color: item['color'] as Color,
-                                  size: 24,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item['title'] as String,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        color: Color(0xFF2C3E50),
-                                      ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(15),
+                            onTap: () => Navigator.pop(context),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: (item['color'] as Color)
+                                          .withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      item['subtitle'] as String,
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 14,
-                                      ),
+                                    child: Icon(
+                                      item['icon'] as IconData,
+                                      color: item['color'] as Color,
+                                      size: 24,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item['title'] as String,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                            color: Color(0xFF2C3E50),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          item['subtitle'] as String,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16,
+                                    color: Colors.grey[400],
+                                  ),
+                                ],
                               ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 16,
-                                color: Colors.grey[400],
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                )
-                .toList(),
+                    )
+                    .toList(),
 
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
     );
   }
 
@@ -531,141 +547,142 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-        ),
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(3),
-              ),
+      builder:
+          (context) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
             ),
-            const SizedBox(height: 25),
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle bar
+                Container(
+                  width: 50,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(height: 25),
 
-            const Text(
-              'Post Your Wants',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF2C3E50),
-              ),
-            ),
-            const SizedBox(height: 25),
+                const Text(
+                  'Post Your Wants',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF2C3E50),
+                  ),
+                ),
+                const SizedBox(height: 25),
 
-            // Wants options
-            ...[
-              {
-                'icon': Icons.search_outlined,
-                'title': 'Looking for Property',
-                'subtitle': 'Describe what you\'re looking for',
-                'color': const Color(0xFF4A90E2),
-              },
-              {
-                'icon': Icons.location_on_outlined,
-                'title': 'Specific Location',
-                'subtitle': 'Search in particular area',
-                'color': const Color(0xFF9B59B6),
-              },
-              {
-                'icon': Icons.apartment_outlined,
-                'title': 'Property Type',
-                'subtitle': 'Filter by property type',
-                'color': const Color(0xFFF39C12),
-              },
-            ]
-                .map(
-                  (item) => Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: Colors.grey.withOpacity(0.2),
-                        width: 1,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.08),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                // Wants options
+                ...[
+                      {
+                        'icon': Icons.search_outlined,
+                        'title': 'Looking for Property',
+                        'subtitle': 'Describe what you\'re looking for',
+                        'color': const Color(0xFF4A90E2),
+                      },
+                      {
+                        'icon': Icons.location_on_outlined,
+                        'title': 'Specific Location',
+                        'subtitle': 'Search in particular area',
+                        'color': const Color(0xFF9B59B6),
+                      },
+                      {
+                        'icon': Icons.apartment_outlined,
+                        'title': 'Property Type',
+                        'subtitle': 'Filter by property type',
+                        'color': const Color(0xFFF39C12),
+                      },
+                    ]
+                    .map(
+                      (item) => Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.2),
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.08),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () => Navigator.pop(context),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: (item['color'] as Color)
-                                      .withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Icon(
-                                  item['icon'] as IconData,
-                                  color: item['color'] as Color,
-                                  size: 24,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item['title'] as String,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        color: Color(0xFF2C3E50),
-                                      ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(15),
+                            onTap: () => Navigator.pop(context),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: (item['color'] as Color)
+                                          .withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      item['subtitle'] as String,
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 14,
-                                      ),
+                                    child: Icon(
+                                      item['icon'] as IconData,
+                                      color: item['color'] as Color,
+                                      size: 24,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item['title'] as String,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                            color: Color(0xFF2C3E50),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          item['subtitle'] as String,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16,
+                                    color: Colors.grey[400],
+                                  ),
+                                ],
                               ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 16,
-                                color: Colors.grey[400],
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                )
-                .toList(),
+                    )
+                    .toList(),
 
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
     );
   }
 
@@ -703,433 +720,446 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
- Widget _buildEnhancedTopSection(Size size, EdgeInsets padding) {
-  return Container(
-    width: size.width,
-    height: size.height * 0.65, // Increased height to match image
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color(0xFF2196F3), Color(0xFF1976D2), Color(0xFF0D47A1)],
+  Widget _buildEnhancedTopSection(Size size, EdgeInsets padding) {
+    return Container(
+      width: size.width,
+      height: size.height * 0.65, // Increased height to match image
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF2196F3), Color(0xFF1976D2), Color(0xFF0D47A1)],
+        ),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(35)),
       ),
-      borderRadius: BorderRadius.vertical(bottom: Radius.circular(35)),
-    ),
-    child: Stack(
-      children: [
-        // Decorative circles
-        Positioned(
-          top: -20,
-          right: -30,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.1),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 80,
-          left: -40,
-          child: Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.08),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 100,
-          left: -20,
-          child: Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.06),
-            ),
-          ),
-        ),
-
-        // Top navigation icons
-        Positioned(
-          top: padding.top + 20,
-          right: 20,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildTopNavIcon(Icons.notifications_outlined, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationScreen(),
-                  ),
-                );
-              }),
-              const SizedBox(width: 12),
-              _buildTopNavIcon(Icons.favorite_outline, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        FavoriteScreen(favoriteProperties: []),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-
-        // Main content area
-        Positioned(
-          left: 30,
-          top: padding.top + 100,
-          right: size.width * 0.4, // Leave space for the person image
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Main headline
-              const Text(
-                '"Find the best\nclients anytime,\nanywhere."',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  height: 1.2,
-                ),
+      child: Stack(
+        children: [
+          // Decorative circles
+          Positioned(
+            top: -20,
+            right: -30,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.1),
               ),
-              const SizedBox(height: 20),
-              // Subtitle
-              Text(
-                '"Buy, Rent, Sell, or Lease -\nYour 360° Real Estate\nSolution."',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  height: 1.4,
-                ),
+            ),
+          ),
+          Positioned(
+            top: 80,
+            left: -40,
+            child: Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.08),
               ),
-              const SizedBox(height: 30),
-              // Combined input and signup button
-              Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
+            ),
+          ),
+          Positioned(
+            bottom: 100,
+            left: -20,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.06),
+              ),
+            ),
+          ),
+
+          // Top navigation icons
+          Positioned(
+            top: padding.top + 20,
+            right: 20,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildTopNavIcon(Icons.notifications_outlined, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>  NotificationScreen(),
                     ),
-                  ],
+                  );
+                }),
+                const SizedBox(width: 12),
+                _buildTopNavIcon(Icons.favorite_outline, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => FavoriteScreen(),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+
+          // Main content area
+          Positioned(
+            left: 30,
+            top: padding.top + 100,
+            right: size.width * 0.4, // Leave space for the person image
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Main headline
+                const Text(
+                  '"Find the best\nclients anytime,\nanywhere."',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    height: 1.2,
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: TextField(
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: 'Enter your account',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
+                const SizedBox(height: 20),
+                // Subtitle
+                Text(
+                  '"Buy, Rent, Sell, or Lease -\nYour 360° Real Estate\nSolution."',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                // Combined input and signup button
+                Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: TextField(
+                            style: const TextStyle(
                               fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: 'Enter your account',
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ),
                       ),
+                      Container(
+                        margin: const EdgeInsets.all(3),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1976D2),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(22),
+                            ),
+                            elevation: 0,
+                            minimumSize: const Size(0, 44),
+                          ),
+                          child: const Text(
+                            'sign up',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Website URL
+                Row(
+                  children: [
+                    Icon(
+                      Icons.language,
+                      color: Colors.white.withOpacity(0.8),
+                      size: 16,
                     ),
-                    Container(
-                      margin: const EdgeInsets.all(3),
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1976D2),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                          elevation: 0,
-                          minimumSize: const Size(0, 44),
-                        ),
-                        child: const Text(
-                          'sign up',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'www.renex.app',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              // Website URL
-              Row(
-                children: [
-                  Icon(
-                    Icons.language,
-                    color: Colors.white.withOpacity(0.8),
-                    size: 16,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'www.renex.app',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
 
-        // Person image with floating icons
-        Positioned(
-          right: 20,
-          top: padding.top + 120,
-          child: Stack(
-            children: [
-              // Main person container
-              Container(
-                height: size.height * 0.35,
-                width: size.width * 0.35,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(-5, 5),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    'lib/assets/guest.jpg',
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+          // Person image with floating icons
+          Positioned(
+            right: 20,
+            top: padding.top + 120,
+            child: Stack(
+              children: [
+                // Main person container
+                Container(
+                  height: size.height * 0.35,
+                  width: size.width * 0.35,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 20,
+                        offset: const Offset(-5, 5),
                       ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 80,
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'lib/assets/guest.jpg',
+                      fit: BoxFit.cover,
+                      errorBuilder:
+                          (context, error, stackTrace) => Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              size: 80,
+                              color: Color(0xFF1976D2),
+                            ),
+                          ),
+                    ),
+                  ),
+                ),
+                // Floating notification icon
+                Positioned(
+                  top: -10,
+                  right: 10,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        const Center(
+                          child: Icon(
+                            Icons.notifications,
+                            color: Color(0xFF1976D2),
+                            size: 20,
+                          ),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Floating heart icon
+                Positioned(
+                  top: 40,
+                  right: -15,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.favorite,
                         color: Color(0xFF1976D2),
+                        size: 20,
                       ),
                     ),
                   ),
                 ),
-              ),
-              // Floating notification icon
-              Positioned(
-                top: -10,
-                right: 10,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      const Center(
-                        child: Icon(
-                          Icons.notifications,
-                          color: Color(0xFF1976D2),
-                          size: 20,
+                // Floating shield icon
+                Positioned(
+                  top: -5,
+                  left: -15,
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.shield,
+                        color: Color(0xFF1976D2),
+                        size: 18,
                       ),
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
+                    ),
+                  ),
+                ),
+                // Floating checkmark icon
+                Positioned(
+                  bottom: 20,
+                  right: -10,
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Color(0xFF1976D2),
+                        size: 18,
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              // Floating heart icon
-              Positioned(
-                top: 40,
-                right: -15,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.favorite,
-                      color: Color(0xFF1976D2),
-                      size: 20,
                     ),
                   ),
                 ),
-              ),
-              // Floating shield icon
-              Positioned(
-                top: -5,
-                left: -15,
-                child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.shield,
-                      color: Color(0xFF1976D2),
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ),
-              // Floating checkmark icon
-              Positioned(
-                bottom: 20,
-                right: -10,
-                child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.check_circle,
-                      color: Color(0xFF1976D2),
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildTopNavIcon(IconData icon, VoidCallback onPressed) {
-  return Container(
-    width: 45,
-    height: 45,
-    decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.2),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.white.withOpacity(0.3)),
-    ),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onPressed,
-        child: Icon(icon, color: Colors.white, size: 20),
-      ),
-    ),
-  );
-}
-
-Widget _buildSearchBar(Size size) {
-  return Transform.translate(
-    offset: const Offset(0, -30),
-    child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      height: 55,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(27),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.search, color: Color(0xFF1976D2), size: 24),
-          const SizedBox(width: 15),
-          Expanded(
-            child: TextField(
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: const InputDecoration(
-                hintText: 'Search House, Apartment, etc',
-                border: InputBorder.none,
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTopNavIcon(IconData icon, VoidCallback onPressed) {
+    return Container(
+      width: 45,
+      height: 45,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(0.3)),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onPressed,
+          child: Icon(icon, color: Colors.white, size: 20),
+        ),
+      ),
+    );
+  }
+Widget _buildSearchBar(Size size) {
+  return Transform.translate(
+    offset: const Offset(0, -30),
+    child: GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>  SearchPage(),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        height: 55,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(27),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.search, color: Color(0xFF1976D2), size: 24),
+            const SizedBox(width: 15),
+            Expanded(
+              child: AbsorbPointer(
+                child: TextField(
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: 'Search House, Apartment, etc',
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -1151,7 +1181,8 @@ Widget _buildSearchBar(Size size) {
           childAspectRatio: 0.85,
         ),
         itemCount: _categories.length,
-        itemBuilder: (context, index) => _buildCategoryItem(_categories[index], size),
+        itemBuilder:
+            (context, index) => _buildCategoryItem(_categories[index], size),
       ),
     );
   }
@@ -1331,14 +1362,15 @@ Widget _buildSearchBar(Size size) {
                   child: Image.asset(
                     property['image'],
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: Colors.grey[300],
-                      child: Icon(
-                        Icons.apartment,
-                        size: size.width * 0.15,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    errorBuilder:
+                        (context, error, stackTrace) => Container(
+                          color: Colors.grey[300],
+                          child: Icon(
+                            Icons.apartment,
+                            size: size.width * 0.15,
+                            color: Colors.grey,
+                          ),
+                        ),
                   ),
                 ),
               ),
@@ -1410,8 +1442,13 @@ Widget _buildSearchBar(Size size) {
                       ],
                     ),
                     child: Icon(
-                      property['isFavorite'] ? Icons.favorite : Icons.favorite_outline,
-                      color: property['isFavorite'] ? Colors.red : const Color(0xFF1976D2),
+                      property['isFavorite']
+                          ? Icons.favorite
+                          : Icons.favorite_outline,
+                      color:
+                          property['isFavorite']
+                              ? Colors.red
+                              : const Color(0xFF1976D2),
                       size: 20,
                     ),
                   ),
@@ -1545,7 +1582,8 @@ Widget _buildSearchBar(Size size) {
       ),
     );
   }
-Widget _buildRequirementCard(Size size) {
+
+  Widget _buildRequirementCard(Size size) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       padding: const EdgeInsets.all(20),
@@ -1712,10 +1750,11 @@ Widget _buildRequirementCard(Size size) {
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: size.width * 0.045),
               itemCount: _mockLocations.length,
-              itemBuilder: (context, index) => Container(
-                margin: EdgeInsets.only(right: size.width * 0.025),
-                child: _buildLocationCard(_mockLocations[index], size),
-              ),
+              itemBuilder:
+                  (context, index) => Container(
+                    margin: EdgeInsets.only(right: size.width * 0.025),
+                    child: _buildLocationCard(_mockLocations[index], size),
+                  ),
             ),
           ),
         ],
@@ -1749,14 +1788,15 @@ Widget _buildRequirementCard(Size size) {
                     fit: BoxFit.cover,
                     width: size.width * 0.2,
                     height: size.width * 0.2,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: Colors.grey[300],
-                      child: Icon(
-                        Icons.location_city,
-                        size: size.width * 0.08,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    errorBuilder:
+                        (context, error, stackTrace) => Container(
+                          color: Colors.grey[300],
+                          child: Icon(
+                            Icons.location_city,
+                            size: size.width * 0.08,
+                            color: Colors.grey,
+                          ),
+                        ),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -1853,7 +1893,8 @@ Widget _buildRequirementCard(Size size) {
       ),
     );
   }
- Widget _buildEnhancedNearbyEstateCard(Map<String, dynamic> estate) {
+
+  Widget _buildEnhancedNearbyEstateCard(Map<String, dynamic> estate) {
     return Container(
       width: 170,
       decoration: BoxDecoration(
