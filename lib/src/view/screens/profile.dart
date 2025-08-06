@@ -39,9 +39,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Name Example', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            Text(
+              'Name Example',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             SizedBox(width: 4),
-            Icon(Icons.check_circle, color: Colors.blue, size: 18), // Verified badge
+            Icon(
+              Icons.check_circle,
+              color: Colors.blue,
+              size: 18,
+            ), // Verified badge
           ],
         ),
         centerTitle: true,
@@ -68,7 +78,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const CircleAvatar(
                         radius: 40,
                         backgroundColor: Colors.grey,
-                        child: Icon(Icons.person, size: 50, color: Colors.white), // Placeholder if no image
+                        child: Icon(
+                          Icons.person,
+                          size: 50,
+                          color: Colors.white,
+                        ), // Placeholder if no image
                         // If you have a specific profile picture asset:
                         // backgroundImage: AssetImage('assets/images/profile_pic.jpg'),
                       ),
@@ -108,7 +122,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: Text(
                             _isFollowing ? 'Following' : 'Follow',
-                            style: const TextStyle(fontSize: 16, color: Colors.white),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -166,14 +183,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 childAspectRatio: 1.0, // For square images
               ),
               itemBuilder: (context, index) {
-                return Image.asset( // Changed to Image.asset
+                return Image.asset(
+                  // Changed to Image.asset
                   _imageAssetPaths[index],
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: double.infinity,
                   // You might want to add error handling for assets if the path is wrong
                   errorBuilder: (context, error, stackTrace) {
-                    return const Center(child: Icon(Icons.broken_image, color: Colors.red));
+                    return const Center(
+                      child: Icon(Icons.broken_image, color: Colors.red),
+                    );
                   },
                 );
               },
@@ -239,10 +259,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           value,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.grey),
-        ),
+        Text(label, style: const TextStyle(color: Colors.grey)),
       ],
     );
   }
@@ -259,10 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               )
             : null,
-        child: Icon(
-          icon,
-          color: isActive ? Colors.blue : Colors.grey,
-        ),
+        child: Icon(icon, color: isActive ? Colors.blue : Colors.grey),
       ),
     );
   }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class Propertylist extends StatefulWidget {
@@ -91,7 +90,10 @@ class _PropertylistState extends State<Propertylist> {
               children: [
                 Icon(Icons.sort, size: 20, color: Colors.grey),
                 SizedBox(width: 5),
-                Text("Sort by", style: TextStyle(fontSize: 14, color: Colors.black87)),
+                Text(
+                  "Sort by",
+                  style: TextStyle(fontSize: 14, color: Colors.black87),
+                ),
               ],
             ),
           ),
@@ -157,7 +159,7 @@ class _PropertylistState extends State<Propertylist> {
         'year': '2005',
         'rating': '4.5',
       },
-       {
+      {
         'imageUrl': 'lib/assets/building.jpg',
         'propertyName': 'Sky Dandelions Apartment',
         'location': 'Jakarta, Indonesia',
@@ -222,14 +224,21 @@ class _PropertylistState extends State<Propertylist> {
                       color: Colors.white.withOpacity(0.8),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.favorite, color: Colors.blue, size: 20), // Blue favorite icon
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.blue,
+                      size: 20,
+                    ), // Blue favorite icon
                   ),
                 ),
                 Positioned(
                   top: 10,
                   right: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF007BFF),
                       borderRadius: BorderRadius.circular(8),
@@ -253,7 +262,10 @@ class _PropertylistState extends State<Propertylist> {
                   children: [
                     Text(
                       property['propertyName'],
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
                     Text(
                       property['price'],

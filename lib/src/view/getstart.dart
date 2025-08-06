@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/onboard.dart';
 

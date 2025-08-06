@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class FavoriteScreen extends StatelessWidget {
   final List<Property> favoriteProperties;
 
-  const FavoriteScreen({Key? key, required this.favoriteProperties}) : super(key: key);
+  const FavoriteScreen({Key? key, required this.favoriteProperties})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,10 @@ class FavoriteScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(property.location),
-                        Text(property.price, style: TextStyle(color: Color(0xFF007BFF))),
+                        Text(
+                          property.price,
+                          style: TextStyle(color: Color(0xFF007BFF)),
+                        ),
                       ],
                     ),
                     trailing: Icon(Icons.favorite, color: Colors.red),

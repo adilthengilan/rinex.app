@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class Editprofile extends StatefulWidget {
   @override
   _EditprofileState createState() => _EditprofileState();
@@ -55,10 +54,7 @@ class _EditprofileState extends State<Editprofile> {
                               ),
                             ],
                           ),
-                          Icon(
-                            Icons.send,
-                            color: Colors.blue,
-                          ),
+                          Icon(Icons.send, color: Colors.blue),
                         ],
                       ),
                       SizedBox(height: 20),
@@ -202,18 +198,9 @@ class _EditprofileState extends State<Editprofile> {
       children: [
         Text(
           number,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
-          ),
-        ),
+        Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
       ],
     );
   }
@@ -386,15 +373,8 @@ class _EditprofileState extends State<Editprofile> {
   Widget _buildAddButton() {
     return Container(
       padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        Icons.add,
-        color: Colors.white,
-        size: 24,
-      ),
+      decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+      child: Icon(Icons.add, color: Colors.white, size: 24),
     );
   }
 }
@@ -422,10 +402,7 @@ class _EditEditprofileState extends State<EditEditprofile> {
         ),
         title: Text(
           'Edit Profile',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: [
           TextButton(
@@ -527,8 +504,11 @@ class _EditEditprofileState extends State<EditEditprofile> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller,
-      {int maxLines = 1}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    int maxLines = 1,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -551,10 +531,7 @@ class _EditEditprofileState extends State<EditEditprofile> {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
         ),
       ],
@@ -576,27 +553,16 @@ class _EditEditprofileState extends State<EditEditprofile> {
             color: Colors.blue.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icon,
-            color: Colors.blue,
-            size: 20,
-          ),
+          child: Icon(icon, color: Colors.blue, size: 20),
         ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        title: Text(title, style: TextStyle(fontWeight: FontWeight.w500)),
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 16,
           color: Colors.grey[400],
         ),
         tileColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

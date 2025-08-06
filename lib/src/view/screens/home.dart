@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rinex/src/view/screens/editprofile.dart';
@@ -116,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
-      if (permission == LocationPermission.denied || 
+      if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
         setState(() => _currentLocation = 'Kochi');
         return;
@@ -129,7 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _getCurrentLocation() async {
     try {
-      await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
       setState(() => _currentLocation = 'Kochi');
     } catch (e) {
       setState(() => _currentLocation = 'Kochi');
@@ -149,20 +150,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
-    
+
     switch (index) {
-      case 0: break;
+      case 0:
+        break;
       case 1:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Propertylist()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Propertylist()),
+        );
         break;
       case 2:
         _showAddListingOptions();
         break;
       case 3:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Editprofile()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Editprofile()),
+        );
         break;
       case 4:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        );
         break;
     }
   }
@@ -189,17 +200,24 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text('Add New Listing', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Add New Listing',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 20),
             ...[
-              {'icon': Icons.camera_alt, 'title': 'Take Photo'},
-              {'icon': Icons.photo_library, 'title': 'Choose from Gallery'},
-              {'icon': Icons.edit, 'title': 'Manual Entry'},
-            ].map((item) => ListTile(
-              leading: Icon(item['icon'] as IconData, color: Colors.blue),
-              title: Text(item['title'] as String),
-              onTap: () => Navigator.pop(context),
-            )).toList(),
+                  {'icon': Icons.camera_alt, 'title': 'Take Photo'},
+                  {'icon': Icons.photo_library, 'title': 'Choose from Gallery'},
+                  {'icon': Icons.edit, 'title': 'Manual Entry'},
+                ]
+                .map(
+                  (item) => ListTile(
+                    leading: Icon(item['icon'] as IconData, color: Colors.blue),
+                    title: Text(item['title'] as String),
+                    onTap: () => Navigator.pop(context),
+                  ),
+                )
+                .toList(),
           ],
         ),
       ),
@@ -210,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       body: SingleChildScrollView(
@@ -234,7 +252,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
- 
   Widget _buildTopSection(Size size, EdgeInsets padding) {
     return Container(
       width: size.width,
@@ -263,18 +280,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         _buildTopNavIcon(Icons.notifications_outlined, () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen()));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationScreen(),
+                            ),
+                          );
                         }),
                         const SizedBox(width: 8),
                         _buildTopNavIcon(Icons.favorite_outline, () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => FavoriteScreen(favoriteProperties: [],),
-                          ));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  FavoriteScreen(favoriteProperties: []),
+                            ),
+                          );
                         }),
                       ],
                     ),
                     const Spacer(),
-                    
+
                     // Main Heading
                     Text(
                       '"Find the best\nclients anytime,\nanywhere."',
@@ -286,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     SizedBox(height: size.height * 0.015),
-                    
+
                     // Action Buttons
                     Row(
                       children: [
@@ -301,7 +327,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(25),
-                                border: Border.all(color: Colors.white.withOpacity(0.3)),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.3),
+                                ),
                               ),
                               child: Text(
                                 'Enter your account',
@@ -325,7 +353,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               horizontal: size.width * 0.04,
                               vertical: size.height * 0.012,
                             ),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
                             elevation: 0,
                           ),
                           child: Text(
@@ -343,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              
+
               // Right Content - Agent Image
               Expanded(
                 flex: 3,
@@ -358,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.black.withOpacity(0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
-                        )
+                        ),
                       ],
                     ),
                     child: ClipRRect(
@@ -369,14 +399,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Image.asset(
                           'lib/assets/agent.jpg',
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            color: Colors.white.withOpacity(0.1),
-                            child: Icon(
-                              Icons.person,
-                              size: size.width * 0.12,
-                              color: Colors.white,
-                            ),
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                color: Colors.white.withOpacity(0.1),
+                                child: Icon(
+                                  Icons.person,
+                                  size: size.width * 0.12,
+                                  color: Colors.white,
+                                ),
+                              ),
                         ),
                       ),
                     ),
@@ -389,7 +420,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   Widget _buildTopNavIcon(IconData icon, VoidCallback onPressed) {
     return Container(
@@ -412,16 +442,29 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 15, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: TextField(
         controller: _searchController,
         style: TextStyle(fontSize: size.width * 0.038),
         decoration: InputDecoration(
           hintText: 'Search House, Apartment, etc',
-          prefixIcon: Icon(Icons.search, color: Colors.grey, size: size.width * 0.055),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.grey,
+            size: size.width * 0.055,
+          ),
           border: InputBorder.none,
-          hintStyle: TextStyle(color: Colors.grey, fontSize: size.width * 0.035),
+          hintStyle: TextStyle(
+            color: Colors.grey,
+            fontSize: size.width * 0.035,
+          ),
         ),
       ),
     );
@@ -443,7 +486,8 @@ class _HomeScreenState extends State<HomeScreen> {
           childAspectRatio: 0.85,
         ),
         itemCount: _categories.length,
-        itemBuilder: (context, index) => _buildCategoryItem(_categories[index], size),
+        itemBuilder: (context, index) =>
+            _buildCategoryItem(_categories[index], size),
       ),
     );
   }
@@ -504,7 +548,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Propertylist()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Propertylist(),
+                      ),
+                    );
                   },
                   child: Text(
                     'view all',
@@ -529,7 +578,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 margin: EdgeInsets.only(right: size.width * 0.035),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Propertylist()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Propertylist(),
+                      ),
+                    );
                   },
                   child: _buildPropertyCard(_mockProperties[index], size),
                 ),
@@ -547,7 +601,13 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 20, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -555,7 +615,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: SizedBox(
                   height: size.height * 0.14,
                   width: double.infinity,
@@ -564,7 +626,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.grey[300],
-                      child: Icon(Icons.apartment, size: size.width * 0.12, color: Colors.grey),
+                      child: Icon(
+                        Icons.apartment,
+                        size: size.width * 0.12,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -573,8 +639,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 top: 12,
                 left: 12,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(color: const Color(0xFF1976D2), borderRadius: BorderRadius.circular(6)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1976D2),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
                   child: Text(
                     'renex assured',
                     style: TextStyle(
@@ -592,10 +664,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () => _toggleFavorite(property),
                   child: Container(
                     padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.9), shape: BoxShape.circle),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      shape: BoxShape.circle,
+                    ),
                     child: Icon(
-                      property['isFavorite'] ? Icons.favorite : Icons.favorite_outline,
-                      color: property['isFavorite'] ? Colors.red : const Color(0xFF1976D2),
+                      property['isFavorite']
+                          ? Icons.favorite
+                          : Icons.favorite_outline,
+                      color: property['isFavorite']
+                          ? Colors.red
+                          : const Color(0xFF1976D2),
                       size: size.width * 0.04,
                     ),
                   ),
@@ -622,7 +701,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.star, color: Colors.amber, size: size.width * 0.035),
+                      Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                        size: size.width * 0.035,
+                      ),
                       SizedBox(width: size.width * 0.01),
                       Text(
                         '${property['rating']}',
@@ -633,7 +716,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(width: size.width * 0.02),
-                      Icon(Icons.location_on_outlined, color: const Color(0xFF666666), size: size.width * 0.032),
+                      Icon(
+                        Icons.location_on_outlined,
+                        color: const Color(0xFF666666),
+                        size: size.width * 0.032,
+                      ),
                       SizedBox(width: size.width * 0.005),
                       Expanded(
                         child: Text(
@@ -652,7 +739,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.bed_outlined, color: const Color(0xFF666666), size: size.width * 0.035),
+                          Icon(
+                            Icons.bed_outlined,
+                            color: const Color(0xFF666666),
+                            size: size.width * 0.035,
+                          ),
                           SizedBox(width: size.width * 0.01),
                           Text(
                             property['rooms'],
@@ -711,7 +802,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(color: const Color(0xFF1976D2), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1976D2),
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: Text(
               'REQUIREMENT',
               style: TextStyle(
@@ -725,8 +819,15 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             width: size.width * 0.07,
             height: size.width * 0.07,
-            decoration: BoxDecoration(color: Colors.grey[300], shape: BoxShape.circle),
-            child: Icon(Icons.person, size: size.width * 0.04, color: Colors.grey),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.person,
+              size: size.width * 0.04,
+              color: Colors.grey,
+            ),
           ),
           SizedBox(width: size.width * 0.025),
           Expanded(
@@ -761,7 +862,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Row(
             children: [
-              Icon(Icons.location_on, color: const Color(0xFF1976D2), size: size.width * 0.035),
+              Icon(
+                Icons.location_on,
+                color: const Color(0xFF1976D2),
+                size: size.width * 0.035,
+              ),
               SizedBox(width: size.width * 0.01),
               Text(
                 _currentLocation,
@@ -774,7 +879,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           SizedBox(width: size.width * 0.015),
-          Icon(Icons.arrow_forward, color: const Color(0xFF1976D2), size: size.width * 0.045),
+          Icon(
+            Icons.arrow_forward,
+            color: const Color(0xFF1976D2),
+            size: size.width * 0.045,
+          ),
         ],
       ),
     );
@@ -845,7 +954,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.black.withOpacity(0.08),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
-                )
+                ),
               ],
             ),
             child: ClipOval(
@@ -905,7 +1014,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 margin: EdgeInsets.only(right: size.width * 0.035),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Propertylist()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Propertylist(),
+                      ),
+                    );
                   },
                   child: _buildNearbyEstateCard(_nearbyEstates[index], size),
                 ),
@@ -923,7 +1037,13 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 15, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -931,7 +1051,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: SizedBox(
                   height: size.height * 0.12,
                   width: double.infinity,
@@ -940,7 +1062,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.grey[300],
-                      child: Icon(Icons.apartment, size: size.width * 0.1, color: Colors.grey),
+                      child: Icon(
+                        Icons.apartment,
+                        size: size.width * 0.1,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -949,8 +1075,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 bottom: 8,
                 left: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(color: const Color(0xFF1976D2), borderRadius: BorderRadius.circular(6)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1976D2),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
                   child: RichText(
                     text: TextSpan(
                       children: [
@@ -981,10 +1113,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () => _toggleFavorite(estate),
                   child: Container(
                     padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.9), shape: BoxShape.circle),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      shape: BoxShape.circle,
+                    ),
                     child: Icon(
-                      estate['isFavorite'] ? Icons.favorite : Icons.favorite_outline,
-                      color: estate['isFavorite'] ? Colors.red : const Color(0xFF1976D2),
+                      estate['isFavorite']
+                          ? Icons.favorite
+                          : Icons.favorite_outline,
+                      color: estate['isFavorite']
+                          ? Colors.red
+                          : const Color(0xFF1976D2),
                       size: size.width * 0.035,
                     ),
                   ),
@@ -1011,7 +1150,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.star, color: Colors.amber, size: size.width * 0.032),
+                      Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                        size: size.width * 0.032,
+                      ),
                       SizedBox(width: size.width * 0.01),
                       Text(
                         '${estate['rating']}',
@@ -1022,7 +1165,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(width: size.width * 0.015),
-                      Icon(Icons.location_on_outlined, color: const Color(0xFF666666), size: size.width * 0.028),
+                      Icon(
+                        Icons.location_on_outlined,
+                        color: const Color(0xFF666666),
+                        size: size.width * 0.028,
+                      ),
                       SizedBox(width: size.width * 0.005),
                       Expanded(
                         child: Text(
@@ -1103,7 +1250,13 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 15, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -1111,13 +1264,17 @@ class _HomeScreenState extends State<HomeScreen> {
             height: size.height * 0.11,
             decoration: BoxDecoration(
               color: item['color'].withOpacity(0.1),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
             ),
             child: Stack(
               children: [
                 if (item['image'] != null)
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
                     child: Image.asset(
                       item['image'],
                       width: double.infinity,
@@ -1125,12 +1282,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
                         color: item['color'].withOpacity(0.1),
-                        child: Center(child: Icon(item['icon'], size: size.width * 0.08, color: item['color'])),
+                        child: Center(
+                          child: Icon(
+                            item['icon'],
+                            size: size.width * 0.08,
+                            color: item['color'],
+                          ),
+                        ),
                       ),
                     ),
                   )
                 else
-                  Center(child: Icon(item['icon'], size: size.width * 0.08, color: item['color'])),
+                  Center(
+                    child: Icon(
+                      item['icon'],
+                      size: size.width * 0.08,
+                      color: item['color'],
+                    ),
+                  ),
               ],
             ),
           ),
@@ -1181,7 +1350,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, -5))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
       ),
       child: BottomAppBar(
         color: Colors.white,
@@ -1194,10 +1369,25 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               _buildBottomNavItem(0, Icons.home_outlined, Icons.home, 'Home'),
-              _buildBottomNavItem(1, Icons.apartment_outlined, Icons.apartment, 'Properties'),
+              _buildBottomNavItem(
+                1,
+                Icons.apartment_outlined,
+                Icons.apartment,
+                'Properties',
+              ),
               const SizedBox(width: 48),
-              _buildBottomNavItem(3, Icons.videocam_outlined, Icons.videocam, 'Video'),
-              _buildBottomNavItem(4, Icons.person_outline, Icons.person, 'Profile'),
+              _buildBottomNavItem(
+                3,
+                Icons.videocam_outlined,
+                Icons.videocam,
+                'Video',
+              ),
+              _buildBottomNavItem(
+                4,
+                Icons.person_outline,
+                Icons.person,
+                'Profile',
+              ),
             ],
           ),
         ),
@@ -1205,10 +1395,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBottomNavItem(int index, IconData outlineIcon, IconData filledIcon, String label) {
+  Widget _buildBottomNavItem(
+    int index,
+    IconData outlineIcon,
+    IconData filledIcon,
+    String label,
+  ) {
     final bool isSelected = _selectedIndex == index;
     final size = MediaQuery.of(context).size;
-    
+
     return Expanded(
       child: Material(
         color: Colors.transparent,
@@ -1225,12 +1420,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF1976D2).withOpacity(0.1) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF1976D2).withOpacity(0.1)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     isSelected ? filledIcon : outlineIcon,
-                    color: isSelected ? const Color(0xFF1976D2) : Colors.grey[600],
+                    color: isSelected
+                        ? const Color(0xFF1976D2)
+                        : Colors.grey[600],
                     size: size.width * 0.055,
                   ),
                 ),
@@ -1238,7 +1437,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   label,
                   style: TextStyle(
-                    color: isSelected ? const Color(0xFF1976D2) : Colors.grey[600],
+                    color: isSelected
+                        ? const Color(0xFF1976D2)
+                        : Colors.grey[600],
                     fontSize: size.width * 0.025,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   ),
@@ -1253,11 +1454,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildFloatingActionButton() {
     final size = MediaQuery.of(context).size;
-    
+
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: [BoxShadow(color: const Color(0xFF1976D2).withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 5))],
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1976D2).withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: FloatingActionButton(
         backgroundColor: const Color(0xFF1976D2),
