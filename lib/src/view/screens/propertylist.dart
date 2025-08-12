@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/screens/agentlist.dart';
-import 'package:rinex/src/view/screens/favourites.dart';
-import 'package:rinex/src/view/screens/notifications.dart';
+import 'package:rinex/src/view/screens/favourites.dart' show FavoriteScreen;
 import 'package:rinex/src/view/screens/searchpage.dart';
 
-// Singleton Favorite Manager to share favorites across all screens
 class SharedFavoriteManager {
   static final SharedFavoriteManager _instance = SharedFavoriteManager._internal();
   factory SharedFavoriteManager() => _instance;
@@ -260,10 +259,7 @@ class _PropertylistState extends State<Propertylist> {
               children: [
                 Icon(Icons.sort, size: 20, color: Colors.grey),
                 SizedBox(width: 5),
-                Text(
-                  "Sort by",
-                  style: TextStyle(fontSize: 14, color: Colors.black87),
-                ),
+                Text("Sort by", style: TextStyle(fontSize: 14, color: Colors.black87)),
               ],
             ),
           ),
@@ -298,54 +294,7 @@ class _PropertylistState extends State<Propertylist> {
   }
 
   Widget _buildPropertyList() {
-    final List<Map<String, dynamic>> properties = [
-      {
-        'imageUrl': 'lib/assets/property4.jpg',
-        'propertyName': 'Sky Dandelions Apartment',
-        'location': 'Jakarta, Indonesia',
-        'price': '₹ 10,000 /month',
-        'beds': '3 BHK',
-        'area': 'Area:1000 Sqft',
-        'bedrooms': 'Bedrooms :03',
-        'bathrooms': 'Bathrooms:03',
-        'kitchen': 'Kitchen:01',
-        'parking': 'Parking Availabile',
-        'furnished': 'Semi Furnished',
-        'year': '2022',
-        'rating': '4.9',
-      },
-      {
-        'imageUrl': 'lib/assets/property2.jpg',
-        'propertyName': 'Charming Family Home',
-        'location': 'San Francisco, USA',
-        'price': '₹ 10,000 /month', // Keeping price consistent with image
-        'beds': '3 BHK', // Keeping beds consistent with image
-        'area': 'Area:1200 Sqft',
-        'bedrooms': 'Bedrooms :04',
-        'bathrooms': 'Bathrooms:02',
-        'kitchen': 'Kitchen:01',
-        'parking': 'Parking Availabile',
-        'furnished': 'Unfurnished',
-        'year': '2005',
-        'rating': '4.5',
-      },
-       {
-        'imageUrl': 'lib/assets/building.jpg',
-        'propertyName': 'Sky Dandelions Apartment',
-        'location': 'Jakarta, Indonesia',
-        'price': '₹ 10,000 /month',
-        'beds': '3 BHK',
-        'area': 'Area:1000 Sqft',
-        'bedrooms': 'Bedrooms :03',
-        'bathrooms': 'Bathrooms:03',
-        'kitchen': 'Kitchen:01',
-        'parking': 'Parking Availabile',
-        'furnished': 'Semi Furnished',
-        'year': '2022',
-        'rating': '4.9',
-      },
-      // Add more properties as needed
-    ];
+    final properties = PropertyDataService.getAllProperties();
 
     return ListView.builder(
       shrinkWrap: true,
@@ -393,23 +342,35 @@ class _PropertylistState extends State<Propertylist> {
                 Positioned(
                   top: 10,
                   left: 10,
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.8),
-                      shape: BoxShape.circle,
+                  child: GestureDetector(
+                    onTap: () => _toggleFavorite(property),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isFavorite ? Colors.red.withOpacity(0.9) : Colors.white.withOpacity(0.9),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite ? Colors.white : Colors.red,
+                        size: 22,
+                      ),
                     ),
-                    child: const Icon(Icons.favorite, color: Colors.blue, size: 20), // Blue favorite icon
                   ),
                 ),
                 Positioned(
                   top: 10,
                   right: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: const Color(0xFF007BFF),
                       borderRadius: BorderRadius.circular(8),
@@ -431,9 +392,11 @@ class _PropertylistState extends State<Propertylist> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      property['propertyName'],
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    Expanded(
+                      child: Text(
+                        property['propertyName'],
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                     ),
                     Text(
                       property['price'],

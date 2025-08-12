@@ -1,14 +1,39 @@
-import 'dart:ui';
-
 
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/screens/propertylist.dart';
 
+class FavoriteScreen extends StatefulWidget {
+  const FavoriteScreen({super.key});
 
-class FavoriteScreen extends StatelessWidget {
-  final List<Property> favoriteProperties;
+  @override
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
 
-  const FavoriteScreen({Key? key, required this.favoriteProperties}) : super(key: key);
+class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStateMixin {
+  final SharedFavoriteManager _favoriteManager = SharedFavoriteManager();
+  String _sortBy = 'name';
+  bool _showGridView = false;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -464,8 +489,52 @@ class FavoriteScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(property.location),
-                        Text(property.price, style: TextStyle(color: Color(0xFF007BFF))),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              property['propertyName'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                const Icon(Icons.location_on, color: Colors.grey, size: 12),
+                                const SizedBox(width: 2),
+                                Expanded(
+                                  child: Text(
+                                    property['location'],
+                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              property['beds'],
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                            Text(
+                              property['price'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

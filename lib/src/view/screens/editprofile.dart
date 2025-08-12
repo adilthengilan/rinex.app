@@ -1,7 +1,10 @@
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-
-class Editprofile extends StatefulWidget {
+class EditProfilePage extends StatefulWidget {
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
@@ -33,392 +36,84 @@ class _EditProfilePageState extends State<EditProfilePage> {
   double _coins = 271.5;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                // Profile Header
-                Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Name Example',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Icon(
-                                Icons.verified,
-                                color: Colors.blue,
-                                size: 20,
-                              ),
-                            ],
-                          ),
-                          Icon(
-                            Icons.send,
-                            color: Colors.blue,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          // Profile Avatar
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.grey[300],
-                            child: Icon(
-                              Icons.person,
-                              size: 40,
-                              color: Colors.grey[700],
-                            ),
-                          ),
-                          SizedBox(width: 30),
-                          // Stats
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _buildStatColumn('2', 'post'),
-                                _buildStatColumn('322', 'followers'),
-                                _buildStatColumn('27', 'following'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'RNX-11220FR',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditEditprofile(),
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                              ),
-                              child: Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 15),
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blue),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.monetization_on,
-                                    color: Colors.orange,
-                                    size: 18,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '271.5',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),
-                // Content Tabs
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildTabButton(
-                        icon: Icons.grid_view,
-                        label: 'Listing',
-                        isSelected: true,
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: _buildTabButton(
-                        icon: Icons.play_circle_outline,
-                        label: 'Clips',
-                        isSelected: false,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                // Property Grid
-                _buildPropertyGrid(),
-              ],
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
-    );
+  void initState() {
+    super.initState();
+    _initializeControllers();
   }
 
-  Widget _buildStatColumn(String number, String label) {
-    return Column(
-      children: [
-        Text(
-          number,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
+  void _initializeControllers() {
+    _nameController.text = _currentName;
+    _usernameController.text = _currentUsername;
+    _emailController.text = _currentEmail;
+    _phoneController.text = _currentPhone;
+    _bioController.text = _currentBio;
+    _websiteController.text = _currentWebsite;
   }
 
-  Widget _buildTabButton({
-    required IconData icon,
-    required String label,
-    required bool isSelected,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.blue.withOpacity(0.1) : Colors.transparent,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: isSelected ? Colors.blue : Colors.grey[600],
-            size: 20,
-          ),
-          SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.blue : Colors.grey[600],
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPropertyGrid() {
-    List<String> propertyTypes = [
-      'Modern House',
-      'Interior Design',
-      'Apartment Building',
-      'City Building',
-      'Residential Complex',
-      'Victorian Houses',
-      'Luxury Villa',
-      'Modern Villa',
-      'Contemporary Home',
-    ];
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-        childAspectRatio: 1,
-      ),
-      itemCount: 9,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            // Handle property tap
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Tapped on ${propertyTypes[index]}'),
-                duration: Duration(seconds: 1),
-              ),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey[300],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    color: Colors.grey[400],
-                    child: Icon(
-                      _getPropertyIcon(index),
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                  if (index == 1 || index == 3 || index == 6)
-                    Center(
-                      child: Icon(
-                        Icons.play_circle_filled,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  IconData _getPropertyIcon(int index) {
-    List<IconData> icons = [
-      Icons.home,
-      Icons.chair,
-      Icons.apartment,
-      Icons.business,
-      Icons.location_city,
-      Icons.house,
-      Icons.villa,
-      Icons.home_work,
-      Icons.architecture,
-    ];
-    return icons[index];
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: Offset(0, -5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildBottomNavItem(Icons.home, 0),
-          _buildBottomNavItem(Icons.grid_view, 1),
-          _buildAddButton(),
-          _buildBottomNavItem(Icons.play_circle_outline, 3),
-          _buildBottomNavItem(Icons.person, 4),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNavItem(IconData icon, int index) {
-    bool isSelected = _currentIndex == index;
-    return GestureDetector(
-      onTap: () {
+  Future<void> _pickImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1800,
+        maxHeight: 1800,
+        imageQuality: 85,
+      );
+      
+      if (image != null) {
         setState(() {
-          _currentIndex = index;
+          _profileImage = File(image.path);
         });
-      },
-      child: Container(
-        padding: EdgeInsets.all(12),
-        child: Icon(
-          icon,
-          color: isSelected ? Colors.blue : Colors.grey[400],
-          size: 28,
-        ),
-      ),
-    );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking image: $e')),
+      );
+    }
   }
 
-  Widget _buildAddButton() {
-    return Container(
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        Icons.add,
-        color: Colors.white,
-        size: 24,
-      ),
-    );
+  Future<void> _saveProfile() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Simulate API call
+      await Future.delayed(const Duration(seconds: 2));
+      
+      // Update local data (in real app, this would be API call)
+      setState(() {
+        _currentName = _nameController.text;
+        _currentUsername = _usernameController.text;
+        _currentEmail = _emailController.text;
+        _currentPhone = _phoneController.text;
+        _currentBio = _bioController.text;
+        _currentWebsite = _websiteController.text;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Profile updated successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating profile: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -447,6 +142,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           'Edit Profile',
           style: TextStyle(
             color: Colors.black,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -763,8 +459,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller,
-      {int maxLines = 1}) {
+  Widget _buildStatItem(String count, String label) {
     return Column(
       children: [
         Text(
@@ -779,26 +474,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         Text(
           label,
           style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-            color: Colors.grey[700],
-          ),
-        ),
-        SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
+            fontSize: 14,
+            color: Colors.grey[600],
           ),
         ),
       ],
@@ -809,40 +486,43 @@ class _EditProfilePageState extends State<EditProfilePage> {
     required TextEditingController controller,
     required String label,
     required IconData icon,
-    required String title,
-    required VoidCallback onTap,
+    Widget? suffix,
+    TextInputType? keyboardType,
+    int maxLines = 1,
+    String? Function(String?)? validator,
   }) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        onTap: onTap,
-        leading: Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            icon,
-            color: Colors.blue,
-            size: 20,
-          ),
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 16,
-          color: Colors.grey[400],
-        ),
-        tileColor: Colors.white,
-        shape: RoundedRectangleBorder(
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.grey[600]),
+        suffixIcon: suffix,
+        border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
   }
