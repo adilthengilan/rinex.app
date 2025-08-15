@@ -1,20 +1,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rinex/src/view/screens/agentlist.dart';
+
 
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> 
+class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   bool isFollowing = false;
-  int _currentIndex = 4; // Profile tab selected
   final TextEditingController _messageController = TextEditingController();
 
   // User profile data
@@ -31,7 +32,8 @@ class _ProfilePageState extends State<ProfilePage>
   final List<PropertyItem> listings = [
     PropertyItem(
       id: 1,
-      imageUrl: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop',
       isVideo: false,
       type: 'House',
       title: 'Modern Luxury Villa',
@@ -40,11 +42,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 5,
       bathrooms: 4,
       area: 4500,
-      description: 'Stunning modern villa with panoramic city views, featuring open-plan living spaces, premium finishes, and a resort-style backyard.',
+      description:
+          'Stunning modern villa with panoramic city views, featuring open-plan living spaces, premium finishes, and a resort-style backyard.',
     ),
     PropertyItem(
       id: 2,
-      imageUrl: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop',
       isVideo: false,
       type: 'Interior',
       title: 'Luxury Interior Design',
@@ -53,11 +57,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 3,
       bathrooms: 3,
       area: 3200,
-      description: 'Exquisitely designed interior spaces with premium materials and contemporary furnishings throughout.',
+      description:
+          'Exquisitely designed interior spaces with premium materials and contemporary furnishings throughout.',
     ),
     PropertyItem(
       id: 3,
-      imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=400&fit=crop',
       isVideo: true,
       type: 'Building',
       title: 'Modern Architecture',
@@ -66,11 +72,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 4,
       bathrooms: 4,
       area: 3800,
-      description: 'Architectural masterpiece in the heart of downtown with floor-to-ceiling windows and premium amenities.',
+      description:
+          'Architectural masterpiece in the heart of downtown with floor-to-ceiling windows and premium amenities.',
     ),
     PropertyItem(
       id: 4,
-      imageUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=400&fit=crop',
       isVideo: true,
       type: 'Building',
       title: 'City Skyline View',
@@ -79,11 +87,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 2,
       bathrooms: 2,
       area: 1850,
-      description: 'Breathtaking city views from every room in this sophisticated urban residence.',
+      description:
+          'Breathtaking city views from every room in this sophisticated urban residence.',
     ),
     PropertyItem(
       id: 5,
-      imageUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=400&fit=crop',
       isVideo: false,
       type: 'Building',
       title: 'Glass Tower',
@@ -92,11 +102,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 6,
       bathrooms: 5,
       area: 6200,
-      description: 'Luxury penthouse in prestigious glass tower with world-class amenities and concierge services.',
+      description:
+          'Luxury penthouse in prestigious glass tower with world-class amenities and concierge services.',
     ),
     PropertyItem(
       id: 6,
-      imageUrl: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=400&fit=crop',
       isVideo: false,
       type: 'House',
       title: 'Lakeside Retreat',
@@ -105,11 +117,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 3,
       bathrooms: 2,
       area: 2800,
-      description: 'Serene lakeside property perfect for weekend getaways with private dock and mountain views.',
+      description:
+          'Serene lakeside property perfect for weekend getaways with private dock and mountain views.',
     ),
     PropertyItem(
       id: 7,
-      imageUrl: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=400&h=400&fit=crop',
       isVideo: false,
       type: 'House',
       title: 'Historic Mansion',
@@ -118,11 +132,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 4,
       bathrooms: 3,
       area: 4200,
-      description: 'Beautifully restored historic mansion with original architectural details and modern updates.',
+      description:
+          'Beautifully restored historic mansion with original architectural details and modern updates.',
     ),
     PropertyItem(
       id: 8,
-      imageUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=400&fit=crop',
       isVideo: true,
       type: 'Interior',
       title: 'Luxury Bathroom',
@@ -131,11 +147,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 2,
       bathrooms: 3,
       area: 2200,
-      description: 'Spa-like luxury bathroom with premium fixtures and finishes throughout the residence.',
+      description:
+          'Spa-like luxury bathroom with premium fixtures and finishes throughout the residence.',
     ),
     PropertyItem(
       id: 9,
-      imageUrl: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=400&fit=crop',
       isVideo: false,
       type: 'Building',
       title: 'Modern Towers',
@@ -144,14 +162,16 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 3,
       bathrooms: 3,
       area: 3100,
-      description: 'Contemporary living in Santa Monica with ocean proximity and luxury amenities.',
+      description:
+          'Contemporary living in Santa Monica with ocean proximity and luxury amenities.',
     ),
   ];
 
   final List<PropertyItem> clips = [
     PropertyItem(
       id: 10,
-      imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=400&fit=crop',
       isVideo: true,
       type: 'Building',
       title: 'Architecture Tour',
@@ -160,11 +180,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 0,
       bathrooms: 0,
       area: 0,
-      description: 'Virtual tour showcasing innovative architectural design and construction techniques.',
+      description:
+          'Virtual tour showcasing innovative architectural design and construction techniques.',
     ),
     PropertyItem(
       id: 11,
-      imageUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=400&fit=crop',
       isVideo: true,
       type: 'Building',
       title: 'Property Walkthrough',
@@ -173,11 +195,13 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 0,
       bathrooms: 0,
       area: 0,
-      description: 'Complete property walkthrough highlighting key features and amenities.',
+      description:
+          'Complete property walkthrough highlighting key features and amenities.',
     ),
     PropertyItem(
       id: 12,
-      imageUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=400&fit=crop',
       isVideo: true,
       type: 'Interior',
       title: 'Interior Design Tips',
@@ -186,7 +210,8 @@ class _ProfilePageState extends State<ProfilePage>
       bedrooms: 0,
       bathrooms: 0,
       area: 0,
-      description: 'Professional interior design tips and trends for luxury living spaces.',
+      description:
+          'Professional interior design tips and trends for luxury living spaces.',
     ),
   ];
 
@@ -212,6 +237,29 @@ class _ProfilePageState extends State<ProfilePage>
     super.dispose();
   }
 
+  void _navigateToHome() {
+    HapticFeedback.lightImpact();
+    // Navigate back to home screen
+    Navigator.pop(context);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.home, color: Colors.white, size: 20),
+            SizedBox(width: 8),
+            Text('Navigating to Home'),
+          ],
+        ),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: EdgeInsets.all(16),
+      ),
+    );
+  }
+
   void _toggleFollow() {
     setState(() {
       isFollowing = !isFollowing;
@@ -221,10 +269,10 @@ class _ProfilePageState extends State<ProfilePage>
         userProfile['followersCount']--;
       }
     });
-    
+
     // Haptic feedback
     HapticFeedback.lightImpact();
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -236,9 +284,9 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             SizedBox(width: 8),
             Text(
-              isFollowing 
-                ? 'Following ${userProfile['name']}' 
-                : 'Unfollowed ${userProfile['name']}',
+              isFollowing
+                  ? 'Following ${userProfile['name']}'
+                  : 'Unfollowed ${userProfile['name']}',
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
           ],
@@ -256,91 +304,105 @@ class _ProfilePageState extends State<ProfilePage>
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Icon(Icons.message, color: Colors.blue),
-            SizedBox(width: 8),
-            Text('Send Message'),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Send a message to ${userProfile['name']}',
-              style: TextStyle(color: Colors.grey[600]),
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-            SizedBox(height: 16),
-            TextField(
-              controller: _messageController,
-              decoration: InputDecoration(
-                hintText: 'Type your message...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.blue, width: 2),
-                ),
-                prefixIcon: Icon(Icons.edit, color: Colors.blue),
-              ),
-              maxLines: 3,
-              maxLength: 500,
-              textCapitalization: TextCapitalization.sentences,
+            title: Row(
+              children: [
+                Icon(Icons.message, color: Colors.blue),
+                SizedBox(width: 8),
+                Text('Send Message'),
+              ],
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              _messageController.clear();
-              Navigator.pop(context);
-            },
-            child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              if (_messageController.text.trim().isNotEmpty) {
-                Navigator.pop(context);
-                _messageController.clear();
-                HapticFeedback.mediumImpact();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: [
-                        Icon(Icons.check_circle, color: Colors.white),
-                        SizedBox(width: 8),
-                        Text('Message sent to ${userProfile['name']}'),
-                      ],
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Send a message to ${userProfile['name']}',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+                SizedBox(height: 16),
+                TextField(
+                  controller: _messageController,
+                  decoration: InputDecoration(
+                    hintText: 'Type your message...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    backgroundColor: Colors.green,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    margin: EdgeInsets.all(16),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.blue, width: 2),
+                    ),
+                    prefixIcon: Icon(Icons.edit, color: Colors.blue),
                   ),
-                );
-              }
-            },
-            icon: Icon(Icons.send),
-            label: Text('Send'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  maxLines: 3,
+                  maxLength: 500,
+                  textCapitalization: TextCapitalization.sentences,
+                ),
+              ],
             ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  _messageController.clear();
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  if (_messageController.text.trim().isNotEmpty) {
+                    Navigator.pop(context);
+                    _messageController.clear();
+                    HapticFeedback.mediumImpact();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(Icons.check_circle, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text('Message sent to ${userProfile['name']}'),
+                          ],
+                        ),
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        margin: EdgeInsets.all(16),
+                      ),
+                    );
+                  }
+                },
+                icon: Icon(Icons.send),
+                label: Text('Send'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
   void _shareProfile() {
     HapticFeedback.lightImpact();
     // Simulate copying to clipboard
-    Clipboard.setData(ClipboardData(text: 'https://realestate.app/profile/${userProfile['username']}'));
-    
+    Clipboard.setData(
+      ClipboardData(
+        text: 'https://realestate.app/profile/${userProfile['username']}',
+      ),
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -368,46 +430,67 @@ class _ProfilePageState extends State<ProfilePage>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.4,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              margin: EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
+      builder:
+          (context) => Container(
+            height: MediaQuery.of(context).size.height * 0.4,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Text(
-                    '${userProfile['name']} Statistics',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  SizedBox(height: 20),
-                  _buildDetailedStatRow('Total Posts', '${userProfile['postsCount']}', Icons.grid_on),
-                  _buildDetailedStatRow('Followers', '${userProfile['followersCount']}', Icons.people),
-                  _buildDetailedStatRow('Following', '${userProfile['followingCount']}', Icons.person_add),
-                  _buildDetailedStatRow('Properties Listed', '${listings.length}', Icons.home),
-                  _buildDetailedStatRow('Video Content', '${clips.length}', Icons.play_circle_outline),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      Text(
+                        '${userProfile['name']} Statistics',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      _buildDetailedStatRow(
+                        'Total Posts',
+                        '${userProfile['postsCount']}',
+                        Icons.grid_on,
+                      ),
+                      _buildDetailedStatRow(
+                        'Followers',
+                        '${userProfile['followersCount']}',
+                        Icons.people,
+                      ),
+                      _buildDetailedStatRow(
+                        'Following',
+                        '${userProfile['followingCount']}',
+                        Icons.person_add,
+                      ),
+                      _buildDetailedStatRow(
+                        'Properties Listed',
+                        '${listings.length}',
+                        Icons.home,
+                      ),
+                      _buildDetailedStatRow(
+                        'Video Content',
+                        '${clips.length}',
+                        Icons.play_circle_outline,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
@@ -418,10 +501,7 @@ class _ProfilePageState extends State<ProfilePage>
         children: [
           Icon(icon, color: Colors.blue, size: 20),
           SizedBox(width: 12),
-          Text(
-            label,
-            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-          ),
+          Text(label, style: TextStyle(fontSize: 16, color: Colors.grey[700])),
           Spacer(),
           Text(
             value,
@@ -445,12 +525,69 @@ class _ProfilePageState extends State<ProfilePage>
           opacity: _fadeAnimation,
           child: Column(
             children: [
+              // Top App Bar with Back Arrow
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: _navigateToHome,
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.black87,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                      'Profile',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: _shareProfile,
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(Icons.send, color: Colors.blue, size: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               // Profile Header
               Container(
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(20),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),
@@ -461,56 +598,37 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
                 child: Column(
                   children: [
-                    // Top Row - Name and Share
+                    // Name and Verified Badge
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              userProfile['name'],
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            if (userProfile['isVerified'])
-                              Container(
-                                padding: EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 14,
-                                ),
-                              ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: _shareProfile,
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.blue,
-                              size: 20,
-                            ),
+                        Text(
+                          userProfile['name'],
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
                           ),
                         ),
+                        SizedBox(width: 8),
+                        if (userProfile['isVerified'])
+                          Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                          ),
                       ],
                     ),
-                    
+
                     SizedBox(height: 20),
-                    
+
                     // Profile Info Row
                     Row(
                       children: [
@@ -535,9 +653,9 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ),
                         ),
-                        
+
                         SizedBox(width: 30),
-                        
+
                         // Stats
                         Expanded(
                           child: Row(
@@ -545,24 +663,33 @@ class _ProfilePageState extends State<ProfilePage>
                             children: [
                               GestureDetector(
                                 onTap: _showUserStats,
-                                child: _buildStatColumn('${userProfile['postsCount']}', 'post'),
+                                child: _buildStatColumn(
+                                  '${userProfile['postsCount']}',
+                                  'post',
+                                ),
                               ),
                               GestureDetector(
                                 onTap: _showUserStats,
-                                child: _buildStatColumn('${userProfile['followersCount']}', 'followers'),
+                                child: _buildStatColumn(
+                                  '${userProfile['followersCount']}',
+                                  'followers',
+                                ),
                               ),
                               GestureDetector(
                                 onTap: _showUserStats,
-                                child: _buildStatColumn('${userProfile['followingCount']}', 'following'),
+                                child: _buildStatColumn(
+                                  '${userProfile['followingCount']}',
+                                  'following',
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    
+
                     SizedBox(height: 15),
-                    
+
                     // Bio
                     Align(
                       alignment: Alignment.centerLeft,
@@ -575,9 +702,9 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                       ),
                     ),
-                    
+
                     SizedBox(height: 20),
-                    
+
                     // Action Buttons
                     Row(
                       children: [
@@ -587,8 +714,12 @@ class _ProfilePageState extends State<ProfilePage>
                             child: ElevatedButton(
                               onPressed: _toggleFollow,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: isFollowing ? Colors.grey[300] : Colors.blue,
-                                foregroundColor: isFollowing ? Colors.black87 : Colors.white,
+                                backgroundColor:
+                                    isFollowing
+                                        ? Colors.grey[300]
+                                        : Colors.blue,
+                                foregroundColor:
+                                    isFollowing ? Colors.black87 : Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -599,7 +730,9 @@ class _ProfilePageState extends State<ProfilePage>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    isFollowing ? Icons.person_remove : Icons.person_add,
+                                    isFollowing
+                                        ? Icons.person_remove
+                                        : Icons.person_add,
                                     size: 18,
                                   ),
                                   SizedBox(width: 4),
@@ -615,9 +748,9 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ),
                         ),
-                        
+
                         SizedBox(width: 12),
-                        
+
                         Expanded(
                           child: ElevatedButton(
                             onPressed: _sendMessage,
@@ -651,7 +784,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ],
                 ),
               ),
-              
+
               // Tab Bar
               Container(
                 decoration: BoxDecoration(
@@ -697,7 +830,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ],
                 ),
               ),
-              
+
               // Tab Content
               Expanded(
                 child: TabBarView(
@@ -712,74 +845,6 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ],
           ),
-        ),
-      ),
-      
-      // Bottom Navigation
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-            HapticFeedback.selectionClick();
-            _handleBottomNavTap(index);
-          },
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.business_outlined),
-              activeIcon: Icon(Icons.business),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble_outline),
-              activeIcon: Icon(Icons.chat_bubble),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: '',
-            ),
-          ],
         ),
       ),
     );
@@ -797,13 +862,7 @@ class _ProfilePageState extends State<ProfilePage>
           ),
         ),
         SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
       ],
     );
   }
@@ -814,26 +873,16 @@ class _ProfilePageState extends State<ProfilePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.business_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.business_outlined, size: 64, color: Colors.grey[400]),
             SizedBox(height: 16),
             Text(
               'No properties available',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             SizedBox(height: 8),
             Text(
               'Properties will appear here once added',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             ),
           ],
         ),
@@ -864,92 +913,46 @@ class _ProfilePageState extends State<ProfilePage>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => PropertyDetailsSheet(
-        property: property,
-        onContact: _sendMessage,
-        onShare: _shareProfile,
-      ),
+      builder:
+          (context) => PropertyDetailsSheet(
+            property: property,
+            onContact: _sendMessage,
+            onShare: _shareProfile,
+          ),
     );
   }
 
   void _showProfilePicture() {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 4),
-              ),
-              child: Icon(
-                Icons.person,
-                size: 100,
-                color: Colors.grey[600],
-              ),
+      builder:
+          (context) => Dialog(
+            backgroundColor: Colors.transparent,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 4),
+                  ),
+                  child: Icon(Icons.person, size: 100, color: Colors.grey[600]),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  userProfile['name'],
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 20),
-            Text(
-              userProfile['name'],
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _handleBottomNavTap(int index) {
-    String message = '';
-    IconData icon = Icons.info;
-    
-    switch (index) {
-      case 0:
-        message = 'Navigate to Home';
-        icon = Icons.home;
-        break;
-      case 1:
-        message = 'Navigate to Properties';
-        icon = Icons.business;
-        break;
-      case 2:
-        message = 'Add New Property';
-        icon = Icons.add_circle;
-        break;
-      case 3:
-        message = 'Navigate to Messages';
-        icon = Icons.message;
-        break;
-      case 4:
-        // Already on profile
-        return;
-    }
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(icon, color: Colors.white, size: 20),
-            SizedBox(width: 8),
-            Text(message),
-          ],
-        ),
-        duration: Duration(seconds: 2),
-        backgroundColor: Colors.blue,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: EdgeInsets.all(16),
-      ),
+          ),
     );
   }
 }
@@ -996,10 +999,11 @@ class PropertyGridItem extends StatelessWidget {
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
+                        value:
+                            loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
                       ),
                     ),
                   );
@@ -1024,10 +1028,7 @@ class PropertyGridItem extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.3),
-                  ],
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
                 ),
               ),
             ),
@@ -1048,11 +1049,7 @@ class PropertyGridItem extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Icon(
-                    Icons.play_arrow,
-                    color: Colors.blue,
-                    size: 20,
-                  ),
+                  child: Icon(Icons.play_arrow, color: Colors.blue, size: 20),
                 ),
               ),
 
@@ -1164,7 +1161,7 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                
+
                 // Scrollable content
                 Expanded(
                   child: SingleChildScrollView(
@@ -1195,20 +1192,26 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                   widget.property.imageUrl,
                                   fit: BoxFit.cover,
                                 ),
-                                
+
                                 // Top overlay with favorite and type
                                 Positioned(
                                   top: 12,
                                   left: 12,
                                   right: 12,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: Colors.blue,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         child: Text(
                                           widget.property.type,
@@ -1224,12 +1227,19 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                         child: Container(
                                           padding: EdgeInsets.all(6),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.9),
+                                            color: Colors.white.withOpacity(
+                                              0.9,
+                                            ),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
-                                            isFavorite ? Icons.favorite : Icons.favorite_border,
-                                            color: isFavorite ? Colors.red : Colors.grey[600],
+                                            isFavorite
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color:
+                                                isFavorite
+                                                    ? Colors.red
+                                                    : Colors.grey[600],
                                             size: 20,
                                           ),
                                         ),
@@ -1237,7 +1247,7 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                     ],
                                   ),
                                 ),
-                                
+
                                 // Video play button
                                 if (widget.property.isVideo)
                                   Center(
@@ -1248,7 +1258,9 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                         shape: BoxShape.circle,
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(0.2),
+                                            color: Colors.black.withOpacity(
+                                              0.2,
+                                            ),
                                             blurRadius: 8,
                                             offset: Offset(0, 4),
                                           ),
@@ -1265,7 +1277,7 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                             ),
                           ),
                         ),
-                        
+
                         // Property details
                         Padding(
                           padding: EdgeInsets.all(16),
@@ -1283,7 +1295,11 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                               SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                                  Icon(
+                                    Icons.location_on,
+                                    size: 16,
+                                    color: Colors.grey[600],
+                                  ),
                                   SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
@@ -1296,7 +1312,7 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                   ),
                                 ],
                               ),
-                              
+
                               if (widget.property.price > 0) ...[
                                 SizedBox(height: 12),
                                 Text(
@@ -1308,25 +1324,34 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                   ),
                                 ),
                               ],
-                              
+
                               // Property specifications
                               if (widget.property.bedrooms > 0) ...[
                                 SizedBox(height: 16),
                                 Row(
                                   children: [
-                                    _buildSpecItem(Icons.bed, '${widget.property.bedrooms} Beds'),
+                                    _buildSpecItem(
+                                      Icons.bed,
+                                      '${widget.property.bedrooms} Beds',
+                                    ),
                                     SizedBox(width: 20),
-                                    _buildSpecItem(Icons.bathtub, '${widget.property.bathrooms} Baths'),
+                                    _buildSpecItem(
+                                      Icons.bathtub,
+                                      '${widget.property.bathrooms} Baths',
+                                    ),
                                     SizedBox(width: 20),
-                                    _buildSpecItem(Icons.square_foot, '${widget.property.area} sqft'),
+                                    _buildSpecItem(
+                                      Icons.square_foot,
+                                      '${widget.property.area} sqft',
+                                    ),
                                   ],
                                 ),
                               ],
-                              
+
                               SizedBox(height: 16),
                               Divider(color: Colors.grey[300]),
                               SizedBox(height: 16),
-                              
+
                               // Description
                               Text(
                                 'Description',
@@ -1345,23 +1370,34 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                   height: 1.5,
                                 ),
                               ),
-                              
+
                               SizedBox(height: 24),
-                              
+
                               // Action buttons
                               Row(
                                 children: [
                                   Expanded(
                                     child: ElevatedButton.icon(
-                                      onPressed: widget.onContact,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Agentscreen(),
+                                          ),
+                                        );
+                                      },
                                       icon: Icon(Icons.message),
                                       label: Text('Contact Agent'),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.blue,
                                         foregroundColor: Colors.white,
-                                        padding: EdgeInsets.symmetric(vertical: 16),
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1381,7 +1417,7 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                   ),
                                 ],
                               ),
-                              
+
                               SizedBox(height: 20),
                             ],
                           ),

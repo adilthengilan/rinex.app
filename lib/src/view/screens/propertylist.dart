@@ -146,7 +146,7 @@ class _PropertylistState extends State<Propertylist> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const RealEstateAgentsScreen()),
+                    MaterialPageRoute(builder: (context) => const Agentscreen()),
                   );
                 },
               ),

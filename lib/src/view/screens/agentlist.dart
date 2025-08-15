@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-
-
-class RealEstateAgentsScreen extends StatefulWidget {
-  const RealEstateAgentsScreen({super.key});
+class Agentscreen extends StatefulWidget {
+  const Agentscreen({super.key});
 
   @override
-  _RealEstateAgentsScreenState createState() => _RealEstateAgentsScreenState();
+  _AgentscreenState createState() => _AgentscreenState();
 }
 
-class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
+class _AgentscreenState extends State<Agentscreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Agent> agents = [
     Agent(
@@ -22,35 +20,35 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
     Agent(
       name: "Sarah Johnson",
       company: "Elite Real Estate",
-      propertyCount: 156,
+      propertyCount: 189,
       profileImage: "lib/assets/buyer.jpg",
       isVerified: true,
     ),
     Agent(
       name: "Michael Brown",
       company: "Luxury Homes",
-      propertyCount: 203,
+      propertyCount: 189,
       profileImage: "lib/assets/buyer.jpg",
       isVerified: true,
     ),
     Agent(
       name: "Emily Davis",
       company: "City Properties",
-      propertyCount: 134,
+      propertyCount: 189,
       profileImage: "lib/assets/buyer.jpg",
       isVerified: true,
     ),
     Agent(
       name: "David Wilson",
       company: "Metro Real Estate",
-      propertyCount: 178,
-      profileImage: "lib/assets/buyer.jpg",
+      propertyCount: 189,
+      profileImage:"lib/assets/buyer.jpg",
       isVerified: true,
     ),
   ];
 
   List<Agent> filteredAgents = [];
-  int _currentIndex = 0;
+  int totalAgentsCount = 2765; // Total count as shown in design
 
   @override
   void initState() {
@@ -75,11 +73,13 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
   void _showSortOptions() {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
           padding: EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -98,6 +98,7 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
               ),
               SizedBox(height: 20),
@@ -114,7 +115,13 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
 
   Widget _buildSortOption(String title, VoidCallback onTap) {
     return ListTile(
-      title: Text(title),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black87,
+        ),
+      ),
       onTap: () {
         onTap();
         Navigator.pop(context);
@@ -144,16 +151,15 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF8F9FA),
       body: SafeArea(
         child: Column(
           children: [
-            // Search and Sort Section
+            // Header with Back Button and Search/Sort Section
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -162,64 +168,101 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
                   ),
                 ],
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  // Search Field
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF5F5F5),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: TextField(
-                        controller: _searchController,
-                        onChanged: _filterAgents,
-                        decoration: InputDecoration(
-                          hintText: 'Search House, Apartment, etc',
-                          hintStyle: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 16,
+                  // Back Button Row
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.grey[300]!,
+                              width: 1,
+                            ),
                           ),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.blue[400],
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.black87,
+                            size: 18,
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  SizedBox(width: 12),
-                  // Sort Button
-                  GestureDetector(
-                    onTap: _showSortOptions,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF5F5F5),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.tune,
-                            color: Colors.blue[400],
+                  SizedBox(height: 16),
+                  
+                  // Search and Sort Row
+                  Row(
+                    children: [
+                      // Search Field
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF5F5F5),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          SizedBox(width: 8),
-                          Text(
-                            'Sort by',
+                          child: TextField(
+                            controller: _searchController,
+                            onChanged: _filterAgents,
                             style: TextStyle(
-                              color: Colors.grey[700],
                               fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: 'Search House, Apartment, etc',
+                              hintStyle: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: 16,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Color(0xFF4A90E2),
+                                size: 22,
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      SizedBox(width: 12),
+                      // Sort Button
+                      GestureDetector(
+                        onTap: _showSortOptions,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF5F5F5),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.tune,
+                                color: Color(0xFF4A90E2),
+                                size: 20,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Sort by',
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -227,11 +270,11 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
             
             // Agents Count
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.fromLTRB(16, 20, 16, 16),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  '${filteredAgents.length} Real Estate Agents',
+                  '$totalAgentsCount Real Estate Agents',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -258,70 +301,6 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
           ],
         ),
       ),
-      
-      // Bottom Navigation
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.business_outlined),
-              activeIcon: Icon(Icons.business),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble_outline),
-              activeIcon: Icon(Icons.chat_bubble),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: '',
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -329,6 +308,9 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         title: Text('Call ${agent.name}'),
         content: Text('Would you like to call ${agent.name} from ${agent.company}?'),
         actions: [
@@ -337,11 +319,19 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
             child: Text('Cancel'),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFF4A90E2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             onPressed: () {
               Navigator.pop(context);
-              // Here you would implement actual calling functionality
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Calling ${agent.name}...')),
+                SnackBar(
+                  content: Text('Calling ${agent.name}...'),
+                  backgroundColor: Color(0xFF4A90E2),
+                ),
               );
             },
             child: Text('Call'),
@@ -363,6 +353,7 @@ class _RealEstateAgentsScreenState extends State<RealEstateAgentsScreen> {
             : 'Unfollowed ${agent.name}'
         ),
         duration: Duration(seconds: 2),
+        backgroundColor: Color(0xFF4A90E2),
       ),
     );
   }
@@ -390,9 +381,10 @@ class AgentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: Offset(0, 2),
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -405,15 +397,41 @@ class AgentCard extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: Colors.blue[100],
                   borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
-                  child: Icon(
-                    Icons.person,
-                    size: 30,
-                    color: Colors.blue[400],
+                  child: Image.asset(
+                    agent.profileImage,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      // Fallback to a professional-looking avatar if image fails
+                      return Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF4A90E2), Color(0xFF357ABD)],
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.person,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -426,32 +444,33 @@ class AgentCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          agent.name,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                        Expanded(
+                          child: Text(
+                            agent.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                         if (agent.isVerified) ...[
-                          SizedBox(width: 8),
                           Container(
-                            padding: EdgeInsets.all(2),
+                            padding: EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: Colors.blue,
+                              color: Color(0xFF4A90E2),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
                               Icons.check,
                               color: Colors.white,
-                              size: 12,
+                              size: 14,
                             ),
                           ),
                         ],
                       ],
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: 6),
                     Text(
                       agent.company,
                       style: TextStyle(
@@ -487,33 +506,27 @@ class AgentCard extends StatelessWidget {
             children: [
               // Call Button
               Expanded(
-                child: OutlinedButton(
+                child: OutlinedButton.icon(
                   onPressed: onCall,
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.blue),
+                    side: BorderSide(color: Color(0xFF4A90E2), width: 1.5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.phone,
-                        color: Colors.blue,
-                        size: 18,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Call',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                  icon: Icon(
+                    Icons.phone,
+                    color: Color(0xFF4A90E2),
+                    size: 18,
+                  ),
+                  label: Text(
+                    'Call',
+                    style: TextStyle(
+                      color: Color(0xFF4A90E2),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -525,18 +538,19 @@ class AgentCard extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: onFollow,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: agent.isFollowed ? Colors.grey : Colors.blue,
+                    backgroundColor: agent.isFollowed ? Colors.grey[400] : Color(0xFF4A90E2),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                    elevation: 2,
                   ),
                   child: Text(
                     agent.isFollowed ? 'Following' : 'Follow',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
