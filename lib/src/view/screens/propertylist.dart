@@ -460,7 +460,11 @@ class _PropertylistState extends State<Propertylist> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () => _contactOwner(property),
+                        onPressed: () {
+                         Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Agentscreen()));
+          },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
