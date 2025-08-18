@@ -2,12 +2,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:rinex/src/view/screens/addproperty.dart';
 import 'package:rinex/src/view/screens/editprofile.dart';
 import 'package:rinex/src/view/screens/favourites.dart';
 import 'package:rinex/src/view/screens/notifications.dart';
 import 'package:rinex/src/view/screens/profile.dart';
 import 'package:rinex/src/view/screens/propertylist.dart';
+import 'package:rinex/src/view/screens/requirements.dart';
 import 'package:rinex/src/view/screens/searchpage.dart';
+import 'package:rinex/src/view/screens/settings.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -302,6 +305,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 const SizedBox(height: 30),
 
                 // Two main action buttons
+              
+                // Two main action buttons
                 Row(
                   children: [
                     // Post your property button (Blue/Filled)
@@ -324,9 +329,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(15),
                             onTap: () {
-                              Navigator.pop(context);
-                              _showPropertyOptions();
-                            },
+                         Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddPropertyPage()));
+          },
                             child: const Center(
                               child: Text(
                                 'Post your property',
@@ -367,10 +373,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           color: Colors.transparent,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(15),
-                            onTap: () {
-                              Navigator.pop(context);
-                              _showWantsOptions();
-                            },
+                               onTap: () {
+                         Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RequirementsForm()));
+          },
                             child: const Center(
                               child: Text(
                                 'Post your Wants',
@@ -432,106 +439,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 25),
 
-                // Property options
-                ...[
-                      {
-                        'icon': Icons.camera_alt_outlined,
-                        'title': 'Take Photo',
-                        'subtitle': 'Capture property images',
-                        'color': const Color(0xFF4A90E2),
-                      },
-                      {
-                        'icon': Icons.photo_library_outlined,
-                        'title': 'Choose from Gallery',
-                        'subtitle': 'Select existing photos',
-                        'color': const Color(0xFF27AE60),
-                      },
-                      {
-                        'icon': Icons.edit_outlined,
-                        'title': 'Manual Entry',
-                        'subtitle': 'Enter details manually',
-                        'color': const Color(0xFFE74C3C),
-                      },
-                    ]
-                    .map(
-                      (item) => Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Colors.grey.withOpacity(0.2),
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.08),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(15),
-                            onTap: () => Navigator.pop(context),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: (item['color'] as Color)
-                                          .withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Icon(
-                                      item['icon'] as IconData,
-                                      color: item['color'] as Color,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item['title'] as String,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            color: Color(0xFF2C3E50),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          item['subtitle'] as String,
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 16,
-                                    color: Colors.grey[400],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
 
                 const SizedBox(height: 20),
               ],
@@ -576,109 +483,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(height: 25),
-
-                // Wants options
-                ...[
-                      {
-                        'icon': Icons.search_outlined,
-                        'title': 'Looking for Property',
-                        'subtitle': 'Describe what you\'re looking for',
-                        'color': const Color(0xFF4A90E2),
-                      },
-                      {
-                        'icon': Icons.location_on_outlined,
-                        'title': 'Specific Location',
-                        'subtitle': 'Search in particular area',
-                        'color': const Color(0xFF9B59B6),
-                      },
-                      {
-                        'icon': Icons.apartment_outlined,
-                        'title': 'Property Type',
-                        'subtitle': 'Filter by property type',
-                        'color': const Color(0xFFF39C12),
-                      },
-                    ]
-                    .map(
-                      (item) => Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Colors.grey.withOpacity(0.2),
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.08),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(15),
-                            onTap: () => Navigator.pop(context),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: (item['color'] as Color)
-                                          .withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Icon(
-                                      item['icon'] as IconData,
-                                      color: item['color'] as Color,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item['title'] as String,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            color: Color(0xFF2C3E50),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          item['subtitle'] as String,
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 16,
-                                    color: Colors.grey[400],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
-
-                const SizedBox(height: 20),
               ],
             ),
           ),
