@@ -268,8 +268,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       screenWidth * 0.13, // 13% of screen width
                                   height: screenWidth * 0.13, // Keep it square
                                   decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xFFE5E7EB,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      255,
+                                      255,
+                                      255,
                                     ), // Light grey background
                                     shape: BoxShape.circle,
                                     border: Border.all(
