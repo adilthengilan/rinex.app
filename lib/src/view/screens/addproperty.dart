@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -33,14 +32,28 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
 
   // Property type dropdown
   String _selectedPropertyType = 'House';
-  final List<String> _propertyTypes = ['House', 'Apartment', 'Villa', 'Condo', 'Office'];
+  final List<String> _propertyTypes = [
+    'House',
+    'Apartment',
+    'Villa',
+    'Condo',
+    'Office',
+  ];
 
   // Furnishing status
   String _furnishingStatus = 'Unfurnished';
-  final List<String> _furnishingOptions = ['Furnished', 'Semi-Furnished', 'Unfurnished'];
+  final List<String> _furnishingOptions = [
+    'Furnished',
+    'Semi-Furnished',
+    'Unfurnished',
+  ];
 
   // Property tags
-  final List<String> _availableTags = ['Sea View', 'Prime Location', 'Corner Property'];
+  final List<String> _availableTags = [
+    'Sea View',
+    'Prime Location',
+    'Corner Property',
+  ];
   List<String> _selectedTags = [];
 
   // Boolean options
@@ -99,7 +112,9 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
   }
 
   Future<void> _takePicture() async {
-    final XFile? image = await _imagePicker.pickImage(source: ImageSource.camera);
+    final XFile? image = await _imagePicker.pickImage(
+      source: ImageSource.camera,
+    );
     if (image != null) {
       setState(() {
         _selectedImages.add(File(image.path));
@@ -120,9 +135,9 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
     if (permission.isGranted) {
       final tempDir = Directory.systemTemp;
       final audioFile = File('${tempDir.path}/recorded_audio.aac');
-      
+
       await _recorder!.startRecorder(toFile: audioFile.path);
-      
+
       setState(() {
         _isRecording = true;
         _recordingDuration = 0;
@@ -140,7 +155,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
   Future<void> _stopRecording() async {
     final path = await _recorder!.stopRecorder();
     _recordingTimer?.cancel();
-    
+
     setState(() {
       _isRecording = false;
       _recordedAudioPath = path;
@@ -201,7 +216,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
 
     // Show success message
     _showSnackBar('Property posted successfully!');
-    
+
     // Here you would typically send data to your backend
     _printFormData();
   }
@@ -231,9 +246,9 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -270,7 +285,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
                   ],
                 ),
               ),
-              
+
               // Form content
               Expanded(
                 child: SingleChildScrollView(
@@ -280,10 +295,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
                     children: [
                       Text(
                         'Please fill out the form below to add your property details',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 24),
 
@@ -293,7 +305,11 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
 
                       // Location field
                       _buildSectionTitle('Location'),
-                      _buildTextField(_locationController, 'Location', icon: Icons.location_pin),
+                      _buildTextField(
+                        _locationController,
+                        'Location',
+                        icon: Icons.location_pin,
+                      ),
 
                       // Property type dropdown
                       _buildSectionTitle('Property type'),
@@ -302,13 +318,37 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
                       // Features section
                       _buildSectionTitle('Features'),
                       _buildTextField(_areaController, 'Area', suffix: 'Sqft'),
-                      _buildNumberField(_bedroomsController, 'Bedrooms', Icons.bed),
-                      _buildNumberField(_bathroomsController, 'Bathrooms', Icons.bathroom),
-                      _buildNumberField(_kitchenController, 'Kitchen', Icons.kitchen),
+                      _buildNumberField(
+                        _bedroomsController,
+                        'Bedrooms',
+                        Icons.bed,
+                      ),
+                      _buildNumberField(
+                        _bathroomsController,
+                        'Bathrooms',
+                        Icons.bathroom,
+                      ),
+                      _buildNumberField(
+                        _kitchenController,
+                        'Kitchen',
+                        Icons.kitchen,
+                      ),
                       _buildFurnishingDropdown(),
-                      _buildNumberField(_parkingController, 'Parking Availability', Icons.local_parking),
-                      _buildTextField(_yearBuiltController, 'Year Built', icon: Icons.calendar_today),
-                      _buildTextField(_priceController, 'Price of property', icon: Icons.attach_money),
+                      _buildNumberField(
+                        _parkingController,
+                        'Parking Availability',
+                        Icons.local_parking,
+                      ),
+                      _buildTextField(
+                        _yearBuiltController,
+                        'Year Built',
+                        icon: Icons.calendar_today,
+                      ),
+                      _buildTextField(
+                        _priceController,
+                        'Price of property',
+                        icon: Icons.attach_money,
+                      ),
 
                       // Media upload section
                       _buildSectionTitle('Media Upload'),
@@ -325,7 +365,10 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
                       _buildTextField(_emailController, 'Email'),
 
                       // Additional information
-                      _buildSectionTitle('Additional Information', isOptional: true),
+                      _buildSectionTitle(
+                        'Additional Information',
+                        isOptional: true,
+                      ),
                       _buildTextField(
                         _additionalInfoController,
                         'Lift, Security, CCTV, Gym, Pool, Garden, Power Backup, Club House, Maintenance, Water Supply, etc.',
@@ -336,10 +379,14 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
                       _buildPropertyTagsSection(),
 
                       // Legal clearance and loan options
-                      _buildCheckboxOption('Legal Clearance', _legalClearance, (value) {
+                      _buildCheckboxOption('Legal Clearance', _legalClearance, (
+                        value,
+                      ) {
                         setState(() => _legalClearance = value!);
                       }),
-                      _buildCheckboxOption('Loan Available', _loanAvailable, (value) {
+                      _buildCheckboxOption('Loan Available', _loanAvailable, (
+                        value,
+                      ) {
                         setState(() => _loanAvailable = value!);
                       }),
 
@@ -416,8 +463,13 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, 
-      {IconData? icon, String? suffix, int maxLines = 1}) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint, {
+    IconData? icon,
+    String? suffix,
+    int maxLines = 1,
+  }) {
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -430,7 +482,9 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(color: Colors.grey[500]),
-          prefixIcon: icon != null ? Icon(icon, color: Colors.grey[500], size: 20) : null,
+          prefixIcon: icon != null
+              ? Icon(icon, color: Colors.grey[500], size: 20)
+              : null,
           suffixText: suffix,
           border: InputBorder.none,
           contentPadding: EdgeInsets.all(16),
@@ -439,7 +493,11 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
     );
   }
 
-  Widget _buildNumberField(TextEditingController controller, String hint, IconData icon) {
+  Widget _buildNumberField(
+    TextEditingController controller,
+    String hint,
+    IconData icon,
+  ) {
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -528,7 +586,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
           style: TextStyle(fontSize: 12, color: Colors.grey[600]),
         ),
         SizedBox(height: 12),
-        
+
         // Display selected images
         if (_selectedImages.isNotEmpty)
           Container(
@@ -545,7 +603,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
               },
             ),
           ),
-        
+
         // Upload buttons
         Row(
           children: [
@@ -558,7 +616,9 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
                   backgroundColor: Colors.white,
                   foregroundColor: Color(0xFF4A90E2),
                   side: BorderSide(color: Color(0xFF4A90E2)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
@@ -571,7 +631,9 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF4A90E2),
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
@@ -592,7 +654,11 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
         decoration: BoxDecoration(
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey[300]!, width: 2, style: BorderStyle.solid),
+          border: Border.all(
+            color: Colors.grey[300]!,
+            width: 2,
+            style: BorderStyle.solid,
+          ),
         ),
         child: Icon(Icons.add, color: Colors.grey[500], size: 30),
       ),
@@ -678,27 +744,27 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
               Expanded(
                 child: Container(
                   height: 40,
-                  child: _isRecording 
-                    ? Row(
-                        children: List.generate(20, (index) {
-                          return Container(
-                            width: 2,
-                            height: (index % 4 + 1) * 8.0,
-                            margin: EdgeInsets.symmetric(horizontal: 1),
-                            decoration: BoxDecoration(
-                              color: Color(0xFF4A90E2),
-                              borderRadius: BorderRadius.circular(1),
-                            ),
-                          );
-                        }),
-                      )
-                    : Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(1),
+                  child: _isRecording
+                      ? Row(
+                          children: List.generate(20, (index) {
+                            return Container(
+                              width: 2,
+                              height: (index % 4 + 1) * 8.0,
+                              margin: EdgeInsets.symmetric(horizontal: 1),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF4A90E2),
+                                borderRadius: BorderRadius.circular(1),
+                              ),
+                            );
+                          }),
+                        )
+                      : Container(
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(1),
+                          ),
                         ),
-                      ),
                 ),
               ),
               SizedBox(width: 16),
@@ -706,17 +772,14 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
               // Duration display
               Text(
                 _isRecording ? _formatDuration(_recordingDuration) : '00:00',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
           ),
         ),
-        
+
         SizedBox(height: 12),
-        
+
         // Audio file path display
         if (_recordedAudioPath != null)
           Container(
@@ -742,7 +805,11 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
 
         SizedBox(height: 12),
 
-        Text('OR', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[500])),
+        Text(
+          'OR',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey[500]),
+        ),
         SizedBox(height: 12),
 
         // Upload audio file button
@@ -756,11 +823,13 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
               backgroundColor: Colors.white,
               foregroundColor: Color(0xFF4A90E2),
               side: BorderSide(color: Color(0xFF4A90E2)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           ),
         ),
-        
+
         Text(
           'file name.mp3',
           style: TextStyle(fontSize: 10, color: Colors.grey[500]),
@@ -798,19 +867,23 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
             ],
           ),
         ),
-        
+
         SizedBox(height: 16),
-        
+
         // Tag options
         ..._availableTags.map((tag) {
           return Container(
             margin: EdgeInsets.only(bottom: 8),
             padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             decoration: BoxDecoration(
-              color: _selectedTags.contains(tag) ? Colors.blue[50] : Colors.grey[100],
+              color: _selectedTags.contains(tag)
+                  ? Colors.blue[50]
+                  : Colors.grey[100],
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: _selectedTags.contains(tag) ? Color(0xFF4A90E2) : Colors.transparent,
+                color: _selectedTags.contains(tag)
+                    ? Color(0xFF4A90E2)
+                    : Colors.transparent,
               ),
             ),
             child: GestureDetector(
@@ -819,10 +892,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
                 children: [
                   Text(
                     tag,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.black87),
                   ),
                   Spacer(),
                   if (_selectedTags.contains(tag))
@@ -832,13 +902,17 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
             ),
           );
         }).toList(),
-        
+
         SizedBox(height: 16),
       ],
     );
   }
 
-  Widget _buildCheckboxOption(String title, bool value, Function(bool?) onChanged) {
+  Widget _buildCheckboxOption(
+    String title,
+    bool value,
+    Function(bool?) onChanged,
+  ) {
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
@@ -848,13 +922,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
       ),
       child: Row(
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-            ),
-          ),
+          Text(title, style: TextStyle(fontSize: 16, color: Colors.black87)),
           Spacer(),
           Container(
             width: 24,
@@ -867,9 +935,9 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
               ),
               color: value ? Color(0xFF4A90E2) : Colors.transparent,
             ),
-            child: value 
-              ? Icon(Icons.check, color: Colors.white, size: 16)
-              : null,
+            child: value
+                ? Icon(Icons.check, color: Colors.white, size: 16)
+                : null,
           ),
         ],
       ),
@@ -880,9 +948,6 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
 // Extension to make any widget tappable
 extension WidgetExtension on Widget {
   Widget asGestureDetector({required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: this,
-    );
+    return GestureDetector(onTap: onTap, child: this);
   }
 }
