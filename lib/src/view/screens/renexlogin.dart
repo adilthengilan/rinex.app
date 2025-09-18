@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RenexLoginScreen extends StatefulWidget {
+  const RenexLoginScreen({super.key});
+
   @override
   _RenexLoginScreenState createState() => _RenexLoginScreenState();
 }
