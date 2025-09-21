@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/bottomAppBar.dart';
 import 'package:rinex/src/view/getstart.dart';
+import 'package:rinex/src/view/login.dart';
 import 'package:rinex/src/view/screens/home.dart';
 
 void main() {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         fontFamily:
             'Roboto', // You can change this to a custom font if you have one
       ),
-      home: NavigationPage(),
+      home: LoginScreen(),
     );
   }
 }
