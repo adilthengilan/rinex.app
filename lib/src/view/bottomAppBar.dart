@@ -53,6 +53,12 @@ class _NavigationPageState extends State<NavigationPage> {
               unselectedIcon: IconlyLight.heart,
               selectedColor: Colors.blue,
             ),
+            CrystalNavigationBarItem(
+              unselectedColor: const Color.fromARGB(0, 255, 255, 255),
+              icon: IconlyBold.activity,
+              unselectedIcon: IconlyLight.activity,
+              selectedColor: const Color.fromARGB(0, 33, 149, 243),
+            ),
 
             /// Add
             CrystalNavigationBarItem(
