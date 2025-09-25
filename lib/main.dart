@@ -5,7 +5,7 @@ import 'package:rinex/src/view/login.dart';
 import 'package:rinex/src/view/screens/home.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp()); 
 }
 
 class MyApp extends StatelessWidget {
