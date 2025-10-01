@@ -16,17 +16,23 @@ class _ProfilePageState extends State<ProfilePage> {
   File? profileImage;
   final ImagePicker _picker = ImagePicker();
 
-  // Sample property images URLs
+  
   final List<String> listingImages = [
     'assets/property4.jpg',
     'assets/property2.jpg',
- '   assets/apartment1.jpg'
+ '   assets/apartment1.jpg',
+  'assets/property4.jpg',
+     'assets/property2.jpg',
+      'assets/apartment1.jpg'
   ];
 
   final List<String> clipsImages = [
     'assets/property4.jpg',
      'assets/property2.jpg',
-      'assets/apartment1.jpg'
+      'assets/apartment1.jpg',
+      'assets/building.jpg',
+      
+
   ];
 
   Future<void> _pickProfileImage() async {

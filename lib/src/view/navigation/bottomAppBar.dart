@@ -2,9 +2,10 @@ import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/screens/home.dart';
-import 'package:rinex/src/view/screens/profile.dart';
-import 'package:rinex/src/view/screens/propertylist.dart';
+
 import 'package:iconly/iconly.dart';
+import 'package:rinex/src/view/screens/profile_Page/profile.dart';
+import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rinex/src/view/bottomAppBar.dart';
+import 'package:rinex/src/view/navigation/bottomAppBar.dart';
 import 'package:rinex/src/view/getstart.dart';
-import 'package:rinex/src/view/login.dart';
+
+
+
+
+import 'package:rinex/src/view/auth/login.dart';
+import 'package:rinex/src/view/onboard.dart';
 
 import 'package:rinex/src/view/screens/home.dart';
 
@@ -23,7 +28,11 @@ class MyApp extends StatelessWidget {
         fontFamily:
             'Roboto', // You can change this to a custom font if you have one
       ),
+
+      
+
       home: HomeScreen(),
+
     );
   }
 }

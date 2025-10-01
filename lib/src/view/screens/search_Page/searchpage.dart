@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rinex/src/view/screens/favourites.dart';
-import 'package:rinex/src/view/screens/notifications.dart';
-import 'package:rinex/src/view/screens/propertylist.dart';
+import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
+import 'package:rinex/src/view/screens/notification_Page/notifications.dart';
+
+import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
+
 
 class Searchpage extends StatefulWidget {
   const Searchpage({super.key});

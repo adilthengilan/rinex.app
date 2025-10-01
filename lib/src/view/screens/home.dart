@@ -2,15 +2,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:iconly/iconly.dart';
-import 'package:rinex/src/view/screens/addproperty.dart';
-import 'package:rinex/src/view/screens/editprofile.dart';
-import 'package:rinex/src/view/screens/favourites.dart';
-import 'package:rinex/src/view/screens/notifications.dart';
-import 'package:rinex/src/view/screens/profile.dart';
-import 'package:rinex/src/view/screens/propertylist.dart';
-import 'package:rinex/src/view/screens/requirements.dart';
-import 'package:rinex/src/view/screens/searchpage.dart';
-import 'package:rinex/src/view/screens/settings.dart';
+import 'package:rinex/src/view/screens/bottom_sheet/addProperty_Page/addproperty.dart';
+import 'package:rinex/src/view/screens/bottom_sheet/requirementAdd_Page/requirements.dart';
+import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
+import 'package:rinex/src/view/screens/profile_Page/profile.dart';
+import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
+
+
+
+import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -120,11 +121,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     {'icon': HugeIcons.strokeRoundedBuilding05, 'label': 'Apartments'},
     {'icon': HugeIcons.strokeRoundedStore01, 'label': 'Commercial'},
     {'icon': HugeIcons.strokeRoundedOffice, 'label': 'Offices'},
-    {'icon': HugeIcons.strokeRoundedHome09, 'label': 'Home'},
-    {'icon': HugeIcons.strokeRoundedBuilding05, 'label': 'Apartments'},
-    {'icon': HugeIcons.strokeRoundedStore01, 'label': 'Commercial'},
-    {'icon': HugeIcons.strokeRoundedOffice, 'label': 'Offices'},
-   
+ 
    
   ];
 
@@ -475,8 +472,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
-
-  Widget _buildTopLocationsSection(Size size) {
+Widget _buildTopLocationsSection(Size size) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25),
       child: Column(
@@ -533,10 +529,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             width: 70,
             height: 70,
             decoration: BoxDecoration(
+              color: const Color(0xFFE3F2FD),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withOpacity(0.08),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -547,22 +544,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 location['image']!,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey[300],
+                  color: const Color(0xFFE3F2FD),
                   child: const Icon(
                     Icons.location_city,
                     size: 30,
-                    color: Colors.grey,
+                    color: Color(0xFF1976D2),
                   ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Text(
             location['name']!,
             style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
               color: const Color(0xFF2C3E50),
             ),
             textAlign: TextAlign.center,
@@ -573,7 +570,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
-
   Widget _buildNearbyEstatesSection(Size size) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25),
@@ -736,7 +732,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ? Icons.favorite
                           : Icons.favorite_outline,
                       color: estate['isFavorite']
-                          ? Colors.red
+                          ? Colors.blue
                           : const Color(0xFF1976D2),
                       size: 16,
                     ),
@@ -1383,7 +1379,7 @@ Widget _buildFeaturedPropertiesSection(Size size) {
                                     ),
                                     child: Icon(
                                       property['isFavorite'] ? Icons.favorite : Icons.favorite_border,
-                                      color: property['isFavorite'] ? Colors.red : Colors.blue,
+                                      color: property['isFavorite'] ? Colors.blue : Colors.blue,
                                       size: 16,
                                     ),
                                   ),

@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rinex/src/view/screens/agentlist.dart';
+import 'package:rinex/src/view/screens/agentList_Page/agentlist.dart';
+
 
 class Editprofile extends StatefulWidget {
   @override

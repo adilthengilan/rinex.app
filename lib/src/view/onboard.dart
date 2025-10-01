@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rinex/src/view/login.dart';
-import 'package:rinex/src/view/register.dart';
+import 'package:rinex/src/view/auth/login.dart';
+import 'package:rinex/src/view/auth/register.dart';
+
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);

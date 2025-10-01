@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:rinex/src/view/screens/propertylist.dart';
+import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
+
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
