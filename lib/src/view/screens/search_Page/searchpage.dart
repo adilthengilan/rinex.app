@@ -1,12 +1,13 @@
+
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
 import 'package:rinex/src/view/screens/notification_Page/notifications.dart';
-
 import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
 
-
 class Searchpage extends StatefulWidget {
-  const Searchpage({super.key});
+  final String? searchQuery;
+
+  const Searchpage({super.key, this.searchQuery});
 
   @override
   _SearchpageState createState() => _SearchpageState();
@@ -22,7 +23,8 @@ class _SearchpageState extends State<Searchpage> {
   @override
   void initState() {
     super.initState();
-    // Initialize property data
+    
+    // Initialize property data with property types
     allProperties = [
       Property(
         id: 'prop_1',
@@ -37,28 +39,81 @@ class _SearchpageState extends State<Searchpage> {
         kitchen: '01',
         yearBuilt: '2022',
         isLiked: false,
+        type: 'Apartment',
       ),
       Property(
         id: 'prop_2',
         imageUrl: 'assets/property2.jpg',
-        title: 'Sky Dandelions Apartment',
-        location: 'Jakarta, Indonesia',
+        title: 'Luxury Villa Paradise',
+        location: 'Bali, Indonesia',
         rating: 4.9,
-        price: 10000,
+        price: 15000,
         area: '1200 Sqft',
-        bedrooms: '03',
-        bathrooms: '02',
+        bedrooms: '04',
+        bathrooms: '03',
         kitchen: '01',
         yearBuilt: '2021',
         isLiked: false,
+        type: 'Villa',
+      ),
+      Property(
+        id: 'prop_3',
+        imageUrl: 'assets/apartment1.jpg',
+        title: 'Modern City Apartment',
+        location: 'Jakarta, Indonesia',
+        rating: 4.7,
+        price: 8000,
+        area: '900 Sqft',
+        bedrooms: '02',
+        bathrooms: '02',
+        kitchen: '01',
+        yearBuilt: '2023',
+        isLiked: false,
+        type: 'Apartment',
+      ),
+      Property(
+        id: 'prop_4',
+        imageUrl: 'assets/building.jpg',
+        title: 'Commercial Building Complex',
+        location: 'Jakarta, Indonesia',
+        rating: 4.8,
+        price: 25000,
+        area: '2000 Sqft',
+        bedrooms: '05',
+        bathrooms: '04',
+        kitchen: '02',
+        yearBuilt: '2020',
+        isLiked: false,
+        type: 'Building',
+      ),
+      Property(
+        id: 'prop_5',
+        imageUrl: 'assets/property4.jpg',
+        title: 'Cozy Family House',
+        location: 'Surabaya, Indonesia',
+        rating: 4.6,
+        price: 12000,
+        area: '1500 Sqft',
+        bedrooms: '03',
+        bathrooms: '02',
+        kitchen: '01',
+        yearBuilt: '2019',
+        isLiked: false,
+        type: 'House',
       ),
     ];
+    
     filteredProperties = List.from(allProperties);
     _loadFavoriteStates();
+    
+    // If searchQuery is provided, apply filter
+    if (widget.searchQuery != null && widget.searchQuery!.isNotEmpty) {
+      _searchController.text = widget.searchQuery!;
+      _filterProperties(widget.searchQuery!);
+    }
   }
 
   void _loadFavoriteStates() {
-    // Load favorite states from SharedFavoriteManager
     List<Map<String, dynamic>> favorites = _favoriteManager.getFavoriteProperties();
     Set<String> favoriteIds = favorites.map((fav) => fav['id'].toString()).toSet();
     
@@ -79,7 +134,8 @@ class _SearchpageState extends State<Searchpage> {
       } else {
         filteredProperties = allProperties.where((property) {
           return property.title.toLowerCase().contains(query.toLowerCase()) ||
-              property.location.toLowerCase().contains(query.toLowerCase());
+              property.location.toLowerCase().contains(query.toLowerCase()) ||
+              property.type.toLowerCase().contains(query.toLowerCase());
         }).toList();
       }
     });
@@ -100,6 +156,9 @@ class _SearchpageState extends State<Searchpage> {
           break;
         default:
           filteredProperties = List.from(allProperties);
+          if (widget.searchQuery != null && widget.searchQuery!.isNotEmpty) {
+            _filterProperties(widget.searchQuery!);
+          }
       }
     });
   }
@@ -109,7 +168,6 @@ class _SearchpageState extends State<Searchpage> {
       property.isLiked = !property.isLiked;
       
       if (property.isLiked) {
-        // Add to favorites
         _favoriteManager.addFavorite(property.id);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -127,7 +185,6 @@ class _SearchpageState extends State<Searchpage> {
           ),
         );
       } else {
-        // Remove from favorites
         _favoriteManager.removeFavorite(property.id);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -206,7 +263,6 @@ class _SearchpageState extends State<Searchpage> {
       context,
       MaterialPageRoute(builder: (context) => FavoriteScreen()),
     );
-    // Reload favorite states when returning from favorites screen
     _loadFavoriteStates();
   }
 
@@ -217,13 +273,8 @@ class _SearchpageState extends State<Searchpage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Search Bar
             _buildSearchHeader(),
-            
-            // Location and Sort Bar
             _buildLocationSortBar(),
-            
-            // Property List
             Expanded(
               child: filteredProperties.isEmpty
                   ? Center(
@@ -295,7 +346,7 @@ class _SearchpageState extends State<Searchpage> {
               controller: _searchController,
               onChanged: _filterProperties,
               decoration: InputDecoration(
-                hintText: 'Search House, Apartment, etc',
+                hintText: 'Search Apartment, Villa, Building, House',
                 hintStyle: TextStyle(
                   color: Colors.grey[500],
                   fontSize: 14,
@@ -434,7 +485,6 @@ class _SearchpageState extends State<Searchpage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Property Image
           Stack(
             children: [
               Container(
@@ -467,7 +517,6 @@ class _SearchpageState extends State<Searchpage> {
                   ),
                 ),
               ),
-              // Like Button
               Positioned(
                 top: 15,
                 left: 15,
@@ -477,7 +526,7 @@ class _SearchpageState extends State<Searchpage> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: property.isLiked ? Colors.blue : Colors.blue,
+                      color: Colors.blue,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -490,14 +539,11 @@ class _SearchpageState extends State<Searchpage> {
               ),
             ],
           ),
-          
-          // Property Details
           Padding(
             padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title and Price Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -521,10 +567,7 @@ class _SearchpageState extends State<Searchpage> {
                     ),
                   ],
                 ),
-                
                 SizedBox(height: 8),
-                
-                // Location and Rating Row
                 Row(
                   children: [
                     Icon(Icons.location_on, color: Colors.blue, size: 16),
@@ -548,7 +591,7 @@ class _SearchpageState extends State<Searchpage> {
                           Icon(Icons.home, color: Colors.grey[700], size: 14),
                           SizedBox(width: 4),
                           Text(
-                            '3 BHK',
+                            property.type,
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontSize: 12,
@@ -570,10 +613,7 @@ class _SearchpageState extends State<Searchpage> {
                     ),
                   ],
                 ),
-                
                 SizedBox(height: 16),
-                
-                // Property Features Grid
                 Row(
                   children: [
                     Expanded(
@@ -592,9 +632,7 @@ class _SearchpageState extends State<Searchpage> {
                     ),
                   ],
                 ),
-                
                 SizedBox(height: 12),
-                
                 Row(
                   children: [
                     Expanded(
@@ -613,9 +651,7 @@ class _SearchpageState extends State<Searchpage> {
                     ),
                   ],
                 ),
-                
                 SizedBox(height: 12),
-                
                 Row(
                   children: [
                     Expanded(
@@ -634,9 +670,7 @@ class _SearchpageState extends State<Searchpage> {
                     ),
                   ],
                 ),
-                
                 SizedBox(height: 12),
-                
                 _buildFeatureItem(
                   icon: Icons.kitchen,
                   label: 'Kitchen',
@@ -705,6 +739,7 @@ class Property {
   final String bathrooms;
   final String kitchen;
   final String yearBuilt;
+  final String type;
   bool isLiked;
 
   Property({
@@ -720,5 +755,6 @@ class Property {
     required this.kitchen,
     required this.yearBuilt,
     required this.isLiked,
+    required this.type,
   });
 }

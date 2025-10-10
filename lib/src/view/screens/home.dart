@@ -13,6 +13,7 @@ import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
 import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:rinex/src/view/screens/search_Page/shuffle.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -1067,8 +1068,8 @@ Widget _buildTopLocationsSection(Size size) {
           ),
         ),
       ),
-      floatingActionButton: _buildFloatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: _buildFloatingActionButton(),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     //   bottomNavigationBar: _buildBottomNavigationBar(),
      );
   }
@@ -1105,7 +1106,7 @@ Widget _buildTopLocationsSection(Size size) {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Searchpage()),
+            MaterialPageRoute(builder: (context) => ShuffleScreen()),
           );
         },
         child: Container(
@@ -1236,7 +1237,10 @@ Widget _buildFeaturedPropertiesSection(Size size) {
             ),
             GestureDetector(
               onTap: () {
-                // Handle navigation to property list
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Searchpage()),
+                );
               },
               child: const Text(
                 "view all",

@@ -5,7 +5,9 @@ import 'package:rinex/src/view/screens/home.dart';
 
 import 'package:iconly/iconly.dart';
 import 'package:rinex/src/view/screens/profile_Page/profile.dart';
-import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
+import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
+import 'package:rinex/src/view/screens/search_Page/shuffle.dart';
+
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -15,7 +17,7 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  final pages = [HomeScreen(), Propertylist(), ProfilePage(), ProfilePage()];
+  final pages = [HomeScreen(), ProfilePage(), ShuffleScreen(), Searchpage()];
   int index = 0;
 
   @override

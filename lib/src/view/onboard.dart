@@ -18,7 +18,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<Map<String, String>> onboardingData = [
     {
       'image':
-          'lib/assets/property.jpg', // Using your provided image for the map illustration
+          'assets/property.jpg', // Using your provided image for the map illustration
       'title_part1': 'Lorem ',
       'title_part2': 'Ipsum is simply',
       'title_part3': '\ndummy text printing',
@@ -27,7 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     },
     {
       'image':
-          'lib/assets/onboard2.jpg', // Using your provided image for the calendar illustration
+          'assets/onboard2.jpg', // Using your provided image for the calendar illustration
       'title_part1': 'Lorem ',
       'title_part2': 'Ipsum is simply',
       'title_part3': '\ndummy text printing',
@@ -37,7 +37,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     // The last page will have the Register and Log In buttons
     {
       'image':
-          'lib/assets/property3.jpg', // Re-using 4th.jpg or use a different one if you have it for the last page
+          'assets/property3.jpg', // Re-using 4th.jpg or use a different one if you have it for the last page
       'title_part1': 'Lorem ',
       'title_part2': 'Ipsum is simply',
       'title_part3': '\ndummy text printing',
