@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'dart:math';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -15,24 +15,22 @@ class _ProfilePageState extends State<ProfilePage> {
   String activeTab = 'listing';
   File? profileImage;
   final ImagePicker _picker = ImagePicker();
+  final Random _random = Random();
 
-  
-  final List<String> listingImages = [
+  List<String> listingImages = [
     'assets/property4.jpg',
     'assets/property2.jpg',
- '   assets/apartment1.jpg',
-  'assets/property4.jpg',
-     'assets/property2.jpg',
-      'assets/apartment1.jpg'
+    'assets/apartment1.jpg',
+    'assets/property4.jpg',
+    'assets/property2.jpg',
+    'assets/apartment1.jpg'
   ];
 
-  final List<String> clipsImages = [
+  List<String> clipsImages = [
     'assets/property4.jpg',
-     'assets/property2.jpg',
-      'assets/apartment1.jpg',
-      'assets/building.jpg',
-      
-
+    'assets/property2.jpg',
+    'assets/apartment1.jpg',
+    'assets/building.jpg',
   ];
 
   Future<void> _pickProfileImage() async {
@@ -51,87 +49,115 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _handleMessageClick() {
-    // Navigate to messages page
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Opening messages...')),
     );
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => MessagesPage()));
+  }
+
+  void _shuffleImages() {
+    setState(() {
+      if (activeTab == 'listing') {
+        listingImages.shuffle(_random);
+      } else {
+        clipsImages.shuffle(_random);
+      }
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Images shuffled!'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  double _getImageHeight(int index) {
+    List<double> ratios = [1.0, 1.3, 0.8, 1.2, 0.9, 1.1];
+    double baseWidth = (MediaQuery.of(context).size.width - 4) / 3;
+    return baseWidth * ratios[index % ratios.length];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            _buildHeader(),
-            
-            // Content
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildProfileSection(),
-                    _buildTabs(),
-                    _buildContentGrid(),
-                  ],
-                ),
+      backgroundColor: Colors.white,
+      appBar: _buildAppBar(),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildProfileSection(),
+                  _buildTabs(),
+                  _buildContentGrid(),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Name Example',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Icon(
-                Icons.verified,
-                color: Colors.blue.shade500,
-                size: 20,
-              ),
-            ],
-          ),
-          IconButton(
-            icon: const Icon(Icons.send, color: Colors.blue),
-            onPressed: _handleMessageClick,
           ),
         ],
       ),
     );
   }
 
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.black),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            'Name Example',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Icon(
+            Icons.verified,
+            color: Colors.blue.shade500,
+            size: 20,
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.shuffle, color: Colors.black87),
+          onPressed: _shuffleImages,
+          tooltip: 'Shuffle Images',
+        ),
+        IconButton(
+          icon: const Icon(Icons.send, color: Colors.black87),
+          onPressed: _handleMessageClick,
+          tooltip: 'Send Message',
+        ),
+      ],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(
+          color: Colors.grey.shade200,
+          height: 1,
+        ),
+      ),
+    );
+  }
+
   Widget _buildProfileSection() {
-    return Padding(
+    return Container(
+      color: Colors.white,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Profile picture and stats
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Profile Picture
               GestureDetector(
                 onTap: _pickProfileImage,
                 child: Container(
@@ -156,8 +182,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(width: 24),
-              
-              // Stats
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -170,10 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          
           const SizedBox(height: 16),
-          
-          // Username
           Text(
             'RNX-11220FR',
             style: TextStyle(
@@ -181,10 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.grey.shade600,
             ),
           ),
-          
           const SizedBox(height: 16),
-          
-          // Action Buttons
           Row(
             children: [
               Expanded(
@@ -261,6 +279,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildTabs() {
     return Container(
+      color: Colors.white,
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: Colors.grey.shade200)),
       ),
@@ -329,65 +348,72 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildContentGrid() {
     List<String> images = activeTab == 'listing' ? listingImages : clipsImages;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double itemWidth = (screenWidth - 4) / 3;
     
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+    return Container(
+      color: Colors.white,
       padding: const EdgeInsets.all(2),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 2,
+      child: Wrap(
+        spacing: 2,
+        runSpacing: 2,
+        children: List.generate(images.length, (index) {
+          return SizedBox(
+            width: itemWidth,
+            height: _getImageHeight(index),
+            child: _buildImageItem(images[index], index),
+          );
+        }),
       ),
-      itemCount: images.length,
-      itemBuilder: (context, index) {
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.network(
-              images[index],
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: Colors.grey.shade300,
-                  child: Icon(Icons.image, color: Colors.grey.shade400),
-                );
-              },
+    );
+  }
+
+  Widget _buildImageItem(String imagePath, int index) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          imagePath,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: Colors.grey.shade300,
+              child: Icon(Icons.image, color: Colors.grey.shade400),
+            );
+          },
+        ),
+        if ((activeTab == 'listing' && index > 1) || activeTab == 'clips')
+          Container(
+            color: Colors.black.withOpacity(0.2),
+            child: const Center(
+              child: Icon(
+                Icons.play_circle_filled,
+                color: Colors.white,
+                size: 32,
+              ),
             ),
-            if (activeTab == 'listing' && index > 1 || activeTab == 'clips')
-              Container(
-                color: Colors.black.withOpacity(0.2),
-                child: const Center(
-                  child: Icon(
-                    Icons.play_circle_filled,
-                    color: Colors.white,
-                    size: 32,
+          ),
+        if (activeTab == 'clips')
+          Positioned(
+            bottom: 8,
+            left: 8,
+            child: Text(
+              '${(index + 1) * 15}K views',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                shadows: [
+                  Shadow(
+                    color: Colors.black,
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
                   ),
-                ),
+                ],
               ),
-            if (activeTab == 'clips')
-              Positioned(
-                bottom: 8,
-                left: 8,
-                child: Text(
-                  '${(index + 1) * 15}K views',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black,
-                        offset: Offset(1, 1),
-                        blurRadius: 2,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
+            ),
+          ),
+      ],
     );
   }
 }

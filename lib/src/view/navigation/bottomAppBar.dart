@@ -5,6 +5,7 @@ import 'package:rinex/src/view/screens/home.dart';
 
 import 'package:iconly/iconly.dart';
 import 'package:rinex/src/view/screens/profile_Page/profile.dart';
+import 'package:rinex/src/view/screens/reels.dart';
 import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
 import 'package:rinex/src/view/screens/search_Page/shuffle.dart';
 
@@ -17,7 +18,7 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  final pages = [HomeScreen(), ProfilePage(), ShuffleScreen(), Searchpage()];
+  final pages = [HomeScreen(), Searchpage(), Searchpage(), ReelsScreen(), ProfilePage()];
   int index = 0;
 
   @override
@@ -56,6 +57,7 @@ class _NavigationPageState extends State<NavigationPage> {
               unselectedIcon: IconlyLight.heart,
               selectedColor: Colors.blue,
             ),
+            
             CrystalNavigationBarItem(
               unselectedColor: const Color.fromARGB(0, 255, 255, 255),
               icon: IconlyBold.activity,
