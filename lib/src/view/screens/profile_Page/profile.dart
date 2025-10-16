@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:math';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -15,30 +14,56 @@ class _ProfilePageState extends State<ProfilePage> {
   String activeTab = 'listing';
   File? profileImage;
   final ImagePicker _picker = ImagePicker();
-  final Random _random = Random();
-
-  List<String> listingImages = [
-    'assets/property4.jpg',
-    'assets/property2.jpg',
-    'assets/apartment1.jpg',
-    'assets/property4.jpg',
-    'assets/property2.jpg',
-    'assets/apartment1.jpg'
-  ];
-
-  List<String> clipsImages = [
-    'assets/property4.jpg',
-    'assets/property2.jpg',
+  
+  final List<String> listingImages = [
     'assets/apartment1.jpg',
     'assets/building.jpg',
+    'assets/property2.jpg',
+    'assets/property4.jpg',
+    'assets/property4.jpg',
+     'assets/apartment1.jpg',
+    'assets/building.jpg',
+    'assets/property2.jpg',
+    'assets/property4.jpg',
+    'assets/property4.jpg'
+  ];
+
+  final List<String> clipsImages = [
+    'assets/apartment1.jpg',
+    'assets/building.jpg',
+    'assets/property2.jpg',
+    'assets/property4.jpg',
+    'assets/property4.jpg'
   ];
 
   Future<void> _pickProfileImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        profileImage = File(image.path);
-      });
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        setState(() {
+          profileImage = File(image.path);
+        });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile picture updated!'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error picking image: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -46,34 +71,21 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       isFollowing = !isFollowing;
     });
-  }
-
-  void _handleMessageClick() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Opening messages...')),
-    );
-  }
-
-  void _shuffleImages() {
-    setState(() {
-      if (activeTab == 'listing') {
-        listingImages.shuffle(_random);
-      } else {
-        clipsImages.shuffle(_random);
-      }
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Images shuffled!'),
-        duration: Duration(seconds: 1),
+      SnackBar(
+        content: Text(isFollowing ? 'Now following!' : 'Unfollowed'),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
 
-  double _getImageHeight(int index) {
-    List<double> ratios = [1.0, 1.3, 0.8, 1.2, 0.9, 1.1];
-    double baseWidth = (MediaQuery.of(context).size.width - 4) / 3;
-    return baseWidth * ratios[index % ratios.length];
+  void _handleMessageClick() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Opening messages...'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -105,7 +117,13 @@ class _ProfilePageState extends State<ProfilePage> {
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/home',
+            (route) => true,
+          );
+        },
       ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -119,19 +137,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           const SizedBox(width: 6),
-          Icon(
+          const Icon(
             Icons.verified,
-            color: Colors.blue.shade500,
+            color: Colors.blue,
             size: 20,
           ),
         ],
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.shuffle, color: Colors.black87),
-          onPressed: _shuffleImages,
-          tooltip: 'Shuffle Images',
-        ),
         IconButton(
           icon: const Icon(Icons.send, color: Colors.black87),
           onPressed: _handleMessageClick,
@@ -141,16 +154,15 @@ class _ProfilePageState extends State<ProfilePage> {
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
         child: Container(
-          color: Colors.grey.shade200,
           height: 1,
+          color: Colors.grey[200],
         ),
       ),
     );
   }
 
   Widget _buildProfileSection() {
-    return Container(
-      color: Colors.white,
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,25 +172,50 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               GestureDetector(
                 onTap: _pickProfileImage,
-                child: Container(
-                  width: 90,
-                  height: 90,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    shape: BoxShape.circle,
-                  ),
-                  child: profileImage != null
-                      ? ClipOval(
-                          child: Image.file(
-                            profileImage!,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Icon(
-                          Icons.person,
-                          size: 45,
-                          color: Colors.grey.shade600,
+                child: Stack(
+                  children: [
+                    Container(
+                      width: 90,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.grey[400]!,
+                          width: 2,
                         ),
+                      ),
+                      child: profileImage != null
+                          ? ClipOval(
+                              child: Image.file(
+                                profileImage!,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Icon(
+                              Icons.person,
+                              size: 45,
+                              color: Colors.grey[600],
+                            ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: 24),
@@ -195,55 +232,100 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           const SizedBox(height: 16),
+          const Text(
+            'Name Example',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4),
           Text(
             'RNX-11220FR',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey.shade600,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Real Estate Agent | Helping you find your dream home 🏡',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[800],
             ),
           ),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
-                child: ElevatedButton(
-                  onPressed: _handleFollowClick,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isFollowing ? Colors.grey.shade200 : Colors.blue,
-                    foregroundColor: isFollowing ? Colors.black : Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    gradient: LinearGradient(
+                      colors: isFollowing
+                          ? [Colors.grey[200]!, Colors.grey[200]!]
+                          : [Colors.blue, Colors.blue.shade600],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
-                  child: Text(
-                    isFollowing ? 'Following' : 'Follow',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                  child: ElevatedButton(
+                    onPressed: _handleFollowClick,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: isFollowing ? Colors.black : Colors.white,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        side: isFollowing
+                            ? BorderSide(color: Colors.grey[300]!)
+                            : BorderSide.none,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text(
+                      isFollowing ? 'Following' : 'Follow',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Expanded(
-                child: ElevatedButton(
-                  onPressed: _handleMessageClick,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    gradient: LinearGradient(
+                      colors: [Colors.blue, Colors.blue.shade600],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
-                  child: const Text(
-                    'Message',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                  child: ElevatedButton(
+                    onPressed: _handleMessageClick,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text(
+                      'Message',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ),
@@ -270,7 +352,7 @@ class _ProfilePageState extends State<ProfilePage> {
           label,
           style: TextStyle(
             fontSize: 13,
-            color: Colors.grey.shade600,
+            color: Colors.grey[600],
           ),
         ),
       ],
@@ -279,9 +361,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildTabs() {
     return Container(
-      color: Colors.white,
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+        border: Border(
+          top: BorderSide(color: Colors.grey[200]!),
+        ),
       ),
       child: Row(
         children: [
@@ -330,14 +413,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Icon(
               icon,
               size: 20,
-              color: isActive ? Colors.black : Colors.grey.shade400,
+              color: isActive ? Colors.black : Colors.grey[400],
             ),
             const SizedBox(width: 6),
             Text(
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                color: isActive ? Colors.black : Colors.grey.shade400,
+                color: isActive ? Colors.black : Colors.grey[400],
               ),
             ),
           ],
@@ -348,72 +431,107 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildContentGrid() {
     List<String> images = activeTab == 'listing' ? listingImages : clipsImages;
-    double screenWidth = MediaQuery.of(context).size.width;
-    double itemWidth = (screenWidth - 4) / 3;
-    
-    return Container(
-      color: Colors.white,
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(2),
-      child: Wrap(
-        spacing: 2,
-        runSpacing: 2,
-        children: List.generate(images.length, (index) {
-          return SizedBox(
-            width: itemWidth,
-            height: _getImageHeight(index),
-            child: _buildImageItem(images[index], index),
-          );
-        }),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+        childAspectRatio: 1,
       ),
+      itemCount: images.length,
+      itemBuilder: (context, index) {
+        return _buildImageItem(images[index], index);
+      },
     );
   }
 
   Widget _buildImageItem(String imagePath, int index) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset(
-          imagePath,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: Colors.grey.shade300,
-              child: Icon(Icons.image, color: Colors.grey.shade400),
-            );
-          },
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Tapped ${activeTab == 'listing' ? 'listing' : 'clip'} ${index + 1}',
+            ),
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.grey[200],
         ),
-        if ((activeTab == 'listing' && index > 1) || activeTab == 'clips')
-          Container(
-            color: Colors.black.withOpacity(0.2),
-            child: const Center(
-              child: Icon(
-                Icons.play_circle_filled,
-                color: Colors.white,
-                size: 32,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: Icon(
+                      Icons.image,
+                      color: Colors.grey[400],
+                      size: 40,
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-        if (activeTab == 'clips')
-          Positioned(
-            bottom: 8,
-            left: 8,
-            child: Text(
-              '${(index + 1) * 15}K views',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                shadows: [
-                  Shadow(
-                    color: Colors.black,
-                    offset: Offset(1, 1),
-                    blurRadius: 2,
+            // Play button overlay for clips or listings after first 2
+            if ((activeTab == 'listing' && index > 1) || activeTab == 'clips')
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black.withOpacity(0.2),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.play_circle_filled,
+                    color: Colors.white,
+                    size: 32,
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-      ],
+            // Views label for clips
+            if (activeTab == 'clips')
+              Positioned(
+                bottom: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    '${(index + 1) * 15}K views',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black54,
+                          offset: Offset(0.5, 0.5),
+                          blurRadius: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

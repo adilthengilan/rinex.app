@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class ReelsScreen extends StatefulWidget {
   const ReelsScreen({Key? key}) : super(key: key);
@@ -111,7 +112,6 @@ class _ReelsScreenState extends State<ReelsScreen> {
                   IconButton(
                     icon: const Icon(Icons.camera_alt_outlined, color: Colors.white, size: 26),
                     onPressed: () {
-                      // Open camera for creating reels
                       _showToast(context, 'Open Camera');
                     },
                   ),
@@ -152,8 +152,10 @@ class ReelItem extends StatefulWidget {
 class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin {
   bool isLiked = false;
   bool isFollowing = false;
+  bool isPlaying = false;
   late AnimationController _likeAnimationController;
   late Animation<double> _likeAnimation;
+  late VideoPlayerController _videoController;
 
   @override
   void initState() {
@@ -171,12 +173,44 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
         curve: Curves.elasticOut,
       ),
     );
+
+    // Initialize video player
+    _initializeVideo();
+  }
+
+  Future<void> _initializeVideo() async {
+    try {
+      _videoController = VideoPlayerController.networkUrl(
+        Uri.parse(widget.reel.videoUrl),
+      );
+      await _videoController.initialize();
+      _videoController.setLooping(true);
+      _videoController.play();
+      setState(() {
+        isPlaying = true;
+      });
+    } catch (e) {
+      print('Error loading video: $e');
+    }
   }
 
   @override
   void dispose() {
     _likeAnimationController.dispose();
+    _videoController.dispose();
     super.dispose();
+  }
+
+  void _toggleVideoPlayPause() {
+    setState(() {
+      if (isPlaying) {
+        _videoController.pause();
+        isPlaying = false;
+      } else {
+        _videoController.play();
+        isPlaying = true;
+      }
+    });
   }
 
   void _handleLike() {
@@ -200,7 +234,6 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
 
   void _handleComment() {
     _showToast('Open Comments');
-    // Show comments bottom sheet
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.grey[900],
@@ -242,7 +275,6 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
 
   void _handleShare() {
     _showToast('Share Reel');
-    // Show share options
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.grey[900],
@@ -394,51 +426,40 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return GestureDetector(
       onDoubleTap: _handleLike,
+      onTap: _toggleVideoPlayPause,
       child: Stack(
         children: [
-          // Video background with actual image/gradient
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(widget.reel.profileImage),
+          // Video Player
+          if (_videoController.value.isInitialized)
+            SizedBox.expand(
+              child: FittedBox(
                 fit: BoxFit.cover,
-                onError: (exception, stackTrace) {
-                  // Fallback to gradient if image fails
-                },
+                child: SizedBox(
+                  width: _videoController.value.size.width,
+                  height: _videoController.value.size.height,
+                  child: VideoPlayer(_videoController),
+                ),
               ),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.blueGrey.shade800,
-                  Colors.black87,
-                  Colors.blueGrey.shade900,
-                ],
-              ),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.7),
-                  ],
-                  stops: const [0.5, 1.0],
+            )
+          else
+            Container(
+              color: Colors.black,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white.withOpacity(0.5),
                 ),
               ),
             ),
-          ),
 
-          // Play icon overlay
-          Center(
-            child: Icon(
-              Icons.play_circle_fill_outlined,
-              size: 80,
-              color: Colors.white.withOpacity(0.3),
+          // Play/Pause overlay when paused
+          if (!isPlaying)
+            Center(
+              child: Icon(
+                Icons.play_circle_fill_outlined,
+                size: 80,
+                color: Colors.white.withOpacity(0.5),
+              ),
             ),
-          ),
 
           // Right side actions
           Positioned(
@@ -502,7 +523,7 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
                 ),
                 const SizedBox(height: 24),
                 
-                // Comment button - Correct icon
+                // Comment button
                 ActionButton(
                   icon: Icons.mode_comment_outlined,
                   label: widget.reel.comments,
@@ -510,9 +531,9 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
                 ),
                 const SizedBox(height: 24),
                 
-                // Share button - Correct icon (paper plane)
+                // Share button
                 ActionButton(
-                  icon: Icons.send,
+                  icon: Icons.send_sharp,
                   label: widget.reel.shares,
                   onTap: _handleShare,
                 ),
@@ -520,7 +541,7 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
                 
                 // Repost button
                 ActionButton(
-                  icon: Icons.repeat,
+                  icon: Icons.repeat_rounded,
                   label: '',
                   onTap: _handleRepost,
                 ),
@@ -534,7 +555,7 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
                 ),
                 const SizedBox(height: 20),
                 
-                // Music album icon with animation
+                // Music album icon
                 GestureDetector(
                   onTap: () {
                     _showToast('View Audio');
@@ -573,6 +594,7 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
                 // Username row with profile and follow button
                 Row(
                   children: [
+                    // Renex Logo Asset Image
                     Container(
                       width: 36,
                       height: 36,
@@ -591,15 +613,21 @@ class _ReelItemState extends State<ReelItem> with SingleTickerProviderStateMixin
                           shape: BoxShape.circle,
                         ),
                         child: ClipOval(
-                          child: Container(
-                            color: Colors.blue[700],
-                            child: const Center(
-                              child: Icon(
-                                Icons.store,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
+                          child: Image.asset(
+                            'assets/renex.jpg',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.blue[700],
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.store,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),

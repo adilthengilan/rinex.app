@@ -7,7 +7,6 @@ import 'package:iconly/iconly.dart';
 import 'package:rinex/src/view/screens/profile_Page/profile.dart';
 import 'package:rinex/src/view/screens/reels.dart';
 import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
-import 'package:rinex/src/view/screens/search_Page/shuffle.dart';
 
 
 class NavigationPage extends StatefulWidget {
