@@ -1,25 +1,27 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:rinex/src/view/screens/agentlist.dart';
-import 'package:rinex/src/view/screens/favourites.dart' show FavoriteScreen;
-import 'package:rinex/src/view/screens/searchpage.dart';
+import 'package:rinex/src/view/screens/agentList_Page/agentlist.dart';
+import 'package:rinex/src/view/screens/favorites_Page/favourites.dart'
+    show FavoriteScreen;
+import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
 
 class SharedFavoriteManager {
-  static final SharedFavoriteManager _instance = SharedFavoriteManager._internal();
+  static final SharedFavoriteManager _instance =
+      SharedFavoriteManager._internal();
   factory SharedFavoriteManager() => _instance;
   SharedFavoriteManager._internal();
 
   final Set<String> _favoriteProperties = <String>{};
-  
+
   Set<String> get favoriteProperties => _favoriteProperties;
-  
-  bool isFavorite(String propertyId) => _favoriteProperties.contains(propertyId);
-  
+
+  bool isFavorite(String propertyId) =>
+      _favoriteProperties.contains(propertyId);
+
   void addFavorite(String propertyId) => _favoriteProperties.add(propertyId);
-  
-  void removeFavorite(String propertyId) => _favoriteProperties.remove(propertyId);
-  
+
+  void removeFavorite(String propertyId) =>
+      _favoriteProperties.remove(propertyId);
+
   void toggleFavorite(String propertyId) {
     if (_favoriteProperties.contains(propertyId)) {
       _favoriteProperties.remove(propertyId);
@@ -27,15 +29,17 @@ class SharedFavoriteManager {
       _favoriteProperties.add(propertyId);
     }
   }
-  
+
   void clearAllFavorites() => _favoriteProperties.clear();
-  
+
   int get favoriteCount => _favoriteProperties.length;
-  
+
   // Get favorite properties with full data
   List<Map<String, dynamic>> getFavoriteProperties() {
     final allProperties = PropertyDataService.getAllProperties();
-    return allProperties.where((prop) => _favoriteProperties.contains(prop['id'])).toList();
+    return allProperties
+        .where((prop) => _favoriteProperties.contains(prop['id']))
+        .toList();
   }
 }
 
@@ -58,7 +62,8 @@ class PropertyDataService {
         'furnished': 'Semi Furnished',
         'year': '2022',
         'rating': '4.9',
-        'description': 'Beautiful apartment with modern amenities in the heart of Jakarta.',
+        'description':
+            'Beautiful apartment with modern amenities in the heart of Jakarta.',
         'amenities': ['Swimming Pool', 'Gym', '24/7 Security', 'Elevator'],
       },
       {
@@ -112,8 +117,14 @@ class PropertyDataService {
         'furnished': 'Fully Furnished',
         'year': '2024',
         'rating': '4.8',
-        'description': 'Luxurious villa with premium amenities and stunning views.',
-        'amenities': ['Private Pool', 'Home Theater', 'Wine Cellar', 'Maid Service'],
+        'description':
+            'Luxurious villa with premium amenities and stunning views.',
+        'amenities': [
+          'Private Pool',
+          'Home Theater',
+          'Wine Cellar',
+          'Maid Service',
+        ],
       },
     ];
   }
@@ -142,11 +153,17 @@ class _PropertylistState extends State<Propertylist> {
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications, color: Colors.blue, size: 28),
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.blue,
+                  size: 28,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Agentscreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const Agentscreen(),
+                    ),
                   );
                 },
               ),
@@ -159,7 +176,9 @@ class _PropertylistState extends State<Propertylist> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const FavoriteScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const FavoriteScreen(),
+                    ),
                   ).then((_) {
                     // Refresh the property list when returning from favorites
                     setState(() {});
@@ -182,10 +201,7 @@ class _PropertylistState extends State<Propertylist> {
                     ),
                     child: Text(
                       '${_favoriteManager.favoriteCount}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontSize: 10),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -212,7 +228,7 @@ class _PropertylistState extends State<Propertylist> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>  SearchPage()),
+          MaterialPageRoute(builder: (context) => SearchPage()),
         );
       },
       child: Container(
@@ -259,7 +275,10 @@ class _PropertylistState extends State<Propertylist> {
               children: [
                 Icon(Icons.sort, size: 20, color: Colors.grey),
                 SizedBox(width: 5),
-                Text("Sort by", style: TextStyle(fontSize: 14, color: Colors.black87)),
+                Text(
+                  "Sort by",
+                  style: TextStyle(fontSize: 14, color: Colors.black87),
+                ),
               ],
             ),
           ),
@@ -310,7 +329,7 @@ class _PropertylistState extends State<Propertylist> {
 
   Widget _buildPropertyCard(Map<String, dynamic> property) {
     final bool isFavorite = _favoriteManager.isFavorite(property['id']);
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       elevation: 2,
@@ -348,7 +367,9 @@ class _PropertylistState extends State<Propertylist> {
                       duration: const Duration(milliseconds: 300),
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: isFavorite ? Colors.red.withOpacity(0.9) : Colors.white.withOpacity(0.9),
+                        color: isFavorite
+                            ? Colors.red.withOpacity(0.9)
+                            : Colors.white.withOpacity(0.9),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -370,7 +391,10 @@ class _PropertylistState extends State<Propertylist> {
                   top: 10,
                   right: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF007BFF),
                       borderRadius: BorderRadius.circular(8),
@@ -395,7 +419,10 @@ class _PropertylistState extends State<Propertylist> {
                     Expanded(
                       child: Text(
                         property['propertyName'],
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                     Text(
@@ -461,10 +488,13 @@ class _PropertylistState extends State<Propertylist> {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                         Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Agentscreen()));
-          },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Agentscreen(),
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
@@ -506,15 +536,15 @@ class _PropertylistState extends State<Propertylist> {
     setState(() {
       _favoriteManager.toggleFavorite(property['id']);
     });
-    
+
     final bool isNowFavorite = _favoriteManager.isFavorite(property['id']);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          isNowFavorite 
-            ? 'Added "${property['propertyName']}" to favorites'
-            : 'Removed "${property['propertyName']}" from favorites',
+          isNowFavorite
+              ? 'Added "${property['propertyName']}" to favorites'
+              : 'Removed "${property['propertyName']}" from favorites',
         ),
         action: SnackBarAction(
           label: 'View Favorites',
@@ -532,13 +562,17 @@ class _PropertylistState extends State<Propertylist> {
 
   void _viewPropertyDetails(Map<String, dynamic> property) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Viewing details for ${property['propertyName']}')),
+      SnackBar(
+        content: Text('Viewing details for ${property['propertyName']}'),
+      ),
     );
   }
 
   void _contactOwner(Map<String, dynamic> property) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Contacting owner of ${property['propertyName']}')),
+      SnackBar(
+        content: Text('Contacting owner of ${property['propertyName']}'),
+      ),
     );
   }
 }

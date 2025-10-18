@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rinex/src/view/screens/agentlist.dart';
-
+import 'package:rinex/src/view/screens/agentList_Page/agentlist.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -304,93 +302,87 @@ class _ProfilePageState extends State<ProfilePage>
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Icons.message, color: Colors.blue),
+            SizedBox(width: 8),
+            Text('Send Message'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Send a message to ${userProfile['name']}',
+              style: TextStyle(color: Colors.grey[600]),
             ),
-            title: Row(
-              children: [
-                Icon(Icons.message, color: Colors.blue),
-                SizedBox(width: 8),
-                Text('Send Message'),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Send a message to ${userProfile['name']}',
-                  style: TextStyle(color: Colors.grey[600]),
+            SizedBox(height: 16),
+            TextField(
+              controller: _messageController,
+              decoration: InputDecoration(
+                hintText: 'Type your message...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: _messageController,
-                  decoration: InputDecoration(
-                    hintText: 'Type your message...',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
-                    ),
-                    prefixIcon: Icon(Icons.edit, color: Colors.blue),
-                  ),
-                  maxLines: 3,
-                  maxLength: 500,
-                  textCapitalization: TextCapitalization.sentences,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.blue, width: 2),
                 ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  _messageController.clear();
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(color: Colors.grey[600]),
-                ),
+                prefixIcon: Icon(Icons.edit, color: Colors.blue),
               ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  if (_messageController.text.trim().isNotEmpty) {
-                    Navigator.pop(context);
-                    _messageController.clear();
-                    HapticFeedback.mediumImpact();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Row(
-                          children: [
-                            Icon(Icons.check_circle, color: Colors.white),
-                            SizedBox(width: 8),
-                            Text('Message sent to ${userProfile['name']}'),
-                          ],
-                        ),
-                        backgroundColor: Colors.green,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        margin: EdgeInsets.all(16),
-                      ),
-                    );
-                  }
-                },
-                icon: Icon(Icons.send),
-                label: Text('Send'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ],
+              maxLines: 3,
+              maxLength: 500,
+              textCapitalization: TextCapitalization.sentences,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              _messageController.clear();
+              Navigator.pop(context);
+            },
+            child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
           ),
+          ElevatedButton.icon(
+            onPressed: () {
+              if (_messageController.text.trim().isNotEmpty) {
+                Navigator.pop(context);
+                _messageController.clear();
+                HapticFeedback.mediumImpact();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text('Message sent to ${userProfile['name']}'),
+                      ],
+                    ),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    margin: EdgeInsets.all(16),
+                  ),
+                );
+              }
+            },
+            icon: Icon(Icons.send),
+            label: Text('Send'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -430,67 +422,63 @@ class _ProfilePageState extends State<ProfilePage>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder:
-          (context) => Container(
-            height: MediaQuery.of(context).size.height * 0.4,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.4,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-            child: Column(
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  margin: EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Text(
+                    '${userProfile['name']} Statistics',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Text(
-                        '${userProfile['name']} Statistics',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      _buildDetailedStatRow(
-                        'Total Posts',
-                        '${userProfile['postsCount']}',
-                        Icons.grid_on,
-                      ),
-                      _buildDetailedStatRow(
-                        'Followers',
-                        '${userProfile['followersCount']}',
-                        Icons.people,
-                      ),
-                      _buildDetailedStatRow(
-                        'Following',
-                        '${userProfile['followingCount']}',
-                        Icons.person_add,
-                      ),
-                      _buildDetailedStatRow(
-                        'Properties Listed',
-                        '${listings.length}',
-                        Icons.home,
-                      ),
-                      _buildDetailedStatRow(
-                        'Video Content',
-                        '${clips.length}',
-                        Icons.play_circle_outline,
-                      ),
-                    ],
+                  SizedBox(height: 20),
+                  _buildDetailedStatRow(
+                    'Total Posts',
+                    '${userProfile['postsCount']}',
+                    Icons.grid_on,
                   ),
-                ),
-              ],
+                  _buildDetailedStatRow(
+                    'Followers',
+                    '${userProfile['followersCount']}',
+                    Icons.people,
+                  ),
+                  _buildDetailedStatRow(
+                    'Following',
+                    '${userProfile['followingCount']}',
+                    Icons.person_add,
+                  ),
+                  _buildDetailedStatRow(
+                    'Properties Listed',
+                    '${listings.length}',
+                    Icons.home,
+                  ),
+                  _buildDetailedStatRow(
+                    'Video Content',
+                    '${clips.length}',
+                    Icons.play_circle_outline,
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -714,12 +702,12 @@ class _ProfilePageState extends State<ProfilePage>
                             child: ElevatedButton(
                               onPressed: _toggleFollow,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    isFollowing
-                                        ? Colors.grey[300]
-                                        : Colors.blue,
-                                foregroundColor:
-                                    isFollowing ? Colors.black87 : Colors.white,
+                                backgroundColor: isFollowing
+                                    ? Colors.grey[300]
+                                    : Colors.blue,
+                                foregroundColor: isFollowing
+                                    ? Colors.black87
+                                    : Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -913,46 +901,44 @@ class _ProfilePageState extends State<ProfilePage>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder:
-          (context) => PropertyDetailsSheet(
-            property: property,
-            onContact: _sendMessage,
-            onShare: _shareProfile,
-          ),
+      builder: (context) => PropertyDetailsSheet(
+        property: property,
+        onContact: _sendMessage,
+        onShare: _shareProfile,
+      ),
     );
   }
 
   void _showProfilePicture() {
     showDialog(
       context: context,
-      builder:
-          (context) => Dialog(
-            backgroundColor: Colors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 4),
-                  ),
-                  child: Icon(Icons.person, size: 100, color: Colors.grey[600]),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  userProfile['name'],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 4),
+              ),
+              child: Icon(Icons.person, size: 100, color: Colors.grey[600]),
             ),
-          ),
+            SizedBox(height: 20),
+            Text(
+              userProfile['name'],
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -999,11 +985,10 @@ class PropertyGridItem extends StatelessWidget {
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                        value:
-                            loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                            : null,
                       ),
                     ),
                   );
@@ -1236,10 +1221,9 @@ class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
                                             isFavorite
                                                 ? Icons.favorite
                                                 : Icons.favorite_border,
-                                            color:
-                                                isFavorite
-                                                    ? Colors.red
-                                                    : Colors.grey[600],
+                                            color: isFavorite
+                                                ? Colors.red
+                                                : Colors.grey[600],
                                             size: 20,
                                           ),
                                         ),

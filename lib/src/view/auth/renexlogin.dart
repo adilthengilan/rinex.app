@@ -1,8 +1,8 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rinex/src/view/navigation/bottomAppBar.dart';
 
 class RenexLoginScreen extends StatefulWidget {
   const RenexLoginScreen({super.key});
@@ -26,21 +26,17 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.5),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    ));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.elasticOut,
+          ),
+        );
 
     _animationController.forward();
   }
@@ -52,7 +48,7 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
   }
 
   // Simulate authentication loading
-  Future<void> _handleLogin(String method) async {
+  void _handleLogin(String method) async {
     setState(() {
       _isLoading = true;
     });
@@ -72,7 +68,13 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
     // Handle different login methods
     switch (method) {
       case 'phone':
-        Navigator.pushNamed(context, '/phone-verify');
+        print('====================================');
+
+        // Navigator.pushNamed(context, '/phone-verify');
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => NavigationPage()),
+        // );
         break;
       case 'google':
         await _handleGoogleLogin();
@@ -123,13 +125,12 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(RenexColors.primary),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    RenexColors.primary,
+                  ),
                 ),
                 const SizedBox(height: 15),
-                const Text(
-                  'Authenticating...',
-                  style: TextStyle(fontSize: 16),
-                ),
+                const Text('Authenticating...', style: TextStyle(fontSize: 16)),
               ],
             ),
           ),
@@ -169,7 +170,11 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton.icon(
-                          icon: const Icon(Icons.help_outline, color: Colors.white, size: 20),
+                          icon: const Icon(
+                            Icons.help_outline,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                           label: const Text(
                             'Help',
                             style: TextStyle(
@@ -178,7 +183,8 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onPressed: () => Navigator.pushNamed(context, '/help'),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/help'),
                         ),
                       ],
                     ),
@@ -206,12 +212,10 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
                         child: Image.asset(
-                          'lib/assets/renex.jpg',
+                          'assets/renex.jpg',
                           fit: BoxFit.cover,
-                         
-                            // Fallback if asset image is not found
-                           
-                        
+
+                          // Fallback if asset image is not found
                         ),
                       ),
                     ),
@@ -246,12 +250,19 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
 
                   // Login buttons
                   _buildLoginButton(
-                    iconWidget: const Icon(Icons.smartphone, size: 24, color: Colors.white),
+                    iconWidget: const Icon(
+                      Icons.smartphone,
+                      size: 24,
+                      color: Colors.white,
+                    ),
                     text: 'Continue with Phone',
                     backgroundColor: Colors.transparent,
                     textColor: Colors.white,
                     borderColor: Colors.white.withOpacity(0.6),
-                    onPressed: _isLoading ? null : () => _handleLogin('phone'),
+                    onPressed: () {
+                      // _handleLogin('phone');
+                      print('===================');
+                    },
                   ),
 
                   const SizedBox(height: 16),
@@ -279,7 +290,7 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
                     backgroundColor: Colors.transparent,
                     textColor: Colors.white,
                     borderColor: Colors.white.withOpacity(0.6),
-                    onPressed: _isLoading ? null : () => _handleLogin('google'),
+                    onPressed: () {},
                   ),
 
                   const SizedBox(height: 16),
@@ -302,7 +313,7 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
                     backgroundColor: Colors.white,
                     textColor: RenexColors.textDark,
                     borderColor: Colors.white,
-                    onPressed: _isLoading ? null : () => _handleLogin('apple'),
+                    onPressed: () {},
                   ),
 
                   const SizedBox(height: 32),
@@ -322,7 +333,10 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
                   TextButton(
                     onPressed: _isLoading ? null : () => _handleLogin('email'),
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 24,
+                      ),
                     ),
                     child: const Text(
                       'Login with Email',
@@ -345,19 +359,19 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
                       children: [
                         const Text(
                           'If You Continue You Are Accepting',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 13,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
                         ),
                         const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
-                              onPressed: () => Navigator.pushNamed(context, '/terms'),
+                              onPressed: () =>
+                                  Navigator.pushNamed(context, '/terms'),
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
                                 minimumSize: Size.zero,
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
@@ -373,12 +387,18 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
                             ),
                             const Text(
                               ' And ',
-                              style: TextStyle(color: Colors.white70, fontSize: 13),
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
                             ),
                             TextButton(
-                              onPressed: () => Navigator.pushNamed(context, '/privacy'),
+                              onPressed: () =>
+                                  Navigator.pushNamed(context, '/privacy'),
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
                                 minimumSize: Size.zero,
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
@@ -423,7 +443,7 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
     required Color backgroundColor,
     required Color textColor,
     required Color borderColor,
-    required VoidCallback? onPressed,
+    required VoidCallback onPressed,
   }) {
     return Container(
       width: double.infinity,
@@ -434,9 +454,7 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
           side: BorderSide(color: borderColor, width: 1.2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           elevation: backgroundColor == Colors.transparent ? 0 : 1,
           shadowColor: Colors.black.withOpacity(0.1),
         ),
@@ -467,7 +485,8 @@ class _RenexLoginScreenState extends State<RenexLoginScreen>
 // Phone Verification Screen
 class PhoneVerificationScreen extends StatefulWidget {
   @override
-  _PhoneVerificationScreenState createState() => _PhoneVerificationScreenState();
+  _PhoneVerificationScreenState createState() =>
+      _PhoneVerificationScreenState();
 }
 
 class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
@@ -520,16 +539,16 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
 
     _startResendTimer();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('OTP sent successfully!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('OTP sent successfully!')));
   }
 
   Future<void> _verifyOtp() async {
     if (_otpController.text.length < 4) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter valid OTP')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter valid OTP')));
       return;
     }
 
@@ -636,9 +655,13 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                   TextButton(
                     onPressed: _resendTimer == 0 ? _sendOtp : null,
                     child: Text(
-                      _resendTimer == 0 ? 'Resend' : 'Resend in ${_resendTimer}s',
+                      _resendTimer == 0
+                          ? 'Resend'
+                          : 'Resend in ${_resendTimer}s',
                       style: TextStyle(
-                        color: _resendTimer == 0 ? Colors.white : Colors.white54,
+                        color: _resendTimer == 0
+                            ? Colors.white
+                            : Colors.white54,
                       ),
                     ),
                   ),
@@ -724,10 +747,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Email Login',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Email Login', style: TextStyle(color: Colors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -766,7 +786,9 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
@@ -781,7 +803,9 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                   prefixIcon: const Icon(Icons.lock_outlined),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      _obscurePassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
@@ -809,7 +833,8 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, '/forgot-password'),
                   child: const Text(
                     'Forgot Password?',
                     style: TextStyle(color: Colors.white),
@@ -898,7 +923,10 @@ class ForgotPasswordScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Forgot Password', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Forgot Password',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: const Padding(
         padding: EdgeInsets.all(24.0),
@@ -1169,11 +1197,23 @@ class HelpScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   _buildContactItem(Icons.phone, 'Call Us', '+91 94474 12345'),
                   const SizedBox(height: 12),
-                  _buildContactItem(Icons.email, 'Email', 'support@renexestate.com'),
+                  _buildContactItem(
+                    Icons.email,
+                    'Email',
+                    'support@renexestate.com',
+                  ),
                   const SizedBox(height: 12),
-                  _buildContactItem(Icons.access_time, 'Support Hours', 'Mon-Sat: 9 AM - 8 PM'),
+                  _buildContactItem(
+                    Icons.access_time,
+                    'Support Hours',
+                    'Mon-Sat: 9 AM - 8 PM',
+                  ),
                   const SizedBox(height: 12),
-                  _buildContactItem(Icons.location_on, 'Head Office', 'Kochi, Kerala, India'),
+                  _buildContactItem(
+                    Icons.location_on,
+                    'Head Office',
+                    'Kochi, Kerala, India',
+                  ),
                 ],
               ),
             ),
@@ -1259,10 +1299,7 @@ class HelpScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -1270,7 +1307,12 @@ class HelpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoSection(String title, String content, IconData icon, Color color) {
+  Widget _buildInfoSection(
+    String title,
+    String content,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -1394,13 +1436,15 @@ class HelpScreen extends StatelessWidget {
 
 // Enhanced Color Palette to match the design
 class RenexColors {
-  static const Color primary =  Color(0xFF1E88E5);// Deep blue from the image
-  static const Color secondary = Color(0xFF1E88E5);// Slightly lighter blue
+  static const Color primary = Color(0xFF1E88E5); // Deep blue from the image
+  static const Color secondary = Color(0xFF1E88E5); // Slightly lighter blue
   static const Color accent = Color(0xFF1E88E5); // Accent blue
-  static const Color background =   Color(0xFF1E88E5);// Dark blue background
+  static const Color background = Color(0xFF1E88E5); // Dark blue background
   static const Color surface = Colors.white;
   static const Color onPrimary = Colors.white;
   static const Color onSecondary = Colors.white;
-  static const Color onSurface =Color(0xFF1E88E5);
-  static const Color textDark = Color(0xFF2C2C2C); // Dark text for white backgrounds
+  static const Color onSurface = Color(0xFF1E88E5);
+  static const Color textDark = Color(
+    0xFF2C2C2C,
+  ); // Dark text for white backgrounds
 }

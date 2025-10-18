@@ -1,17 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:iconly/iconly.dart';
-import 'package:rinex/src/view/screens/addproperty.dart';
-import 'package:rinex/src/view/screens/editprofile.dart';
-import 'package:rinex/src/view/screens/favourites.dart';
-import 'package:rinex/src/view/screens/notifications.dart';
-import 'package:rinex/src/view/screens/profile.dart';
-import 'package:rinex/src/view/screens/propertylist.dart';
-import 'package:rinex/src/view/screens/requirements.dart';
-import 'package:rinex/src/view/screens/searchpage.dart';
-import 'package:rinex/src/view/screens/settings.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:rinex/src/view/screens/bottom_sheet/addProperty_Page/addproperty.dart';
+import 'package:rinex/src/view/screens/profile_Page/editprofile.dart';
+
+import 'package:rinex/src/view/screens/profile_Page/profile.dart';
+import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
+import 'package:rinex/src/view/screens/bottom_sheet/requirementAdd_Page/requirements.dart';
+import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
+
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:google_fonts/google_fonts.dart';

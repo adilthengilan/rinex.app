@@ -1,19 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rinex/src/view/screens/agentlist.dart';
+import 'package:rinex/src/view/screens/agentList_Page/agentlist.dart';
 
 class Editprofile extends StatefulWidget {
   @override
   _EditprofileState createState() => _EditprofileState();
 }
 
-class _EditprofileState extends State<Editprofile> 
+class _EditprofileState extends State<Editprofile>
     with TickerProviderStateMixin {
   late TabController _tabController;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   bool isFollowing = false;
   final TextEditingController _messageController = TextEditingController();
 
@@ -41,7 +40,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 5,
       bathrooms: 4,
       area: 4500,
-      description: 'Stunning modern villa with panoramic city views, featuring open-plan living spaces, premium finishes, and a resort-style backyard.',
+      description:
+          'Stunning modern villa with panoramic city views, featuring open-plan living spaces, premium finishes, and a resort-style backyard.',
     ),
     PropertyItem(
       id: 2,
@@ -54,7 +54,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 3,
       bathrooms: 3,
       area: 3200,
-      description: 'Exquisitely designed interior spaces with premium materials and contemporary furnishings throughout.',
+      description:
+          'Exquisitely designed interior spaces with premium materials and contemporary furnishings throughout.',
     ),
     PropertyItem(
       id: 3,
@@ -67,7 +68,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 4,
       bathrooms: 4,
       area: 3800,
-      description: 'Architectural masterpiece in the heart of downtown with floor-to-ceiling windows and premium amenities.',
+      description:
+          'Architectural masterpiece in the heart of downtown with floor-to-ceiling windows and premium amenities.',
     ),
     PropertyItem(
       id: 4,
@@ -80,7 +82,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 2,
       bathrooms: 2,
       area: 1850,
-      description: 'Breathtaking city views from every room in this sophisticated urban residence.',
+      description:
+          'Breathtaking city views from every room in this sophisticated urban residence.',
     ),
     PropertyItem(
       id: 5,
@@ -93,7 +96,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 6,
       bathrooms: 5,
       area: 6200,
-      description: 'Luxury penthouse in prestigious glass tower with world-class amenities and concierge services.',
+      description:
+          'Luxury penthouse in prestigious glass tower with world-class amenities and concierge services.',
     ),
     PropertyItem(
       id: 6,
@@ -106,7 +110,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 3,
       bathrooms: 2,
       area: 2800,
-      description: 'Serene lakeside property perfect for weekend getaways with private dock and mountain views.',
+      description:
+          'Serene lakeside property perfect for weekend getaways with private dock and mountain views.',
     ),
     PropertyItem(
       id: 7,
@@ -119,7 +124,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 4,
       bathrooms: 3,
       area: 4200,
-      description: 'Beautifully restored historic mansion with original architectural details and modern updates.',
+      description:
+          'Beautifully restored historic mansion with original architectural details and modern updates.',
     ),
     PropertyItem(
       id: 8,
@@ -132,7 +138,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 2,
       bathrooms: 3,
       area: 2200,
-      description: 'Spa-like luxury bathroom with premium fixtures and finishes throughout the residence.',
+      description:
+          'Spa-like luxury bathroom with premium fixtures and finishes throughout the residence.',
     ),
     PropertyItem(
       id: 9,
@@ -145,7 +152,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 3,
       bathrooms: 3,
       area: 3100,
-      description: 'Contemporary living in Santa Monica with ocean proximity and luxury amenities.',
+      description:
+          'Contemporary living in Santa Monica with ocean proximity and luxury amenities.',
     ),
   ];
 
@@ -161,7 +169,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 0,
       bathrooms: 0,
       area: 0,
-      description: 'Virtual tour showcasing innovative architectural design and construction techniques.',
+      description:
+          'Virtual tour showcasing innovative architectural design and construction techniques.',
     ),
     PropertyItem(
       id: 11,
@@ -174,11 +183,12 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 0,
       bathrooms: 0,
       area: 0,
-      description: 'Complete property walkthrough highlighting key features and amenities.',
+      description:
+          'Complete property walkthrough highlighting key features and amenities.',
     ),
     PropertyItem(
       id: 12,
-      imageUrl:'lib/assets/property4.jpg',
+      imageUrl: 'lib/assets/property4.jpg',
       isVideo: true,
       type: 'Interior',
       title: 'Interior Design Tips',
@@ -187,7 +197,8 @@ class _EditprofileState extends State<Editprofile>
       bedrooms: 0,
       bathrooms: 0,
       area: 0,
-      description: 'Professional interior design tips and trends for luxury living spaces.',
+      description:
+          'Professional interior design tips and trends for luxury living spaces.',
     ),
   ];
 
@@ -222,10 +233,10 @@ class _EditprofileState extends State<Editprofile>
         userProfile['followersCount']--;
       }
     });
-    
+
     // Haptic feedback
     HapticFeedback.lightImpact();
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -237,9 +248,9 @@ class _EditprofileState extends State<Editprofile>
             ),
             SizedBox(width: 8),
             Text(
-              isFollowing 
-                ? 'Following ${userProfile['name']}' 
-                : 'Unfollowed ${userProfile['name']}',
+              isFollowing
+                  ? 'Following ${userProfile['name']}'
+                  : 'Unfollowed ${userProfile['name']}',
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
           ],
@@ -318,7 +329,9 @@ class _EditprofileState extends State<Editprofile>
                     ),
                     backgroundColor: Colors.green,
                     behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     margin: EdgeInsets.all(16),
                   ),
                 );
@@ -329,7 +342,9 @@ class _EditprofileState extends State<Editprofile>
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ],
@@ -373,7 +388,7 @@ class _EditprofileState extends State<Editprofile>
                       ),
                     ),
                     SizedBox(height: 30),
-                    
+
                     // Profile Picture Section
                     Center(
                       child: Stack(
@@ -400,7 +415,10 @@ class _EditprofileState extends State<Editprofile>
                               decoration: BoxDecoration(
                                 color: Colors.blue,
                                 shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 2),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
                               ),
                               child: Icon(
                                 Icons.camera_alt,
@@ -412,18 +430,18 @@ class _EditprofileState extends State<Editprofile>
                         ],
                       ),
                     ),
-                    
+
                     SizedBox(height: 30),
-                    
+
                     // Form Fields
                     _buildEditField('Name', userProfile['name']),
                     SizedBox(height: 16),
                     _buildEditField('Username', userProfile['username']),
                     SizedBox(height: 16),
                     _buildEditField('Bio', 'Real Estate Professional'),
-                    
+
                     Spacer(),
-                    
+
                     // Save Button
                     SizedBox(
                       width: double.infinity,
@@ -442,7 +460,9 @@ class _EditprofileState extends State<Editprofile>
                               ),
                               backgroundColor: Colors.green,
                               behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                               margin: EdgeInsets.all(16),
                             ),
                           );
@@ -491,9 +511,7 @@ class _EditprofileState extends State<Editprofile>
         TextFormField(
           initialValue: initialValue,
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -508,8 +526,12 @@ class _EditprofileState extends State<Editprofile>
   void _shareProfile() {
     HapticFeedback.lightImpact();
     // Simulate copying to clipboard
-    Clipboard.setData(ClipboardData(text: 'https://realestate.app/profile/${userProfile['username']}'));
-    
+    Clipboard.setData(
+      ClipboardData(
+        text: 'https://realestate.app/profile/${userProfile['username']}',
+      ),
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -560,18 +582,39 @@ class _EditprofileState extends State<Editprofile>
                 children: [
                   Text(
                     '${userProfile['name']} Statistics',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
-                  _buildDetailedStatRow('Total Posts', '${userProfile['postsCount']}', Icons.grid_on),
-                  _buildDetailedStatRow('Followers', '${userProfile['followersCount']}', Icons.people),
-                  _buildDetailedStatRow('Following', '${userProfile['followingCount']}', Icons.person_add),
-                  _buildDetailedStatRow('Properties Listed', '${listings.length}', Icons.home),
-                  _buildDetailedStatRow('Video Content', '${clips.length}', Icons.play_circle_outline),
-                  _buildDetailedStatRow('Coins Balance', '${userProfile['coins']}', Icons.monetization_on),
+                  _buildDetailedStatRow(
+                    'Total Posts',
+                    '${userProfile['postsCount']}',
+                    Icons.grid_on,
+                  ),
+                  _buildDetailedStatRow(
+                    'Followers',
+                    '${userProfile['followersCount']}',
+                    Icons.people,
+                  ),
+                  _buildDetailedStatRow(
+                    'Following',
+                    '${userProfile['followingCount']}',
+                    Icons.person_add,
+                  ),
+                  _buildDetailedStatRow(
+                    'Properties Listed',
+                    '${listings.length}',
+                    Icons.home,
+                  ),
+                  _buildDetailedStatRow(
+                    'Video Content',
+                    '${clips.length}',
+                    Icons.play_circle_outline,
+                  ),
+                  _buildDetailedStatRow(
+                    'Coins Balance',
+                    '${userProfile['coins']}',
+                    Icons.monetization_on,
+                  ),
                 ],
               ),
             ),
@@ -588,10 +631,7 @@ class _EditprofileState extends State<Editprofile>
         children: [
           Icon(icon, color: Colors.blue, size: 20),
           SizedBox(width: 12),
-          Text(
-            label,
-            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-          ),
+          Text(label, style: TextStyle(fontSize: 16, color: Colors.grey[700])),
           Spacer(),
           Text(
             value,
@@ -623,11 +663,7 @@ class _EditprofileState extends State<Editprofile>
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 4),
                 ),
-                child: Icon(
-                  Icons.person,
-                  size: 120,
-                  color: Colors.grey[600],
-                ),
+                child: Icon(Icons.person, size: 120, color: Colors.grey[600]),
               ),
             ),
             Positioned(
@@ -641,11 +677,7 @@ class _EditprofileState extends State<Editprofile>
                     color: Colors.white.withOpacity(0.9),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.black87,
-                    size: 24,
-                  ),
+                  child: Icon(Icons.close, color: Colors.black87, size: 24),
                 ),
               ),
             ),
@@ -667,13 +699,7 @@ class _EditprofileState extends State<Editprofile>
           ),
         ),
         SizedBox(height: 2),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
       ],
     );
   }
@@ -740,12 +766,15 @@ class _EditprofileState extends State<Editprofile>
                             )
                           : null,
                     ),
-                    
+
                     SizedBox(height: 20),
-                    
+
                     // Property Type Badge
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.blue.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
@@ -759,9 +788,9 @@ class _EditprofileState extends State<Editprofile>
                         ),
                       ),
                     ),
-                    
+
                     SizedBox(height: 10),
-                    
+
                     // Title
                     Text(
                       property.title,
@@ -771,13 +800,17 @@ class _EditprofileState extends State<Editprofile>
                         color: Colors.black87,
                       ),
                     ),
-                    
+
                     SizedBox(height: 8),
-                    
+
                     // Location
                     Row(
                       children: [
-                        Icon(Icons.location_on, color: Colors.grey[600], size: 16),
+                        Icon(
+                          Icons.location_on,
+                          color: Colors.grey[600],
+                          size: 16,
+                        ),
                         SizedBox(width: 4),
                         Text(
                           property.location,
@@ -788,9 +821,9 @@ class _EditprofileState extends State<Editprofile>
                         ),
                       ],
                     ),
-                    
+
                     SizedBox(height: 15),
-                    
+
                     // Price
                     if (property.price > 0)
                       Text(
@@ -801,11 +834,13 @@ class _EditprofileState extends State<Editprofile>
                           color: Colors.green,
                         ),
                       ),
-                    
+
                     SizedBox(height: 20),
-                    
+
                     // Property Details
-                    if (property.bedrooms > 0 || property.bathrooms > 0 || property.area > 0)
+                    if (property.bedrooms > 0 ||
+                        property.bathrooms > 0 ||
+                        property.area > 0)
                       Container(
                         padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -836,9 +871,9 @@ class _EditprofileState extends State<Editprofile>
                           ],
                         ),
                       ),
-                    
+
                     SizedBox(height: 20),
-                    
+
                     // Description
                     Text(
                       'Description',
@@ -848,9 +883,9 @@ class _EditprofileState extends State<Editprofile>
                         color: Colors.black87,
                       ),
                     ),
-                    
+
                     SizedBox(height: 10),
-                    
+
                     Text(
                       property.description,
                       style: TextStyle(
@@ -859,18 +894,21 @@ class _EditprofileState extends State<Editprofile>
                         height: 1.5,
                       ),
                     ),
-                    
+
                     SizedBox(height: 30),
-                    
+
                     // Contact Button
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                         Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Agentscreen()));
-          },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Agentscreen(),
+                            ),
+                          );
+                        },
                         icon: Icon(Icons.message),
                         label: Text('Contact Agent'),
                         style: ElevatedButton.styleFrom(
@@ -906,13 +944,7 @@ class _EditprofileState extends State<Editprofile>
             color: Colors.black87,
           ),
         ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
       ],
     );
   }
@@ -1092,11 +1124,7 @@ class _EditprofileState extends State<Editprofile>
                 color: Colors.blue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                Icons.send,
-                color: Colors.blue,
-                size: 20,
-              ),
+              child: Icon(Icons.send, color: Colors.blue, size: 20),
             ),
           ),
         ],
@@ -1111,7 +1139,9 @@ class _EditprofileState extends State<Editprofile>
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(20),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),
@@ -1149,9 +1179,9 @@ class _EditprofileState extends State<Editprofile>
                           ),
                       ],
                     ),
-                    
+
                     SizedBox(height: 20),
-                    
+
                     // Profile Info Row
                     Row(
                       children: [
@@ -1176,9 +1206,9 @@ class _EditprofileState extends State<Editprofile>
                             ),
                           ),
                         ),
-                        
+
                         SizedBox(width: 30),
-                        
+
                         // Stats
                         Expanded(
                           child: Row(
@@ -1186,24 +1216,33 @@ class _EditprofileState extends State<Editprofile>
                             children: [
                               GestureDetector(
                                 onTap: _showUserStats,
-                                child: _buildStatColumn('${userProfile['postsCount']}', 'post'),
+                                child: _buildStatColumn(
+                                  '${userProfile['postsCount']}',
+                                  'post',
+                                ),
                               ),
                               GestureDetector(
                                 onTap: _showUserStats,
-                                child: _buildStatColumn('${userProfile['followersCount']}', 'followers'),
+                                child: _buildStatColumn(
+                                  '${userProfile['followersCount']}',
+                                  'followers',
+                                ),
                               ),
                               GestureDetector(
                                 onTap: _showUserStats,
-                                child: _buildStatColumn('${userProfile['followingCount']}', 'following'),
+                                child: _buildStatColumn(
+                                  '${userProfile['followingCount']}',
+                                  'following',
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    
+
                     SizedBox(height: 15),
-                    
+
                     // Bio
                     Align(
                       alignment: Alignment.centerLeft,
@@ -1216,9 +1255,9 @@ class _EditprofileState extends State<Editprofile>
                         ),
                       ),
                     ),
-                    
+
                     SizedBox(height: 20),
-                    
+
                     // Action Buttons Row
                     Row(
                       children: [
@@ -1244,16 +1283,21 @@ class _EditprofileState extends State<Editprofile>
                             ),
                           ),
                         ),
-                        
+
                         SizedBox(width: 12),
-                        
+
                         // Coins Display
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                            border: Border.all(
+                              color: Colors.blue.withOpacity(0.3),
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -1288,7 +1332,7 @@ class _EditprofileState extends State<Editprofile>
                   ],
                 ),
               ),
-              
+
               // Tab Bar
               Container(
                 decoration: BoxDecoration(
@@ -1334,7 +1378,7 @@ class _EditprofileState extends State<Editprofile>
                   ],
                 ),
               ),
-              
+
               // Tab Content
               Expanded(
                 child: TabBarView(
@@ -1373,18 +1417,19 @@ class _EditprofileState extends State<Editprofile>
                           )
                         : GridView.builder(
                             padding: EdgeInsets.all(16),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.8,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.8,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
                             itemCount: listings.length,
                             itemBuilder: (context, index) {
                               return _buildPropertyCard(listings[index]);
                             },
                           ),
-                    
+
                     // Clips Tab
                     clips.isEmpty
                         ? Center(
@@ -1418,12 +1463,13 @@ class _EditprofileState extends State<Editprofile>
                           )
                         : GridView.builder(
                             padding: EdgeInsets.all(16),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 0.7,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 0.7,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
                             itemCount: clips.length,
                             itemBuilder: (context, index) {
                               return _buildClipCard(clips[index]);
@@ -1471,10 +1517,7 @@ class _EditprofileState extends State<Editprofile>
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.7),
-                    ],
+                    colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
                   ),
                 ),
               ),

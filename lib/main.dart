@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rinex/src/view/navigation/bottomAppBar.dart';
-import 'package:rinex/src/view/getstart.dart';
-import 'package:rinex/src/view/auth/login.dart';
-import 'package:rinex/src/view/screens/home.dart';
+import 'package:rinex/src/view/onboard.dart';
 
 void main() {
-  runApp(const MyApp()); 
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
