@@ -867,24 +867,6 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   }
 }
 
-// Additional screens
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Renex Home'),
-        backgroundColor: RenexColors.primary,
-      ),
-      body: const Center(
-        child: Text(
-          'Welcome to Renex Estate!',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-}
 
 class ForgotPasswordScreen extends StatelessWidget {
   @override

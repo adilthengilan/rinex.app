@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:rinex/src/view/auth/renexlogin.dart';
 import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
+import 'package:rinex/src/view/screens/home.dart';
 import 'package:rinex/src/view/screens/notification_Page/notifications.dart';
 import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
 
@@ -334,7 +336,10 @@ class _SearchpageState extends State<Searchpage> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
             },
             child: Icon(Icons.arrow_back, color: Colors.blue, size: 20),
           ),
