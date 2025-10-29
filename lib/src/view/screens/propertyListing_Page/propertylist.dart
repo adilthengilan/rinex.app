@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:rinex/propert.dart';
 import 'package:rinex/src/view/screens/agentList_Page/agentlist.dart';
 import 'package:rinex/src/view/screens/favorites_Page/favourites.dart'
     show FavoriteScreen;
 import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
 
+// Your existing SharedFavoriteManager class
 class SharedFavoriteManager {
   static final SharedFavoriteManager _instance =
       SharedFavoriteManager._internal();
@@ -21,6 +23,11 @@ class SharedFavoriteManager {
 
   void removeFavorite(String propertyId) =>
       _favoriteProperties.remove(propertyId);
+  // bool isFavorite(String propertyId) => _favoriteProperties.contains(propertyId);
+
+  // void addFavorite(String propertyId) => _favoriteProperties.add(propertyId);
+
+  // void removeFavorite(String propertyId) => _favoriteProperties.remove(propertyId);
 
   void toggleFavorite(String propertyId) {
     if (_favoriteProperties.contains(propertyId)) {
@@ -43,14 +50,13 @@ class SharedFavoriteManager {
   }
 }
 
-// Centralized Property Data Service
+// Property Data Service
 class PropertyDataService {
   static List<Map<String, dynamic>> getAllProperties() {
     return [
       {
-        'id': 'prop_1',
-        'imageUrl': 'lib/assets/property4.jpg',
-        'propertyName': 'Sky Dandelions Apartment',
+        'id': '1',
+        'name': 'Sky Dandelions Apartment',
         'location': 'Jakarta, Indonesia',
         'price': '₹ 10,000 /month',
         'beds': '3 BHK',
@@ -65,42 +71,27 @@ class PropertyDataService {
         'description':
             'Beautiful apartment with modern amenities in the heart of Jakarta.',
         'amenities': ['Swimming Pool', 'Gym', '24/7 Security', 'Elevator'],
+        'price': '10,000',
+        'bedrooms': 3,
+        'rating': 4.9,
+        'area': 1000,
+        'furnishing': 'Semi Furnished',
+        'image': 'assets/building.jpg',
+        'isPremium': true,
+        'isFeatured': true,
       },
       {
-        'id': 'prop_2',
-        'imageUrl': 'lib/assets/property2.jpg',
-        'propertyName': 'Charming Family Home',
-        'location': 'San Francisco, USA',
-        'price': '₹ 10,000 /month',
-        'beds': '3 BHK',
-        'area': 'Area: 1200 Sqft',
-        'bedrooms': 'Bedrooms: 04',
-        'bathrooms': 'Bathrooms: 02',
-        'kitchen': 'Kitchen: 01',
-        'parking': 'Parking Available',
-        'furnished': 'Unfurnished',
-        'year': '2005',
-        'rating': '4.5',
-        'description': 'Spacious family home perfect for growing families.',
-        'amenities': ['Garden', 'Garage', 'Fireplace', 'Basement'],
-      },
-      {
-        'id': 'prop_3',
-        'imageUrl': 'lib/assets/building.jpg',
-        'propertyName': 'Modern Building Complex',
+        'id': '2',
+        'name': 'Sky Dandelions Apartment',
         'location': 'Jakarta, Indonesia',
-        'price': '₹ 12,000 /month',
-        'beds': '2 BHK',
-        'area': 'Area: 800 Sqft',
-        'bedrooms': 'Bedrooms: 02',
-        'bathrooms': 'Bathrooms: 02',
-        'kitchen': 'Kitchen: 01',
-        'parking': 'Parking Available',
-        'furnished': 'Fully Furnished',
-        'year': '2023',
-        'rating': '4.7',
-        'description': 'Ultra-modern apartment with smart home features.',
-        'amenities': ['Smart Home', 'Rooftop Terrace', 'Concierge', 'Spa'],
+        'price': '10,000',
+        'bedrooms': 3,
+        'rating': 4.9,
+        'area': 1000,
+        'furnishing': 'Semi Furnished',
+        'image': 'assets/building.jpg',
+        'isPremium': true,
+        'isFeatured': true,
       },
       {
         'id': 'prop_4',
@@ -125,25 +116,55 @@ class PropertyDataService {
           'Wine Cellar',
           'Maid Service',
         ],
+        'id': '3',
+        'name': 'Sky Dandelions Apartment',
+        'location': 'Jakarta, Indonesia',
+        'price': '10,000',
+        'bedrooms': 3,
+        'rating': 4.9,
+        'area': 1000,
+        'furnishing': 'Semi Furnished',
+        'image': 'assets/property2.jpg',
+        'isPremium': true,
+        'isFeatured': true,
+      },
+      {
+        'id': '4',
+        'name': 'Sky Dandelions Apartment',
+        'location': 'Jakarta, Indonesia',
+        'price': '10,000',
+        'bedrooms': 3,
+        'rating': 4.9,
+        'area': 1000,
+        'furnishing': 'Semi Furnished',
+        'image': 'assets/apartment.jpg',
+        'isPremium': true,
+        'isFeatured': true,
       },
     ];
   }
 }
 
 class Propertylist extends StatefulWidget {
-  const Propertylist({super.key});
-
   @override
-  State<Propertylist> createState() => _PropertylistState();
+  _PropertylistState createState() => _PropertylistState();
 }
 
 class _PropertylistState extends State<Propertylist> {
-  String _currentLocation = '34.0522° N, 118.2437° W';
   final SharedFavoriteManager _favoriteManager = SharedFavoriteManager();
+  List<Map<String, dynamic>> properties = [];
+
+  @override
+  void initState() {
+    super.initState();
+    properties = PropertyDataService.getAllProperties();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(color: Colors.transparent),
+      extendBody: true,
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -228,7 +249,7 @@ class _PropertylistState extends State<Propertylist> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SearchPage()),
+          MaterialPageRoute(builder: (context) => PropertySearchPage()),
         );
       },
       child: Container(
@@ -301,7 +322,7 @@ class _PropertylistState extends State<Propertylist> {
                 const Icon(Icons.location_on, size: 20, color: Colors.grey),
                 const SizedBox(width: 5),
                 Text(
-                  _currentLocation,
+                  " _currentLocation",
                   style: const TextStyle(fontSize: 14, color: Colors.black87),
                 ),
               ],
@@ -359,37 +380,109 @@ class _PropertylistState extends State<Propertylist> {
                   ),
                 ),
                 Positioned(
-                  top: 10,
-                  left: 10,
+                  right: 12,
+                  top: 12,
                   child: GestureDetector(
-                    onTap: () => _toggleFavorite(property),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: isFavorite
-                            ? Colors.red.withOpacity(0.9)
-                            : Colors.white.withOpacity(0.9),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
+                    onTap: () {
+                      setState(() {
+                        _favoriteManager.toggleFavorite(property['id']);
+                      });
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: isFavorite
+                          ? Colors.red.withOpacity(0.9)
+                          : Colors.white.withOpacity(0.9),
                       child: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
                         color: isFavorite ? Colors.white : Colors.red,
-                        size: 22,
                       ),
                     ),
                   ),
                 ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              property['title'] ?? 'Property Title',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PropertyCard extends StatelessWidget {
+  final Map<String, dynamic> property;
+  final VoidCallback onFavoriteToggle;
+  final bool isFavorite;
+
+  const PropertyCard({
+    Key? key,
+    required this.property,
+    required this.onFavoriteToggle,
+    required this.isFavorite,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Property Image Section
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+              image: DecorationImage(
+                image: AssetImage(property['image']),
+                fit: BoxFit.cover,
+                onError: (exception, stackTrace) {},
+              ),
+            ),
+            child: Stack(
+              children: [
+                // Overlay gradient
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.1),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Badge
                 Positioned(
                   top: 10,
-                  right: 10,
+                  left: 10,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
@@ -400,110 +493,211 @@ class _PropertylistState extends State<Propertylist> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text(
-                      "renex assured",
+                      "Renex Assured",
                       style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ),
+                ),
+
+                // Favorite Button
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: onFavoriteToggle,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite ? Colors.red : Colors.grey[600],
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
           ),
+
+          // Property Details Section
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Property title, price, and info
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Text(
-                        property['propertyName'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            property['name'],
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: Colors.grey[400],
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                property['location'],
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Icon(
+                                Icons.bed,
+                                color: Colors.grey[400],
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${property['bedrooms']} BHK',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Icon(Icons.star, color: Colors.amber, size: 14),
+                              const SizedBox(width: 2),
+                              Text(
+                                '${property['rating']}',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      property['price'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF007BFF),
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, color: Colors.grey, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      property['location'],
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    const SizedBox(width: 12),
-                    const Icon(Icons.king_bed, color: Colors.grey, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      property['beds'],
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    const SizedBox(width: 12),
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      property['rating'],
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ],
-                ),
-                const Divider(height: 20),
-                _buildDetailRow(Icons.area_chart, property['area']),
-                _buildDetailRow(Icons.king_bed, property['bedrooms']),
-                _buildDetailRow(Icons.bathtub, property['bathrooms']),
-                _buildDetailRow(Icons.kitchen, property['kitchen']),
-                _buildDetailRow(Icons.directions_car, property['parking']),
-                _buildDetailRow(Icons.chair, property['furnished']),
-                _buildDetailRow(Icons.calendar_today, property['year']),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _viewPropertyDetails(property),
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.blue),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '₹${property['price']}',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              TextSpan(
+                                text: '/month',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        icon: const Icon(Icons.visibility, size: 16),
-                        label: const Text('View Details'),
+                      ],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Area and Furnishing
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[50],
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.square_foot,
+                            color: Colors.blue[600],
+                            size: 14,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Area: ${property['area']} Sqft',
+                            style: TextStyle(
+                              color: Colors.blue[600],
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Agentscreen(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[50],
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.chair, color: Colors.blue[600], size: 14),
+                          const SizedBox(width: 4),
+                          Text(
+                            property['furnishing'],
+                            style: TextStyle(
+                              color: Colors.blue[600],
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
                           ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Agentscreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        icon: const Icon(Icons.call, size: 16),
-                        label: const Text('Contact'),
+                      ),
+                      icon: const Icon(Icons.phone, size: 16),
+                      label: const Text(
+                        "Contact Agent",
+                        style: TextStyle(fontSize: 13),
                       ),
                     ),
                   ],
@@ -512,66 +706,6 @@ class _PropertylistState extends State<Propertylist> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.grey, size: 18),
-          const SizedBox(width: 8),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 14, color: Colors.black87),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _toggleFavorite(Map<String, dynamic> property) {
-    setState(() {
-      _favoriteManager.toggleFavorite(property['id']);
-    });
-
-    final bool isNowFavorite = _favoriteManager.isFavorite(property['id']);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          isNowFavorite
-              ? 'Added "${property['propertyName']}" to favorites'
-              : 'Removed "${property['propertyName']}" from favorites',
-        ),
-        action: SnackBarAction(
-          label: 'View Favorites',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const FavoriteScreen()),
-            ).then((_) => setState(() {}));
-          },
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _viewPropertyDetails(Map<String, dynamic> property) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Viewing details for ${property['propertyName']}'),
-      ),
-    );
-  }
-
-  void _contactOwner(Map<String, dynamic> property) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Contacting owner of ${property['propertyName']}'),
       ),
     );
   }
