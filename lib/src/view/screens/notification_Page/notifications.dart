@@ -19,7 +19,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       message: 'New message received from a potential buyer',
       timestamp: 'Now',
       isVerified: true,
-      avatarAsset: 'lib/assets/buyer.jpg',
+      avatarAsset: 'assets/buyer.jpg',
       isRead: false,
     ),
     NotificationItem(
@@ -28,7 +28,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       message: 'Your property has been successfully added!',
       timestamp: 'Now',
       isVerified: true,
-      avatarAsset: 'lib/assets/renex.jpg',
+      avatarAsset: 'assets/renex.jpg',
       isRead: false,
       isAppNotification: true,
     ),
@@ -38,7 +38,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       message: 'New message received from a potential buyer',
       timestamp: 'Tue',
       isVerified: true,
-      avatarAsset: 'lib/assets/buyer.jpg',
+      avatarAsset: 'assets/buyer.jpg',
       isRead: true,
     ),
     NotificationItem(
@@ -47,7 +47,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       message: 'New message received from a potential buyer',
       timestamp: 'Mon',
       isVerified: true,
-      avatarAsset: 'lib/assets/buyer.jpg',
+      avatarAsset: 'assets/buyer.jpg',
       isRead: true,
     ),
   ];

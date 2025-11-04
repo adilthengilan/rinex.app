@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/auth/renexlogin.dart';
 import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';

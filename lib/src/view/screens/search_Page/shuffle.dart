@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
 import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
 
 class ShuffleScreen extends StatefulWidget {

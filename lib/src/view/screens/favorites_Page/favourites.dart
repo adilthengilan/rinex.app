@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
-
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -12,10 +10,11 @@ class FavoriteScreen extends StatefulWidget {
 
 class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStateMixin {
   final SharedFavoriteManager _favoriteManager = SharedFavoriteManager();
-  String _sortBy = 'name';
-  bool _showGridView = false;
+  String _sortBy = 'Default';
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  List<Property> favoriteProperties = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -28,6 +27,43 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
+    _loadFavorites();
+  }
+
+  Future<void> _loadFavorites() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      List<Map<String, dynamic>> favs = await _favoriteManager.getFavoriteProperties();
+      
+      setState(() {
+        favoriteProperties = favs.map((fav) {
+          return Property(
+            id: fav['id'] ?? '',
+            imageUrl: fav['imageUrl'] ?? 'assets/property4.jpg',
+            title: fav['propertyName'] ?? 'Property',
+            location: fav['location'] ?? 'Unknown',
+            rating: double.tryParse(fav['rating']?.toString() ?? '0') ?? 0.0,
+            price: int.tryParse(fav['price']?.replaceAll(RegExp(r'[₹,/month]'), '').trim() ?? '0') ?? 0,
+            area: fav['area'] ?? '0 Sqft',
+            bedrooms: fav['beds'] ?? '0',
+            bathrooms: fav['bathrooms'] ?? '0',
+            kitchen: fav['kitchen'] ?? '0',
+            yearBuilt: fav['year'] ?? '2020',
+            type: fav['type'] ?? 'Property',
+            isLiked: true,
+          );
+        }).toList();
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        favoriteProperties = [];
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -36,13 +72,147 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
     super.dispose();
   }
 
+  void _sortProperties(String sortType) {
+    setState(() {
+      _sortBy = sortType;
+      switch (sortType) {
+        case 'Price: Low to High':
+          favoriteProperties.sort((a, b) => a.price.compareTo(b.price));
+          break;
+        case 'Price: High to Low':
+          favoriteProperties.sort((a, b) => b.price.compareTo(a.price));
+          break;
+        case 'Rating':
+          favoriteProperties.sort((a, b) => b.rating.compareTo(a.rating));
+          break;
+        default:
+          _loadFavorites();
+      }
+    });
+  }
+
+  void _showSortOptions() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Sort By',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 20),
+              _buildSortOption('Default'),
+              _buildSortOption('Price: Low to High'),
+              _buildSortOption('Price: High to Low'),
+              _buildSortOption('Rating'),
+              SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSortOption(String option) {
+    return ListTile(
+      title: Text(option),
+      trailing: _sortBy == option ? Icon(Icons.check, color: Colors.blue) : null,
+      onTap: () {
+        _sortProperties(option);
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  Future<void> _removeFavorite(String propertyId, String propertyName) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text('Remove from Favorites'),
+        content: Text('Remove "$propertyName" from your favorites?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              
+              _favoriteManager.removeFavorite(propertyId);
+              await _loadFavorites();
+              
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Removed "$propertyName" from favorites'),
+                    backgroundColor: Colors.orange,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Remove', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showClearAllDialog() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text('Clear All Favorites'),
+        content: const Text('Are you sure you want to remove all properties from your favorites?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              
+              _favoriteManager.clearAllFavorites();
+              await _loadFavorites();
+              
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('All favorites cleared'),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Clear All', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> favoriteProps = _favoriteManager.getFavoriteProperties();
-    _sortFavorites(favoriteProps);
-
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -55,59 +225,63 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
           children: [
             const Text(
               'Favorite Properties',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
             Text(
-              '${favoriteProps.length} properties',
+              '${favoriteProperties.length} properties',
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
           ],
         ),
         actions: [
-          if (favoriteProps.isNotEmpty) ...[
+          if (favoriteProperties.isNotEmpty) ...[
             IconButton(
-              icon: Icon(_showGridView ? Icons.list : Icons.grid_view, color: Colors.blue),
-              onPressed: () {
-                setState(() {
-                  _showGridView = !_showGridView;
-                });
-              },
-            ),
-            PopupMenuButton<String>(
               icon: const Icon(Icons.sort, color: Colors.blue),
-              onSelected: (value) {
-                setState(() {
-                  _sortBy = value;
-                });
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(value: 'name', child: Text('Sort by Name')),
-                const PopupMenuItem(value: 'price', child: Text('Sort by Price')),
-                const PopupMenuItem(value: 'rating', child: Text('Sort by Rating')),
-                const PopupMenuItem(value: 'recent', child: Text('Recently Added')),
-              ],
+              onPressed: _showSortOptions,
             ),
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert, color: Colors.blue),
               onSelected: (value) {
                 if (value == 'clear_all') {
                   _showClearAllDialog();
-                } else if (value == 'share') {
-                  _shareFavorites(favoriteProps);
                 }
               },
               itemBuilder: (context) => [
-                const PopupMenuItem(value: 'share', child: Text('Share Favorites')),
                 const PopupMenuItem(value: 'clear_all', child: Text('Clear All')),
               ],
             ),
           ],
         ],
       ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: favoriteProps.isEmpty ? _buildEmptyState() : _buildFavoritesList(favoriteProps),
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : FadeTransition(
+              opacity: _fadeAnimation,
+              child: favoriteProperties.isEmpty
+                  ? _buildEmptyState()
+                  : ListView.builder(
+                      padding: EdgeInsets.all(16),
+                      itemCount: favoriteProperties.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: _buildPropertyCard(
+                            property: favoriteProperties[index],
+                            onRemove: () {
+                              _removeFavorite(
+                                favoriteProperties[index].id,
+                                favoriteProperties[index].title,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+            ),
     );
   }
 
@@ -173,130 +347,129 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
     );
   }
 
-  Widget _buildFavoritesList(List<Map<String, dynamic>> favoriteProps) {
-    if (_showGridView) {
-      return GridView.builder(
-        padding: const EdgeInsets.all(16.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.8,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-        ),
-        itemCount: favoriteProps.length,
-        itemBuilder: (context, index) {
-          final property = favoriteProps[index];
-          return _buildGridCard(property, index);
-        },
-      );
-    } else {
-      return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: favoriteProps.length,
-        itemBuilder: (context, index) {
-          final property = favoriteProps[index];
-          return _buildListCard(property, index);
-        },
-      );
-    }
-  }
-
-  Widget _buildListCard(Map<String, dynamic> property, int index) {
+  Widget _buildPropertyCard({
+    required Property property,
+    required VoidCallback onRemove,
+  }) {
     return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 300 + (index * 100)),
+      duration: const Duration(milliseconds: 300),
       tween: Tween(begin: 0.0, end: 1.0),
       builder: (context, value, child) {
         return Transform.translate(
           offset: Offset(0, 50 * (1 - value)),
           child: Opacity(
             opacity: value,
-            child: Card(
-              margin: const EdgeInsets.only(bottom: 16.0),
-              elevation: 3,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 10,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-                    child: Stack(
-                      children: [
-                        Hero(
-                          tag: 'property_${property['id']}',
+                  Stack(
+                    children: [
+                      Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
                           child: Image.asset(
-                            property['imageUrl'],
-                            height: 200,
-                            width: double.infinity,
+                            property.imageUrl,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
-                                height: 200,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [Colors.grey[300]!, Colors.grey[100]!],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
+                                color: Colors.grey[300],
+                                child: Icon(
+                                  Icons.image,
+                                  size: 50,
+                                  color: Colors.grey[600],
                                 ),
-                                child: const Icon(Icons.image, size: 64, color: Colors.grey),
                               );
                             },
                           ),
                         ),
-                        Positioned(
-                          top: 10,
-                          left: 10,
-                          child: GestureDetector(
-                            onTap: () => _removeFavorite(property['id'], property['propertyName']),
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.9),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.favorite,
-                                color: Colors.white,
-                                size: 22,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 10,
-                          right: 10,
+                      ),
+                      Positioned(
+                        top: 15,
+                        left: 15,
+                        child: GestureDetector(
+                          onTap: onRemove,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.star, color: Colors.white, size: 14),
-                                const SizedBox(width: 2),
-                                Text(
-                                  property['rating'],
-                                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: Offset(0, 2),
                                 ),
                               ],
                             ),
+                            child: const Icon(
+                              Icons.favorite,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        top: 15,
+                        right: 15,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.star, color: Colors.white, size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                property.rating.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -305,62 +478,109 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                           children: [
                             Expanded(
                               child: Text(
-                                property['propertyName'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                property.title,
+                                style: TextStyle(
                                   fontSize: 18,
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                property['price'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF007BFF),
-                                  fontSize: 16,
-                                ),
+                            Text(
+                              '₹${property.price}/month',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
-                        
+                        SizedBox(height: 8),
                         Row(
                           children: [
-                            const Icon(Icons.location_on, color: Colors.grey, size: 16),
-                            const SizedBox(width: 4),
+                            Icon(Icons.location_on, color: Colors.blue, size: 16),
+                            SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                property['location'],
-                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                property.location,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            const Icon(Icons.king_bed, color: Colors.grey, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              property['beds'],
-                              style: const TextStyle(fontSize: 14, color: Colors.grey),
+                            SizedBox(width: 12),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.home, color: Colors.grey[700], size: 14),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    property.type,
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildFeatureItem(
+                                icon: Icons.square_foot,
+                                label: 'Area',
+                                value: property.area,
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildFeatureItem(
+                                icon: Icons.bed,
+                                label: 'Bedrooms',
+                                value: property.bedrooms,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildFeatureItem(
+                                icon: Icons.bathtub,
+                                label: 'Bathrooms',
+                                value: property.bathrooms,
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildFeatureItem(
+                                icon: Icons.kitchen,
+                                label: 'Kitchen',
+                                value: property.kitchen,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
                         Row(
                           children: [
                             Expanded(
                               child: OutlinedButton.icon(
-                                onPressed: () => _viewPropertyDetails(property),
+                                onPressed: () {},
                                 style: OutlinedButton.styleFrom(
                                   side: const BorderSide(color: Colors.blue),
                                   shape: RoundedRectangleBorder(
@@ -374,7 +594,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                             const SizedBox(width: 8),
                             Expanded(
                               child: ElevatedButton.icon(
-                                onPressed: () => _contactOwner(property),
+                                onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue,
                                   foregroundColor: Colors.white,
@@ -400,270 +620,71 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
     );
   }
 
-  Widget _buildGridCard(Map<String, dynamic> property, int index) {
-    return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 300 + (index * 100)),
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value, child) {
-        return Transform.scale(
-          scale: value,
-          child: Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-                    child: Stack(
-                      children: [
-                        Image.asset(
-                          property['imageUrl'],
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [Colors.grey[300]!, Colors.grey[100]!],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                              ),
-                              child: const Icon(Icons.image, size: 32, color: Colors.grey),
-                            );
-                          },
-                        ),
-                        Positioned(
-                          top: 5,
-                          right: 5,
-                          child: GestureDetector(
-                            onTap: () => _removeFavorite(property['id'], property['propertyName']),
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.9),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.favorite,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 5,
-                          right: 5,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.star, color: Colors.white, size: 10),
-                                const SizedBox(width: 2),
-                                Text(
-                                  property['rating'],
-                                  style: const TextStyle(color: Colors.white, fontSize: 10),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              property['propertyName'],
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                const Icon(Icons.location_on, color: Colors.grey, size: 12),
-                                const SizedBox(width: 2),
-                                Expanded(
-                                  child: Text(
-                                    property['location'],
-                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              property['beds'],
-                              style: const TextStyle(fontSize: 12, color: Colors.grey),
-                            ),
-                            Text(
-                              property['price'],
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+  Widget _buildFeatureItem({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            color: Colors.blue,
+            size: 18,
+          ),
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value.isNotEmpty ? '$label: $value' : label,
+            style: TextStyle(
+              color: Colors.grey[700],
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        );
-      },
+        ),
+      ],
     );
   }
+}
 
-  void _sortFavorites(List<Map<String, dynamic>> favorites) {
-    switch (_sortBy) {
-      case 'name':
-        favorites.sort((a, b) => a['propertyName'].compareTo(b['propertyName']));
-        break;
-      case 'price':
-        favorites.sort((a, b) {
-          final priceA = int.parse(a['price'].replaceAll(RegExp(r'[₹,/ month]'), '').trim());
-          final priceB = int.parse(b['price'].replaceAll(RegExp(r'[₹,/ month]'), '').trim());
-          return priceA.compareTo(priceB);
-        });
-        break;
-      case 'rating':
-        favorites.sort((a, b) => double.parse(b['rating']).compareTo(double.parse(a['rating'])));
-        break;
-      case 'recent':
-        favorites.sort((a, b) => int.parse(b['year']).compareTo(int.parse(a['year'])));
-        break;
-    }
-  }
+// Property Model Class
+class Property {
+  final String id;
+  final String imageUrl;
+  final String title;
+  final String location;
+  final double rating;
+  final int price;
+  final String area;
+  final String bedrooms;
+  final String bathrooms;
+  final String kitchen;
+  final String yearBuilt;
+  final String type;
+  bool isLiked;
 
-  void _removeFavorite(String propertyId, String propertyName) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Text('Remove from Favorites'),
-        content: Text('Remove "$propertyName" from your favorites?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _favoriteManager.removeFavorite(propertyId);
-              });
-              Navigator.of(context).pop();
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Removed "$propertyName" from favorites'),
-                  action: SnackBarAction(
-                    label: 'Undo',
-                    onPressed: () {
-                      setState(() {
-                        _favoriteManager.addFavorite(propertyId);
-                      });
-                    },
-                  ),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Remove', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showClearAllDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Text('Clear All Favorites'),
-        content: const Text('Are you sure you want to remove all properties from your favorites? This action cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _favoriteManager.clearAllFavorites();
-              });
-              Navigator.of(context).pop();
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('All favorites cleared'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Clear All', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _shareFavorites(List<Map<String, dynamic>> favorites) {
-    final favoriteNames = favorites.map((prop) => prop['propertyName']).join(', ');
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Sharing ${favorites.length} favorite properties: $favoriteNames'),
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
-  void _viewPropertyDetails(Map<String, dynamic> property) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Viewing details for ${property['propertyName']}')),
-    );
-  }
-
-  void _contactOwner(Map<String, dynamic> property) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Contacting owner of ${property['propertyName']}')),
-    );
-  }
+  Property({
+    required this.id,
+    required this.imageUrl,
+    required this.title,
+    required this.location,
+    required this.rating,
+    required this.price,
+    required this.area,
+    required this.bedrooms,
+    required this.bathrooms,
+    required this.kitchen,
+    required this.yearBuilt,
+    required this.isLiked,
+    required this.type,
+  });
 }

@@ -1,6 +1,7 @@
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
 import 'package:rinex/src/view/screens/home.dart';
 
 import 'package:iconly/iconly.dart';
@@ -17,7 +18,7 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  final pages = [HomeScreen(), Searchpage(), Searchpage(), ReelsScreen(), ProfilePage()];
+  final pages = [HomeScreen(), Searchpage(), FavoriteScreen(), ReelsScreen(), ProfilePage()];
   int index = 0;
 
   @override

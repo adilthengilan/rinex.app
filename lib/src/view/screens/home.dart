@@ -474,103 +474,103 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 Widget _buildTopLocationsSection(Size size) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 25),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 25),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Top Locations',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF2C3E50),
+                ),
+              ),
+              Text(
+                'explore',
+                style: TextStyle(
+                  color: const Color(0xFF1976D2),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 140,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Top Locations',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF2C3E50),
-                  ),
-                ),
-                Text(
-                  'explore',
-                  style: TextStyle(
-                    color: const Color(0xFF1976D2),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            itemCount: _mockLocations.length,
+            itemBuilder: (context, index) => Container(
+              margin: const EdgeInsets.only(right: 30),
+              child: _buildLocationCard(_mockLocations[index], size),
             ),
           ),
-          const SizedBox(height: 20),
-          Container(
-            height: 120,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: _mockLocations.length,
-              itemBuilder: (context, index) => Container(
-                margin: const EdgeInsets.only(right: 20),
-                child: _buildLocationCard(_mockLocations[index], size),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
-  Widget _buildLocationCard(Map<String, String> location, Size size) {
-    return Container(
-      width: 100,
-      child: Column(
-        children: [
-          Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE3F2FD),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+Widget _buildLocationCard(Map<String, String> location, Size size) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: 90,
+        height: 90,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            child: ClipOval(
-              child: Image.asset(
-                location['image']!,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: const Color(0xFFE3F2FD),
-                  child: const Icon(
-                    Icons.location_city,
-                    size: 30,
-                    color: Color(0xFF1976D2),
-                  ),
-                ),
+          ],
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            location['image']!,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: const Color(0xFFE3F2FD),
+              child: const Icon(
+                Icons.location_city,
+                size: 40,
+                color: Color(0xFF1976D2),
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            location['name']!,
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              fontSize: 13,
-              color: const Color(0xFF2C3E50),
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+        ),
       ),
-    );
-  }
+      const SizedBox(height: 12),
+      SizedBox(
+        width: 90,
+        child: Text(
+          location['name']!,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+            color: const Color(0xFF2C3E50),
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ],
+  );
+}
   Widget _buildNearbyEstatesSection(Size size) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25),
