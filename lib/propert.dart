@@ -10,17 +10,122 @@ class PropertySearchPage extends StatefulWidget {
 class _PropertySearchPageState extends State<PropertySearchPage> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
-  
+
   List<Property> allProperties = [
-    Property(id: 1, name: 'Luxury Villa', location: 'Mumbai', price: 50000000, type: 'Villa'),
-    Property(id: 2, name: 'Modern Apartment', location: 'Delhi', price: 8000000, type: 'Apartment'),
-    Property(id: 3, name: 'Beach House', location: 'Goa', price: 35000000, type: 'House'),
-    Property(id: 4, name: 'Penthouse Suite', location: 'Bangalore', price: 15000000, type: 'Penthouse'),
-    Property(id: 5, name: 'Studio Flat', location: 'Mumbai', price: 4500000, type: 'Studio'),
-    Property(id: 6, name: 'Garden Villa', location: 'Pune', price: 25000000, type: 'Villa'),
-    Property(id: 7, name: 'City Apartment', location: 'Chennai', price: 6000000, type: 'Apartment'),
+    Property(
+      id: 1,
+      name: 'Luxury Villa',
+      location: 'Mumbai',
+      price: 50000000,
+      type: 'Villa',
+      isLiked: false,
+      yearBuilt: '2020',
+      kitchen: '1',
+      imageUrl: 'assets/property1.jpg',
+      title: 'Luxury Villa',
+      rating: 4.8,
+      area: '2500 Sqft',
+      bedrooms: '4',
+      bathrooms: '3',
+    ),
+    Property(
+      id: 2,
+      name: 'Modern Apartment',
+      location: 'Delhi',
+      price: 8000000,
+      type: 'Apartment',
+      isLiked: false,
+      yearBuilt: '2019',
+      kitchen: '1',
+      imageUrl: 'assets/property2.jpg',
+      title: 'Modern Apartment',
+      rating: 4.5,
+      area: '1200 Sqft',
+      bedrooms: '2',
+      bathrooms: '2',
+    ),
+    Property(
+      id: 3,
+      name: 'Beach House',
+      location: 'Goa',
+      price: 35000000,
+      type: 'House',
+      isLiked: false,
+      yearBuilt: '2021',
+      kitchen: '1',
+      imageUrl: 'assets/property3.jpg',
+      title: 'Beach House',
+      rating: 4.9,
+      area: '3000 Sqft',
+      bedrooms: '3',
+      bathrooms: '3',
+    ),
+    Property(
+      id: 4,
+      name: 'Penthouse Suite',
+      location: 'Bangalore',
+      price: 15000000,
+      type: 'Penthouse',
+      isLiked: false,
+      yearBuilt: '2022',
+      kitchen: '1',
+      imageUrl: 'assets/property4.jpg',
+      title: 'Penthouse Suite',
+      rating: 4.7,
+      area: '1800 Sqft',
+      bedrooms: '2',
+      bathrooms: '2',
+    ),
+    Property(
+      id: 5,
+      name: 'Studio Flat',
+      location: 'Mumbai',
+      price: 4500000,
+      type: 'Studio',
+      isLiked: false,
+      yearBuilt: '2018',
+      kitchen: '1',
+      imageUrl: 'assets/property5.jpg',
+      title: 'Studio Flat',
+      rating: 4.2,
+      area: '600 Sqft',
+      bedrooms: '1',
+      bathrooms: '1',
+    ),
+    Property(
+      id: 6,
+      name: 'Garden Villa',
+      location: 'Pune',
+      price: 25000000,
+      type: 'Villa',
+      isLiked: false,
+      yearBuilt: '2020',
+      kitchen: '1',
+      imageUrl: 'assets/property6.jpg',
+      title: 'Garden Villa',
+      rating: 4.6,
+      area: '2200 Sqft',
+      bedrooms: '3',
+      bathrooms: '3',
+    ),
+    Property(
+      id: 7,
+      name: 'City Apartment',
+      location: 'Chennai',
+      price: 6000000,
+      type: 'Apartment',
+      isLiked: false,
+      yearBuilt: '2019',
+      kitchen: '1',
+      imageUrl: 'assets/property7.jpg',
+      title: 'City Apartment',
+      rating: 4.4,
+      area: '1000 Sqft',
+      bedrooms: '2',
+      bathrooms: '2',
+    ),
   ];
-  
+
   List<Property> filteredProperties = [];
   List<String> suggestions = [];
   bool showSuggestions = false;
@@ -44,7 +149,7 @@ class _PropertySearchPageState extends State<PropertySearchPage> {
 
   void _onSearchChanged() {
     String query = _searchController.text;
-    
+
     if (query.isEmpty) {
       setState(() {
         suggestions = [];
@@ -55,7 +160,6 @@ class _PropertySearchPageState extends State<PropertySearchPage> {
       return;
     }
 
-    
     Set<String> suggestionSet = {};
     for (var property in allProperties) {
       if (property.name.toLowerCase().contains(query.toLowerCase())) {
@@ -88,8 +192,8 @@ class _PropertySearchPageState extends State<PropertySearchPage> {
     setState(() {
       filteredProperties = allProperties.where((property) {
         return property.name.toLowerCase().contains(query.toLowerCase()) ||
-               property.location.toLowerCase().contains(query.toLowerCase()) ||
-               property.type.toLowerCase().contains(query.toLowerCase());
+            property.location.toLowerCase().contains(query.toLowerCase()) ||
+            property.type.toLowerCase().contains(query.toLowerCase());
       }).toList();
       isSearching = true;
       showSuggestions = false;
@@ -112,6 +216,7 @@ class _PropertySearchPageState extends State<PropertySearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: const Text('Property Search'),
         backgroundColor: Colors.blue[700],
@@ -211,11 +316,20 @@ class _PropertySearchPageState extends State<PropertySearchPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+                        Icon(
+                          Icons.search_off,
+                          size: 64,
+                          color: Colors.grey[400],
+                        ),
                         const SizedBox(height: 16),
                         Text(
-                          isSearching ? 'No properties found' : 'Start searching for properties',
-                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          isSearching
+                              ? 'No properties found'
+                              : 'Start searching for properties',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),
@@ -249,7 +363,7 @@ class PropertyCard extends StatelessWidget {
         onTap: () {
           // Handle property tap
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Selected: ${property.name}')),
+            SnackBar(content: Text('Selected: ${property.name}'))
           );
         },
         borderRadius: BorderRadius.circular(12),
@@ -284,7 +398,11 @@ class PropertyCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                            Icon(
+                              Icons.location_on,
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               property.location,
@@ -294,7 +412,10 @@ class PropertyCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.green[100],
                             borderRadius: BorderRadius.circular(4),
@@ -349,6 +470,15 @@ class Property {
   final String location;
   final double price;
   final String type;
+  final bool isLiked;
+  final String yearBuilt;
+  final String kitchen;
+  final String imageUrl;
+  final String title;
+  final double rating;
+  final String area;
+  final String bedrooms;
+  final String bathrooms;
 
   Property({
     required this.id,
@@ -356,5 +486,14 @@ class Property {
     required this.location,
     required this.price,
     required this.type,
+    required this.isLiked,
+    required this.yearBuilt,
+    required this.kitchen,
+    required this.imageUrl,
+    required this.title,
+    required this.rating,
+    required this.area,
+    required this.bedrooms,
+    required this.bathrooms,
   });
 }

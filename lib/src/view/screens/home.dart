@@ -1,22 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:iconly/iconly.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:rinex/src/view/screens/agentList_Page/agentlist.dart';
 import 'package:rinex/src/view/screens/bottom_sheet/addProperty_Page/addproperty.dart';
 import 'package:rinex/src/view/screens/bottom_sheet/requirementAdd_Page/requirements.dart';
 import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
-import 'package:rinex/src/view/screens/profile_Page/profile.dart';
 import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
-
-
-
 import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:rinex/src/view/screens/search_Page/shuffle.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:hugeicons/hugeicons.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -110,21 +103,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       'image': 'assets/yogyakarta.jpg',
       'properties': '45+',
     },
-    {
-      'name': 'Bandung',
-      'image': 'assets/building.jpg',
-      'properties': '67+',
-    },
+    {'name': 'Bandung', 'image': 'assets/building.jpg', 'properties': '67+'},
   ];
 
-  final List<Map<String, dynamic>> _categories = [
-    {'icon': HugeIcons.strokeRoundedHome09, 'label': 'Home'},
-    {'icon': HugeIcons.strokeRoundedBuilding05, 'label': 'Apartments'},
-    {'icon': HugeIcons.strokeRoundedStore01, 'label': 'Commercial'},
-    {'icon': HugeIcons.strokeRoundedOffice, 'label': 'Offices'},
- 
-   
-  ];
+  List<Map<String, dynamic>> getcategories(BuildContext context) {
+    return [
+      {
+        'icon': HugeIcons.strokeRoundedHome09,
+        'label': 'Home',
+        'onTap': () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Agentscreen()),
+          );
+        },
+      },
+      {'icon': HugeIcons.strokeRoundedBuilding05, 'label': 'Apartments'},
+      {'icon': HugeIcons.strokeRoundedStore01, 'label': 'Commercial'},
+      {'icon': HugeIcons.strokeRoundedOffice, 'label': 'Offices'},
+      {'icon': HugeIcons.strokeRoundedHome13, 'label': 'Resort'},
+      {'icon': HugeIcons.strokeRoundedHotel02, 'label': 'Hotels'},
+      {'icon': HugeIcons.strokeRoundedRemoteControl, 'label': 'Rent'},
+      {'icon': HugeIcons.strokeRoundedAgreement01, 'label': 'Agent'},
+    ];
+  }
 
   final List<Map<String, dynamic>> _nearbyEstates = [
     {
@@ -258,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>  Propertylist()),
+          MaterialPageRoute(builder: (context) => Propertylist()),
         );
         break;
       case 2:
@@ -273,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => FavoriteScreen()),
         );
         break;
     }
@@ -402,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
 
             const SizedBox(height: 20),
-            
+
             // Example requirement card
             Container(
               padding: const EdgeInsets.all(15),
@@ -447,7 +449,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         const SizedBox(height: 4),
                         Text(
                           'Budget: ₹15,000 - ₹25,000/month',
-                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),
@@ -473,107 +478,109 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
-Widget _buildTopLocationsSection(Size size) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 25),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Top Locations',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF2C3E50),
+
+  Widget _buildTopLocationsSection(Size size) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Top Locations',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF2C3E50),
+                  ),
                 ),
+                Text(
+                  'explore',
+                  style: TextStyle(
+                    color: const Color(0xFF1976D2),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            height: 140,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: _mockLocations.length,
+              itemBuilder: (context, index) => Container(
+                margin: const EdgeInsets.only(right: 30),
+                child: _buildLocationCard(_mockLocations[index], size),
               ),
-              Text(
-                'explore',
-                style: TextStyle(
-                  color: const Color(0xFF1976D2),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLocationCard(Map<String, String> location, Size size) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 90,
+          height: 90,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
-        ),
-        const SizedBox(height: 20),
-        SizedBox(
-          height: 140,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _mockLocations.length,
-            itemBuilder: (context, index) => Container(
-              margin: const EdgeInsets.only(right: 30),
-              child: _buildLocationCard(_mockLocations[index], size),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildLocationCard(Map<String, String> location, Size size) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Container(
-        width: 90,
-        height: 90,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: ClipOval(
-          child: Image.asset(
-            location['image']!,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              color: const Color(0xFFE3F2FD),
-              child: const Icon(
-                Icons.location_city,
-                size: 40,
-                color: Color(0xFF1976D2),
+          child: ClipOval(
+            child: Image.asset(
+              location['image']!,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: const Color(0xFFE3F2FD),
+                child: const Icon(
+                  Icons.location_city,
+                  size: 40,
+                  color: Color(0xFF1976D2),
+                ),
               ),
             ),
           ),
         ),
-      ),
-      const SizedBox(height: 12),
-      SizedBox(
-        width: 90,
-        child: Text(
-          location['name']!,
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-            color: const Color(0xFF2C3E50),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: 90,
+          child: Text(
+            location['name']!,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: const Color(0xFF2C3E50),
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
+
   Widget _buildNearbyEstatesSection(Size size) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 25),
+      padding: const EdgeInsets.symmetric(vertical: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -590,7 +597,7 @@ Widget _buildLocationCard(Map<String, String> location, Size size) {
           ),
           const SizedBox(height: 20),
           SizedBox(
-            height: 220,
+            height: 240,
             child: CarouselSlider.builder(
               itemCount: _nearbyEstates.length,
               itemBuilder: (context, index, realIndex) {
@@ -1068,10 +1075,9 @@ Widget _buildLocationCard(Map<String, String> location, Size size) {
           ),
         ),
       ),
-      // floatingActionButton: _buildFloatingActionButton(),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    //   bottomNavigationBar: _buildBottomNavigationBar(),
-     );
+      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
   }
 
   Widget _buildEnhancedTopSection(Size size, EdgeInsets padding) {
@@ -1092,7 +1098,10 @@ Widget _buildLocationCard(Map<String, String> location, Size size) {
         return Container(
           width: size.width,
           decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(item), fit: BoxFit.cover),
+            image: DecorationImage(
+              image: AssetImage(item), 
+              fit: BoxFit.cover
+            ),
           ),
         );
       }).toList(),
@@ -1159,16 +1168,17 @@ Widget _buildLocationCard(Map<String, String> location, Size size) {
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(2, (rowIndex) {
+        children: List.generate(4, (rowIndex) {
           return Column(
             children: List.generate(2, (colIndex) {
               int index = rowIndex * 2 + colIndex;
-              if (index >= _categories.length) return const SizedBox.shrink();
-              
-              final category = _categories[index];
+              if (index >= getcategories(context).length)
+                return const SizedBox.shrink();
+
+              final category = getcategories(context)[index];
               return Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),
-                child: _buildCategoryCard(category, size),
+                child: _buildCategoryCard(category, size, category['onTap']),
               );
             }),
           );
@@ -1177,39 +1187,357 @@ Widget _buildLocationCard(Map<String, String> location, Size size) {
     );
   }
 
-  Widget _buildCategoryCard(Map<String, dynamic> category, Size size) {
-    return Container(
-      width: size.width * 0.4,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
+  Widget _buildCategoryCard(Map<String, dynamic> category, Size size, Function? onTap) {
+    return GestureDetector(
+      onTap: onTap as void Function()?,
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: HugeIcon(icon: category['icon'], color: Colors.blue),
+            ),
           ),
+          const SizedBox(height: 10),
+          Text(category['label'], style: GoogleFonts.poppins(fontSize: 10)),
         ],
       ),
-      child: Row(
+    );
+  }
+
+  Widget _buildFeaturedPropertiesSection(Size size) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HugeIcon(
-            icon: category['icon'], 
-            color: const Color(0xFF1976D2), 
-            size: 20
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              category['label'],
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
+          // Header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Featured Properties",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-              overflow: TextOverflow.ellipsis,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Searchpage()),
+                  );
+                },
+                child: const Text(
+                  "view all",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Carousel Slider for Properties
+          SizedBox(
+            width: double.infinity,
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _mockProperties.length,
+              itemBuilder: (context, index) {
+                final property = _mockProperties[index];
+                return Center(
+                  child: Container(
+                    height: 180,
+                    width: size.width * 0.8,
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        // First Column → Image + Overlays
+                        Expanded(
+                          flex: 2,
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: size.width / 2,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  image: DecorationImage(
+                                    image: AssetImage(property['image']),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+
+                              // Bottom row with Favorite and Voice Player
+                              Positioned(
+                                bottom: 8,
+                                left: 8,
+                                right: 8,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Voice Player button - bottom left
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          property['isPlaying'] =
+                                              !(property['isPlaying'] ?? false);
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.95),
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                0.1,
+                                              ),
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 1),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              (property['isPlaying'] ?? false)
+                                                  ? Icons.pause
+                                                  : Icons.play_arrow,
+                                              color: Colors.blue,
+                                              size: 16,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            // Audio wave visualization
+                                            if (property['isPlaying'] ??
+                                                false) ...[
+                                              ...List.generate(
+                                                4,
+                                                (i) => Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 0.5,
+                                                      ),
+                                                  child: Container(
+                                                    width: 1.5,
+                                                    height: [
+                                                      6,
+                                                      10,
+                                                      8,
+                                                      5,
+                                                    ][i].toDouble(),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.blue,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            1,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ] else ...[
+                                              Container(
+                                                width: 15,
+                                                height: 1.5,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[400],
+                                                  borderRadius:
+                                                      BorderRadius.circular(1),
+                                                ),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                    // Favorite button - bottom right
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          property['isFavorite'] =
+                                              !property['isFavorite'];
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.95),
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                0.1,
+                                              ),
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 1),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Icon(
+                                          property['isFavorite']
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: property['isFavorite']
+                                              ? Colors.blue
+                                              : Colors.blue,
+                                          size: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        // Second Column → Text details
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                property['name'],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: 14,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "${property['rating']}",
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on,
+                                    size: 14,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      property['location'],
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.bed,
+                                    size: 14,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    property['rooms'],
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Spacer(),
+                              Row(
+                                children: [
+                                  Text(
+                                    property['price'],
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  Text(
+                                    property['period'],
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -1217,427 +1545,143 @@ Widget _buildLocationCard(Map<String, String> location, Size size) {
     );
   }
 
-Widget _buildFeaturedPropertiesSection(Size size) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Header
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              "Featured Properties",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Searchpage()),
-                );
-              },
-              child: const Text(
-                "view all",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w500,
+  Widget _buildRequirementCard(Size size) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row with Requirements tag and Location
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
                 ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-
-        // Carousel Slider for Properties
-        SizedBox(
-          height: 220,
-          child: CarouselSlider.builder(
-            itemCount: _mockProperties.length,
-            itemBuilder: (context, index, realIndex) {
-              final property = _mockProperties[index];
-              return Container(
-                width: size.width * 0.8,
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  color: const Color(0xFF2196F3),
+                  borderRadius: BorderRadius.circular(6),
                 ),
-                child: Row(
-                  children: [
-                    // First Column → Image + Overlays
-                    Expanded(
-                      flex: 2,
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                image: AssetImage(property['image']),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          
-                         
-                          // Bottom row with Favorite and Voice Player
-                          Positioned(
-                            bottom: 8,
-                            left: 8,
-                            right: 8,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // Voice Player button - bottom left
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      property['isPlaying'] = !(property['isPlaying'] ?? false);
-                                    });
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.95),
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 1),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          (property['isPlaying'] ?? false) ? Icons.pause : Icons.play_arrow,
-                                          color: Colors.blue,
-                                          size: 16,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        // Audio wave visualization
-                                        if (property['isPlaying'] ?? false) ...[
-                                          ...List.generate(4, (i) => Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 0.5),
-                                            child: Container(
-                                              width: 1.5,
-                                              height: [6, 10, 8, 5][i].toDouble(),
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue,
-                                                borderRadius: BorderRadius.circular(1),
-                                              ),
-                                            ),
-                                          )),
-                                        ] else ...[
-                                          Container(
-                                            width: 15,
-                                            height: 1.5,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[400],
-                                              borderRadius: BorderRadius.circular(1),
-                                            ),
-                                          ),
-                                        ]
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                
-                                // Favorite button - bottom right
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      property['isFavorite'] = !property['isFavorite'];
-                                    });
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.95),
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 1),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Icon(
-                                      property['isFavorite'] ? Icons.favorite : Icons.favorite_border,
-                                      color: property['isFavorite'] ? Colors.blue : Colors.blue,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    // Second Column → Text details
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            property['name'],
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Icon(Icons.star, color: Colors.amber, size: 14),
-                              const SizedBox(width: 4),
-                              Text(
-                                "${property['rating']}",
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Icon(Icons.location_on, size: 14, color: Colors.grey),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  property['location'],
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Icon(Icons.bed, size: 14, color: Colors.grey),
-                              const SizedBox(width: 4),
-                              Text(
-                                property['rooms'],
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Row(
-                            children: [
-                              Text(
-                                property['price'],
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              Text(
-                                property['period'],
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                child: const Text(
+                  'Requirements',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_on,
+                    color: Color(0xFF2196F3),
+                    size: 16,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    _currentLocation,
+                    style: const TextStyle(
+                      color: Color(0xFF2196F3),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Main content row
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RequirementsForm()),
               );
             },
-            options: CarouselOptions(
-              height: 220,
-              viewportFraction: 0.8,
-              enableInfiniteScroll: true,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 4),
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-              autoPlayCurve: Curves.fastOutSlowIn,
-              enlargeCenterPage: true,
-              enlargeFactor: 0.2,
-              scrollDirection: Axis.horizontal,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-  
- Widget _buildRequirementCard(Size size) {
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 4,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Header row with Requirements tag and Location
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 4,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFF2196F3),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Text(
-                'Requirements',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            Row(
+            child: Row(
               children: [
-                const Icon(
-                  Icons.location_on,
-                  color: Color(0xFF2196F3),
-                  size: 16,
+                // Profile avatar
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.person, size: 24, color: Colors.grey),
                 ),
-                const SizedBox(width: 4),
-                Text(
-                  _currentLocation ?? 'Kochi',
-                  style: const TextStyle(
-                    color: Color(0xFF2196F3),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
+                const SizedBox(width: 12),
+
+                // Content
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Name Example',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Looking for a 2 BHK apartment\nfor rent in Kakkanad, Kochi.',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black87,
+                          height: 1.3,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: size.width / 1.7,
+                            child: const Text(
+                              'You can enter your requirements and click the arrow to post your wants',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey,
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.grey,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        
-        // Main content row
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RequirementsForm(),
-              ),
-            );
-          },
-          child: Row(
-            children: [
-              // Profile avatar
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.person,
-                  size: 24,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(width: 12),
-              
-              // Content
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Name Example',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      'Looking for a 2 BHK apartment\nfor rent in Kakkanad, Kochi.',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
-                        height: 1.3,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Text(
-                          'You can enter your requirements and click the arrow to\npost your wants',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
-                            height: 1.2,
-                          ),
-                        ),
-                        const Spacer(),
-                        const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.grey,
-                          size: 16,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }

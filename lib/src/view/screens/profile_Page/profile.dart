@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -9,23 +10,70 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
+class FollowedUser {
+  final String name;
+  final String username;
+  final String profileImage;
+  final bool isVerified;
+  final String bio;
+
+  FollowedUser({
+    required this.name,
+    required this.username,
+    required this.profileImage,
+    this.isVerified = false,
+    this.bio = '',
+  });
+}
+
 class _ProfilePageState extends State<ProfilePage> {
   bool isFollowing = false;
   String activeTab = 'listing';
   File? profileImage;
   final ImagePicker _picker = ImagePicker();
-  
+  late TextEditingController _messageController;
+
+  // Following list
+  final List<FollowedUser> followingList = [
+    FollowedUser(
+      name: 'John Doe',
+      username: 'johndoe',
+      profileImage: 'assets/apartment1.jpg',
+      isVerified: true,
+      bio: 'Real Estate Agent at Luxury Homes',
+    ),
+    FollowedUser(
+      name: 'Jane Smith',
+      username: 'janesmith',
+      profileImage: 'assets/building.jpg',
+      bio: 'Property Developer | Commercial Real Estate',
+    ),
+    FollowedUser(
+      name: 'Mike Johnson',
+      username: 'mikejohnson',
+      profileImage: 'assets/property2.jpg',
+      isVerified: true,
+      bio: 'Real Estate Investor',
+    ),
+    FollowedUser(
+      name: 'Sarah Wilson',
+      username: 'sarahw',
+      profileImage: 'assets/property4.jpg',
+      bio: 'Residential Property Specialist',
+    ),
+  ];
+
   final List<String> listingImages = [
     'assets/apartment1.jpg',
     'assets/building.jpg',
     'assets/property2.jpg',
     'assets/property4.jpg',
     'assets/property4.jpg',
-     'assets/apartment1.jpg',
+    'assets/apartment1.jpg',
     'assets/building.jpg',
     'assets/property2.jpg',
     'assets/property4.jpg',
-    'assets/property4.jpg'
+    'assets/property4.jpg',
   ];
 
   final List<String> clipsImages = [
@@ -33,8 +81,28 @@ class _ProfilePageState extends State<ProfilePage> {
     'assets/building.jpg',
     'assets/property2.jpg',
     'assets/property4.jpg',
-    'assets/property4.jpg'
+    'assets/property4.jpg',
   ];
+
+  final Map<String, dynamic> userProfile = {
+    'name': 'Name Example',
+    'username': 'nameexample',
+    'postsCount': 2,
+    'followersCount': 322,
+    'followingCount': 27,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _messageController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
 
   Future<void> _pickProfileImage() async {
     try {
@@ -67,10 +135,34 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _handleFollowClick() {
+  void _toggleFollow() {
     setState(() {
       isFollowing = !isFollowing;
     });
+  }
+
+  void _handleFollowClick() {
+    setState(() {
+      isFollowing = !isFollowing;
+      
+      // Add or remove from following list only
+      if (isFollowing) {
+        followingList.add(FollowedUser(
+          name: userProfile['name'],
+          username: userProfile['username'],
+          profileImage: 'assets/apartment1.jpg',
+          isVerified: true,
+          bio: 'Real Estate Agent | Helping you find your dream home 🏡',
+        ));
+        // Update following count only
+        userProfile['followingCount'] = followingList.length;
+      } else {
+        followingList.removeWhere((user) => user.username == userProfile['username']);
+        // Update following count only
+        userProfile['followingCount'] = followingList.length;
+      }
+    });
+    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(isFollowing ? 'Now following!' : 'Unfollowed'),
@@ -81,9 +173,255 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _handleMessageClick() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Opening messages...'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: const Text('Opening messages...'),
+        duration: const Duration(seconds: 2),
+        backgroundColor: isFollowing ? Colors.green : Colors.grey[600],
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  void _sendMessage() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            const Icon(Icons.message, color: Colors.blue),
+            const SizedBox(width: 8),
+            const Text('Send Message'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Send a message to ${userProfile['name']}',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _messageController,
+              decoration: InputDecoration(
+                hintText: 'Type your message...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
+                ),
+                prefixIcon: const Icon(Icons.edit, color: Colors.blue),
+              ),
+              maxLines: 3,
+              maxLength: 500,
+              textCapitalization: TextCapitalization.sentences,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              _messageController.clear();
+              Navigator.pop(context);
+            },
+            child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              if (_messageController.text.trim().isNotEmpty) {
+                Navigator.pop(context);
+                _messageController.clear();
+                HapticFeedback.mediumImpact();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(Icons.check_circle, color: Colors.white),
+                        const SizedBox(width: 8),
+                        Text('Message sent to ${userProfile['name']}'),
+                      ],
+                    ),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    margin: const EdgeInsets.all(16),
+                  ),
+                );
+              }
+            },
+            icon: const Icon(Icons.send),
+            label: const Text('Send'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _shareProfile() {
+    HapticFeedback.lightImpact();
+    Clipboard.setData(
+      ClipboardData(
+        text: 'https://realestate.app/profile/${userProfile['username']}',
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.link, color: Colors.white),
+            const SizedBox(width: 8),
+            const Text('Profile link copied to clipboard'),
+          ],
+        ),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: Colors.white,
+          onPressed: () {},
+        ),
+        backgroundColor: Colors.blue,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  void _showUserStats() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.4,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Text(
+                    '${userProfile['name']} Statistics',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildDetailedStatRow(
+                    'Total Posts',
+                    '${userProfile['postsCount']}',
+                    Icons.grid_on,
+                  ),
+                  _buildDetailedStatRow(
+                    'Followers',
+                    '${userProfile['followersCount']}',
+                    Icons.people,
+                  ),
+                  _buildDetailedStatRow(
+                    'Following',
+                    '${userProfile['followingCount']}',
+                    Icons.person_add,
+                  ),
+                  _buildDetailedStatRow(
+                    'Properties Listed',
+                    '${listingImages.length}',
+                    Icons.home,
+                  ),
+                  _buildDetailedStatRow(
+                    'Video Content',
+                    '${clipsImages.length}',
+                    Icons.play_circle_outline,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailedStatRow(String label, String value, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.blue, size: 20),
+          const SizedBox(width: 12),
+          Text(label, style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+          const Spacer(),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Function to navigate to following list
+  void _viewFollowingList() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FollowingListPage(
+          followingList: followingList,
+          onUserUnfollow: _unfollowUser,
+        ),
+      ),
+    );
+  }
+
+  // Function to unfollow a user from the list
+  void _unfollowUser(String username) {
+    setState(() {
+      followingList.removeWhere((user) => user.username == username);
+      userProfile['followingCount'] = followingList.length;
+      
+      // If unfollowing the current user, update the follow button
+      if (username == userProfile['username']) {
+        isFollowing = false;
+        // Don't modify followers count here
+      }
+    });
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Unfollowed $username'),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
@@ -91,7 +429,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: _buildAppBar(),
       body: Column(
         children: [
@@ -118,11 +455,7 @@ class _ProfilePageState extends State<ProfilePage> {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.black),
         onPressed: () {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/home',
-            (route) => true,
-          );
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => true);
         },
       ),
       title: Row(
@@ -137,11 +470,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           const SizedBox(width: 6),
-          const Icon(
-            Icons.verified,
-            color: Colors.blue,
-            size: 20,
-          ),
+          const Icon(Icons.verified, color: Colors.blue, size: 20),
         ],
       ),
       actions: [
@@ -153,10 +482,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: Container(
-          height: 1,
-          color: Colors.grey[200],
-        ),
+        child: Container(height: 1, color: Colors.grey[200]),
       ),
     );
   }
@@ -180,10 +506,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
                         shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.grey[400]!,
-                          width: 2,
-                        ),
+                        border: Border.all(color: Colors.grey[400]!, width: 2),
                       ),
                       child: profileImage != null
                           ? ClipOval(
@@ -223,9 +546,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatColumn('2', 'post'),
-                    _buildStatColumn('322', 'followers'),
-                    _buildStatColumn('27', 'following'),
+                    _buildStatColumn('2', 'post', null),
+                    _buildStatColumn(
+                      userProfile['followersCount'].toString(),
+                      'followers',
+                      _showUserStats,
+                    ),
+                    _buildStatColumn(
+                      followingList.length.toString(),
+                      'following',
+                      _viewFollowingList,
+                    ),
                   ],
                 ),
               ),
@@ -234,26 +565,17 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 16),
           const Text(
             'Name Example',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
           Text(
             'RNX-11220FR',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
             'Real Estate Agent | Helping you find your dream home 🏡',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[800],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[800]),
           ),
           const SizedBox(height: 16),
           Row(
@@ -275,7 +597,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: _handleFollowClick,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
-                      foregroundColor: isFollowing ? Colors.black : Colors.white,
+                      foregroundColor: isFollowing
+                          ? Colors.black
+                          : Colors.white,
                       elevation: 0,
                       shadowColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
@@ -337,34 +661,36 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildStatColumn(String count, String label) {
-    return Column(
-      children: [
-        Text(
-          count,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+  Widget _buildStatColumn(String count, String label, VoidCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Text(
+            count,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.black, // Always black now
+            ),
           ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.grey[600],
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey[600],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildTabs() {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.grey[200]!),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey[200]!)),
       ),
       child: Row(
         children: [
@@ -477,16 +803,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: Colors.grey[300],
-                    child: Icon(
-                      Icons.image,
-                      color: Colors.grey[400],
-                      size: 40,
-                    ),
+                    child: Icon(Icons.image, color: Colors.grey[400], size: 40),
                   );
                 },
               ),
             ),
-            // Play button overlay for clips or listings after first 2
             if ((activeTab == 'listing' && index > 1) || activeTab == 'clips')
               Container(
                 decoration: BoxDecoration(
@@ -501,13 +822,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-            // Views label for clips
             if (activeTab == 'clips')
               Positioned(
                 bottom: 8,
                 left: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(4),
@@ -516,15 +839,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     '${(index + 1) * 15}K views',
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black54,
-                          offset: Offset(0.5, 0.5),
-                          blurRadius: 1,
-                        ),
-                      ],
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -532,6 +848,684 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
+    );
+  }
+
+
+}
+
+class FollowingListPage extends StatefulWidget {
+  final List<FollowedUser> followingList;
+  final Function(String) onUserUnfollow;
+
+  const FollowingListPage({
+    super.key,
+    required this.followingList,
+    required this.onUserUnfollow,
+  });
+
+  @override
+  State<FollowingListPage> createState() => _FollowingListPageState();
+}
+
+class _FollowingListPageState extends State<FollowingListPage> {
+  late List<FollowedUser> _filteredList;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredList = widget.followingList;
+    _searchController.addListener(_filterUsers);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterUsers() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        _filteredList = widget.followingList;
+      } else {
+        _filteredList = widget.followingList.where((user) {
+          return user.name.toLowerCase().contains(query) ||
+                 user.username.toLowerCase().contains(query) ||
+                 user.bio.toLowerCase().contains(query);
+        }).toList();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Following'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search following...',
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(Icons.clear, color: Colors.grey[600]),
+                          onPressed: () {
+                            _searchController.clear();
+                            _filterUsers();
+                          },
+                        )
+                      : null,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: _filteredList.isEmpty
+          ? _buildEmptyState()
+          : _buildFollowingList(),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    final hasSearchQuery = _searchController.text.isNotEmpty;
+    
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            hasSearchQuery ? Icons.search_off : Icons.people_outline,
+            size: 80,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            hasSearchQuery ? 'No users found' : 'Not following anyone yet',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            hasSearchQuery 
+                ? 'Try searching with different keywords'
+                : 'Users you follow will appear here',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[500],
+            ),
+          ),
+          if (!hasSearchQuery) ...[
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text('Discover People to Follow'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFollowingList() {
+    return ListView.builder(
+      itemCount: _filteredList.length,
+      itemBuilder: (context, index) {
+        final user = _filteredList[index];
+        return _buildUserItem(user);
+      },
+    );
+  }
+
+  Widget _buildUserItem(FollowedUser user) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ListTile(
+        leading: CircleAvatar(
+          radius: 25,
+          backgroundColor: Colors.grey[300],
+          backgroundImage: AssetImage(user.profileImage),
+        ),
+        title: Row(
+          children: [
+            Text(
+              user.name,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(width: 4),
+            if (user.isVerified)
+              const Icon(
+                Icons.verified,
+                color: Colors.blue,
+                size: 16,
+              ),
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '@${user.username}',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+              ),
+            ),
+            if (user.bio.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                user.bio,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ],
+        ),
+        trailing: ElevatedButton(
+          onPressed: () {
+            _showUnfollowDialog(user);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey[200],
+            foregroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+          child: const Text(
+            'Following',
+            style: TextStyle(fontSize: 14),
+          ),
+        ),
+        onTap: () {
+          // Navigate to user's profile
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Viewing ${user.name}\'s profile'),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _showUnfollowDialog(FollowedUser user) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Unfollow User?'),
+        content: Text('Are you sure you want to unfollow ${user.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              widget.onUserUnfollow(user.username);
+              // Update filtered list after unfollow
+              _filterUsers();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('Unfollow'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PropertyItem {
+  final String imageUrl;
+  final String title;
+  final String location;
+  final double price;
+  final int bedrooms;
+  final int bathrooms;
+  final int area;
+  final String description;
+  final String type;
+  final bool isVideo;
+
+  PropertyItem({
+    required this.imageUrl,
+    required this.title,
+    required this.location,
+    required this.price,
+    required this.bedrooms,
+    required this.bathrooms,
+    required this.area,
+    required this.description,
+    required this.type,
+    this.isVideo = false,
+  });
+
+  String get formattedPrice => '\$${price.toStringAsFixed(0)}';
+}
+
+class PropertyGridItem extends StatelessWidget {
+  final PropertyItem property;
+  final VoidCallback onTap;
+
+  const PropertyGridItem({
+    super.key,
+    required this.property,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.grey[200],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(property.imageUrl, fit: BoxFit.cover),
+        ),
+      ),
+    );
+  }
+}
+
+class PropertyDetailsSheet extends StatefulWidget {
+  final PropertyItem property;
+  final VoidCallback onContact;
+  final VoidCallback onShare;
+
+  const PropertyDetailsSheet({
+    Key? key,
+    required this.property,
+    required this.onContact,
+    required this.onShare,
+  }) : super(key: key);
+
+  @override
+  _PropertyDetailsSheetState createState() => _PropertyDetailsSheetState();
+}
+
+class _PropertyDetailsSheetState extends State<PropertyDetailsSheet>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _slideAnimation;
+  bool isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _slideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleFavorite() {
+    setState(() => isFavorite = !isFavorite);
+    HapticFeedback.lightImpact();
+  }
+
+  Widget _buildSpecItem(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.blue, size: 18),
+        const SizedBox(width: 6),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _slideAnimation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, (1 - _slideAnimation.value) * 400),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.8,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 250,
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Image.network(
+                                  widget.property.imageUrl,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  top: 12,
+                                  left: 12,
+                                  right: 12,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          widget.property.type,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: _toggleFavorite,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(
+                                              0.9,
+                                            ),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            isFavorite
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: isFavorite
+                                                ? Colors.red
+                                                : Colors.grey[600],
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (widget.property.isVideo)
+                                  Center(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.9),
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.2,
+                                            ),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: const Icon(
+                                        Icons.play_arrow,
+                                        color: Colors.blue,
+                                        size: 32,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.property.title,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    size: 16,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      widget.property.location,
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              if (widget.property.price > 0) ...[
+                                const SizedBox(height: 12),
+                                Text(
+                                  widget.property.formattedPrice,
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ],
+                              if (widget.property.bedrooms > 0) ...[
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    _buildSpecItem(
+                                      Icons.bed,
+                                      '${widget.property.bedrooms} Beds',
+                                    ),
+                                    const SizedBox(width: 20),
+                                    _buildSpecItem(
+                                      Icons.bathtub,
+                                      '${widget.property.bathrooms} Baths',
+                                    ),
+                                    const SizedBox(width: 20),
+                                    _buildSpecItem(
+                                      Icons.square_foot,
+                                      '${widget.property.area} sqft',
+                                    ),
+                                  ],
+                                ),
+                              ],
+                              const SizedBox(height: 16),
+                              Divider(color: Colors.grey[300]),
+                              const SizedBox(height: 16),
+                              const Text(
+                                'Description',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                widget.property.description,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[700],
+                                  height: 1.5,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed: widget.onContact,
+                                      icon: const Icon(Icons.message),
+                                      label: const Text('Contact Agent'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blue,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  ElevatedButton(
+                                    onPressed: widget.onShare,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey[200],
+                                      foregroundColor: Colors.grey[700],
+                                      padding: const EdgeInsets.all(16),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: const Icon(Icons.share),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rinex/propert.dart';
 import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -8,9 +9,11 @@ class FavoriteScreen extends StatefulWidget {
   State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStateMixin {
+class _FavoriteScreenState extends State<FavoriteScreen>
+    with TickerProviderStateMixin {
   final SharedFavoriteManager _favoriteManager = SharedFavoriteManager();
   String _sortBy = 'Default';
+  bool _showGridView = false;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   List<Property> favoriteProperties = [];
@@ -53,7 +56,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
             kitchen: fav['kitchen'] ?? '0',
             yearBuilt: fav['year'] ?? '2020',
             type: fav['type'] ?? 'Property',
-            isLiked: true,
+            isLiked: true, 
+            name: '',
           );
         }).toList();
         _isLoading = false;
@@ -94,29 +98,29 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
   void _showSortOptions() {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
         return Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Sort By',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildSortOption('Default'),
               _buildSortOption('Price: Low to High'),
               _buildSortOption('Price: High to Low'),
               _buildSortOption('Rating'),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           ),
         );
@@ -127,7 +131,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
   Widget _buildSortOption(String option) {
     return ListTile(
       title: Text(option),
-      trailing: _sortBy == option ? Icon(Icons.check, color: Colors.blue) : null,
+      trailing: _sortBy == option ? const Icon(Icons.check, color: Colors.blue) : null,
       onTap: () {
         _sortProperties(option);
         Navigator.pop(context);
@@ -159,7 +163,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                   SnackBar(
                     content: Text('Removed "$propertyName" from favorites'),
                     backgroundColor: Colors.orange,
-                    duration: Duration(seconds: 2),
+                    duration: const Duration(seconds: 2),
                   ),
                 );
               }
@@ -209,10 +213,47 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
     );
   }
 
+  Widget _buildFavoritesList(List<Map<String, dynamic>> favoriteProps) {
+    if (_showGridView) {
+      return GridView.builder(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 0.7,
+        ),
+        itemCount: favoriteProps.length,
+        itemBuilder: (context, index) {
+          return _buildGridCard(favoriteProps[index], index);
+        },
+      );
+    } else {
+      return ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: favoriteProperties.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: _buildPropertyCard(
+              property: favoriteProperties[index],
+              onRemove: () {
+                _removeFavorite(
+                  favoriteProperties[index].id,
+                  favoriteProperties[index].title,
+                );
+              },
+            ),
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -240,6 +281,17 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
         actions: [
           if (favoriteProperties.isNotEmpty) ...[
             IconButton(
+              icon: Icon(
+                _showGridView ? Icons.list : Icons.grid_view,
+                color: Colors.blue,
+              ),
+              onPressed: () {
+                setState(() {
+                  _showGridView = !_showGridView;
+                });
+              },
+            ),
+            IconButton(
               icon: const Icon(Icons.sort, color: Colors.blue),
               onPressed: _showSortOptions,
             ),
@@ -248,9 +300,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
               onSelected: (value) {
                 if (value == 'clear_all') {
                   _showClearAllDialog();
+                } else if (value == 'share') {
+                  _shareFavorites();
                 }
               },
               itemBuilder: (context) => [
+                const PopupMenuItem(value: 'share', child: Text('Share Favorites')),
                 const PopupMenuItem(value: 'clear_all', child: Text('Clear All')),
               ],
             ),
@@ -258,29 +313,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : FadeTransition(
               opacity: _fadeAnimation,
               child: favoriteProperties.isEmpty
                   ? _buildEmptyState()
-                  : ListView.builder(
-                      padding: EdgeInsets.all(16),
-                      itemCount: favoriteProperties.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 20),
-                          child: _buildPropertyCard(
-                            property: favoriteProperties[index],
-                            onRemove: () {
-                              _removeFavorite(
-                                favoriteProperties[index].id,
-                                favoriteProperties[index].title,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                  : _buildFavoritesList([]),
             ),
     );
   }
@@ -325,10 +363,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
           Text(
             'Start exploring properties and add them\nto your favorites to see them here',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 16,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 16),
           ),
           const SizedBox(height: 32),
           ElevatedButton.icon(
@@ -337,7 +372,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
             ),
             icon: const Icon(Icons.explore),
             label: const Text('Explore Properties'),
@@ -367,7 +404,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                   BoxShadow(
                     color: Colors.black.withOpacity(0.08),
                     blurRadius: 10,
-                    offset: Offset(0, 5),
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
@@ -379,14 +416,14 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                       Container(
                         height: 200,
                         width: double.infinity,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
                           ),
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
                           ),
@@ -421,7 +458,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.3),
                                   blurRadius: 8,
-                                  offset: Offset(0, 2),
+                                  offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
@@ -437,7 +474,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                         top: 15,
                         right: 15,
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: Colors.orange,
                             borderRadius: BorderRadius.circular(12),
@@ -445,7 +482,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.2),
                                 blurRadius: 8,
-                                offset: Offset(0, 2),
+                                offset: const Offset(0, 2),
                               ),
                             ],
                           ),
@@ -469,7 +506,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -479,7 +516,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                             Expanded(
                               child: Text(
                                 property.title,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
@@ -490,7 +527,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                             ),
                             Text(
                               '₹${property.price}/month',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black87,
@@ -498,11 +535,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                             ),
                           ],
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.location_on, color: Colors.blue, size: 16),
-                            SizedBox(width: 4),
+                            const Icon(Icons.location_on, color: Colors.blue, size: 16),
+                            const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 property.location,
@@ -514,9 +551,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(12),
@@ -524,7 +561,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                               child: Row(
                                 children: [
                                   Icon(Icons.home, color: Colors.grey[700], size: 14),
-                                  SizedBox(width: 4),
+                                  const SizedBox(width: 4),
                                   Text(
                                     property.type,
                                     style: TextStyle(
@@ -537,7 +574,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                             ),
                           ],
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           children: [
                             Expanded(
@@ -556,7 +593,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                             ),
                           ],
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Row(
                           children: [
                             Expanded(
@@ -575,7 +612,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
                             ),
                           ],
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           children: [
                             Expanded(
@@ -620,6 +657,188 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
     );
   }
 
+  Widget _buildGridCard(Map<String, dynamic> property, int index) {
+    return TweenAnimationBuilder<double>(
+      duration: Duration(milliseconds: 300 + (index * 100)),
+      tween: Tween(begin: 0.0, end: 1.0),
+      builder: (context, value, child) {
+        return Transform.scale(
+          scale: value,
+          child: Card(
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(15),
+                    ),
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          property['imageUrl'],
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.grey[300]!,
+                                    Colors.grey[100]!,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.image,
+                                size: 32,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
+                        ),
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: GestureDetector(
+                            onTap: () => _removeFavorite(
+                              property['id'],
+                              property['propertyName'],
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.9),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.favorite,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 5,
+                          right: 5,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.white,
+                                  size: 10,
+                                ),
+                                const SizedBox(width: 2),
+                                Text(
+                                  property['rating'],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              property['propertyName'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  color: Colors.grey,
+                                  size: 12,
+                                ),
+                                const SizedBox(width: 2),
+                                Expanded(
+                                  child: Text(
+                                    property['location'],
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              property['beds'],
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Text(
+                              property['price'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildFeatureItem({
     required IconData icon,
     required String label,
@@ -640,7 +859,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
             size: 18,
           ),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             value.isNotEmpty ? '$label: $value' : label,
@@ -652,6 +871,21 @@ class _FavoriteScreenState extends State<FavoriteScreen> with TickerProviderStat
           ),
         ),
       ],
+    );
+  }
+
+  void _shareFavorites() {
+    final favoriteNames = favoriteProperties
+        .map((prop) => prop.title)
+        .join(', ');
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Sharing ${favoriteProperties.length} favorite properties: $favoriteNames',
+        ),
+        duration: const Duration(seconds: 3),
+      ),
     );
   }
 }
@@ -671,6 +905,7 @@ class Property {
   final String yearBuilt;
   final String type;
   bool isLiked;
+  final String name;
 
   Property({
     required this.id,
@@ -684,7 +919,8 @@ class Property {
     required this.bathrooms,
     required this.kitchen,
     required this.yearBuilt,
-    required this.isLiked,
     required this.type,
+    required this.isLiked,
+    required this.name,
   });
 }

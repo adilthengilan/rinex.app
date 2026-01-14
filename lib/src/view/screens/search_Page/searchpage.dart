@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rinex/src/view/auth/renexlogin.dart';
+
 import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
 import 'package:rinex/src/view/screens/home.dart';
+
 import 'package:rinex/src/view/screens/notification_Page/notifications.dart';
 import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
 
@@ -24,7 +25,7 @@ class _SearchpageState extends State<Searchpage> {
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize property data with property types
     allProperties = [
       Property(
@@ -103,10 +104,10 @@ class _SearchpageState extends State<Searchpage> {
         type: 'House',
       ),
     ];
-    
+
     filteredProperties = List.from(allProperties);
     _loadFavoriteStates();
-    
+
     // If searchQuery is provided, apply filter
     if (widget.searchQuery != null && widget.searchQuery!.isNotEmpty) {
       _searchController.text = widget.searchQuery!;
@@ -115,9 +116,12 @@ class _SearchpageState extends State<Searchpage> {
   }
 
   void _loadFavoriteStates() {
-    List<Map<String, dynamic>> favorites = _favoriteManager.getFavoriteProperties();
-    Set<String> favoriteIds = favorites.map((fav) => fav['id'].toString()).toSet();
-    
+    List<Map<String, dynamic>> favorites = _favoriteManager
+        .getFavoriteProperties();
+    Set<String> favoriteIds = favorites
+        .map((fav) => fav['id'].toString())
+        .toSet();
+
     setState(() {
       for (var property in allProperties) {
         property.isLiked = favoriteIds.contains(property.id);
@@ -167,7 +171,7 @@ class _SearchpageState extends State<Searchpage> {
   void _toggleFavorite(Property property) {
     setState(() {
       property.isLiked = !property.isLiked;
-      
+
       if (property.isLiked) {
         _favoriteManager.addFavorite(property.id);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -221,10 +225,7 @@ class _SearchpageState extends State<Searchpage> {
             children: [
               Text(
                 'Sort By',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
               _buildSortOption('Default'),
@@ -267,12 +268,18 @@ class _SearchpageState extends State<Searchpage> {
     _loadFavoriteStates();
   }
 
+  void _goHome() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
-      body: SafeArea(
-        child: Column(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        extendBody: true,
+        bottomNavigationBar: BottomAppBar(color: Colors.transparent),
+        body: Column(
           children: [
             _buildSearchHeader(),
             _buildLocationSortBar(),
@@ -334,12 +341,7 @@ class _SearchpageState extends State<Searchpage> {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
-          Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-            },
+            onTap: _goHome,
             child: Icon(Icons.arrow_back, color: Colors.blue, size: 20),
           ),
           SizedBox(width: 8),
@@ -351,10 +353,7 @@ class _SearchpageState extends State<Searchpage> {
               onChanged: _filterProperties,
               decoration: InputDecoration(
                 hintText: 'Search Apartment, Villa, Building, House',
-                hintStyle: TextStyle(
-                  color: Colors.grey[500],
-                  fontSize: 14,
-                ),
+                hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(vertical: 10),
               ),
@@ -371,7 +370,11 @@ class _SearchpageState extends State<Searchpage> {
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.notifications_none, color: Colors.blue, size: 18),
+                  child: Icon(
+                    Icons.notifications_none,
+                    color: Colors.blue,
+                    size: 18,
+                  ),
                 ),
                 Positioned(
                   top: 6,
@@ -429,7 +432,11 @@ class _SearchpageState extends State<Searchpage> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.unfold_more_outlined, color: Colors.blue, size: 20),
+                  Icon(
+                    Icons.unfold_more_outlined,
+                    color: Colors.blue,
+                    size: 20,
+                  ),
                   SizedBox(width: 8),
                   Text(
                     'Sort by',
@@ -457,10 +464,7 @@ class _SearchpageState extends State<Searchpage> {
                 SizedBox(width: 4),
                 Text(
                   '34.0522° N, 118.2437° W',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[700],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                 ),
               ],
             ),
@@ -578,10 +582,7 @@ class _SearchpageState extends State<Searchpage> {
                     SizedBox(width: 4),
                     Text(
                       property.location,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     SizedBox(width: 12),
                     Container(
@@ -702,11 +703,7 @@ class _SearchpageState extends State<Searchpage> {
             color: Colors.blue.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icon,
-            color: Colors.blue,
-            size: 18,
-          ),
+          child: Icon(icon, color: Colors.blue, size: 18),
         ),
         SizedBox(width: 8),
         Expanded(
