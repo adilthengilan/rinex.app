@@ -10,16 +10,23 @@ import 'package:rinex/src/view/screens/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   try {
     // Initialize Firebase
     await Firebase.initializeApp(
-      // options: DefaultFirebaseOptions.currentPlatform,
+      options: FirebaseOptions(
+        apiKey: "AIzaSyBmQ2YV4kX2x5ZwY1kZT9OwLx6VZKsLJL4",
+        authDomain: "rinex-6f7f4.firebaseapp.com",
+        projectId: "rinex-6f7f4",
+        storageBucket: "rinex-6f7f4.appspot.com",
+        messagingSenderId: "106700000000",
+        appId: "1:106700000000:web:1a2b3c4d5e6f7g8h",
+      ),
     );
   } catch (e) {
     debugPrint('Firebase initialization error: $e');
   }
-  
+
   runApp(const MyApp());
 }
 
@@ -69,22 +76,18 @@ class AuthWrapper extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             backgroundColor: Color(0xFF1A1A1A),
-            body: Center(
-              child: CircularProgressIndicator(
-                color: Colors.blue,
-              ),
-            ),
+            body: Center(child: CircularProgressIndicator(color: Colors.blue)),
           );
         }
-        
+
         // If user is logged in, show NavigationPage (home)
         if (snapshot.hasData && snapshot.data != null) {
           return const NavigationPage();
         }
-        
+
         // If user is not logged in, show onboarding/login flow
         // You can change this to OnboardScreen() if you want to show onboarding first
-        return const LoginScreen();
+        return const NavigationPage();
       },
     );
   }
@@ -115,10 +118,7 @@ class OnboardScreen extends StatelessWidget {
             const SizedBox(height: 20),
             const Text(
               'Your marketplace for everything',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
             const SizedBox(height: 40),
             ElevatedButton(
@@ -134,10 +134,7 @@ class OnboardScreen extends StatelessWidget {
               ),
               child: const Text(
                 'Get Started',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
           ],
@@ -166,11 +163,7 @@ class GetStartScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.shopping_bag,
-              color: Colors.blue,
-              size: 100,
-            ),
+            const Icon(Icons.shopping_bag, color: Colors.blue, size: 100),
             const SizedBox(height: 20),
             const Text(
               'Ready to Start?',
@@ -186,10 +179,7 @@ class GetStartScreen extends StatelessWidget {
               child: Text(
                 'Join our community of buyers and sellers',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: Colors.white70, fontSize: 16),
               ),
             ),
             const SizedBox(height: 40),
@@ -206,10 +196,7 @@ class GetStartScreen extends StatelessWidget {
               ),
               child: const Text(
                 'Continue to Login',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
           ],
@@ -226,25 +213,21 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text(
-          'Home',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Home', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.blue),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               if (context.mounted) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/login',
-                  (route) => false,
-                );
+                Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil('/login', (route) => false);
               }
             },
           ),
@@ -259,10 +242,7 @@ class HomeScreen extends StatelessWidget {
               backgroundColor: Colors.blue,
               child: Text(
                 user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
-                style: const TextStyle(
-                  fontSize: 40,
-                  color: Colors.white,
-                ),
+                style: const TextStyle(fontSize: 40, color: Colors.white),
               ),
             ),
             const SizedBox(height: 20),
@@ -277,18 +257,12 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               user?.email ?? '',
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 16),
             ),
             const SizedBox(height: 40),
             const Text(
               'You are successfully logged in!',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
           ],
         ),
@@ -298,118 +272,100 @@ class HomeScreen extends StatelessWidget {
 }
 
 // NavigationPage - Replace with your actual bottom navigation
-class NavigationPage extends StatefulWidget {
-  const NavigationPage({Key? key}) : super(key: key);
+// class NavigationPage extends StatefulWidget {
+//   const NavigationPage({Key? key}) : super(key: key);
 
-  @override
-  State<NavigationPage> createState() => _NavigationPageState();
-}
+//   @override
+//   State<NavigationPage> createState() => _NavigationPageState();
+// }
 
-class _NavigationPageState extends State<NavigationPage> {
-  int _currentIndex = 0;
-  
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const SearchScreen(),
-    const AddItemScreen(),
-    const MessagesScreen(),
-    const ProfileScreen(),
-  ];
+// class _NavigationPageState extends State<NavigationPage> {
+//   int _currentIndex = 0;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF2A2A2A),
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.white54,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: 'Sell',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: 'Messages',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   final List<Widget> _screens = [
+//     const HomeScreen(),
+//     const SearchScreen(),
+//     const AddItemScreen(),
+//     const MessagesScreen(),
+//     const ProfileScreen(),
+//   ];
 
-// Additional placeholder screens for bottom navigation
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xFF1A1A1A),
+//       body: _screens[_currentIndex],
+//       bottomNavigationBar: BottomNavigationBar(
+//         currentIndex: _currentIndex,
+//         onTap: (index) {
+//           setState(() {
+//             _currentIndex = index;
+//           });
+//         },
+//         type: BottomNavigationBarType.fixed,
+//         backgroundColor: const Color(0xFF2A2A2A),
+//         selectedItemColor: Colors.blue,
+//         unselectedItemColor: Colors.white54,
+//         showSelectedLabels: true,
+//         showUnselectedLabels: true,
+//         items: const [
+//           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+//           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.add_circle_outline),
+//             label: 'Sell',
+//           ),
+//           BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Messages'),
+//           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+// // Additional placeholder screens for bottom navigation
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text(
-          'Search',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: const Center(
-        child: Text(
-          'Search Screen',
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      ),
-    );
-  }
-}
+// class SearchScreen extends StatelessWidget {
+//   const SearchScreen({Key? key}) : super(key: key);
 
-class AddItemScreen extends StatelessWidget {
-  const AddItemScreen({Key? key}) : super(key: key);
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xFF1A1A1A),
+//       appBar: AppBar(
+//         backgroundColor: const Color(0xFF1A1A1A),
+//         title: const Text('Search', style: TextStyle(color: Colors.white)),
+//       ),
+//       body: const Center(
+//         child: Text(
+//           'Search Screen',
+//           style: TextStyle(color: Colors.white, fontSize: 20),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text(
-          'Add Item',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: const Center(
-        child: Text(
-          'Add Item Screen',
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      ),
-    );
-  }
-}
+// class AddItemScreen extends StatelessWidget {
+//   const AddItemScreen({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xFF1A1A1A),
+//       appBar: AppBar(
+//         backgroundColor: const Color(0xFF1A1A1A),
+//         title: const Text('Add Item', style: TextStyle(color: Colors.white)),
+//       ),
+//       body: const Center(
+//         child: Text(
+//           'Add Item Screen',
+//           style: TextStyle(color: Colors.white, fontSize: 20),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({Key? key}) : super(key: key);
@@ -420,10 +376,7 @@ class MessagesScreen extends StatelessWidget {
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text(
-          'Messages',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Messages', style: TextStyle(color: Colors.white)),
       ),
       body: const Center(
         child: Text(
@@ -441,15 +394,12 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Profile', style: TextStyle(color: Colors.white)),
       ),
       body: Center(
         child: Column(
@@ -459,12 +409,10 @@ class ProfileScreen extends StatelessWidget {
               radius: 60,
               backgroundColor: Colors.blue,
               child: Text(
-                user?.displayName?.substring(0, 1).toUpperCase() ?? 
-                user?.email?.substring(0, 1).toUpperCase() ?? 'U',
-                style: const TextStyle(
-                  fontSize: 48,
-                  color: Colors.white,
-                ),
+                user?.displayName?.substring(0, 1).toUpperCase() ??
+                    user?.email?.substring(0, 1).toUpperCase() ??
+                    'U',
+                style: const TextStyle(fontSize: 48, color: Colors.white),
               ),
             ),
             const SizedBox(height: 20),
@@ -479,20 +427,16 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               user?.email ?? '',
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 16),
             ),
             const SizedBox(height: 40),
             ElevatedButton.icon(
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
                 if (context.mounted) {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/login',
-                    (route) => false,
-                  );
+                  Navigator.of(
+                    context,
+                  ).pushNamedAndRemoveUntil('/login', (route) => false);
                 }
               },
               icon: const Icon(Icons.logout),

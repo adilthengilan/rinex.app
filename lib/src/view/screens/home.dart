@@ -7,6 +7,7 @@ import 'package:rinex/src/view/screens/agentList_Page/agentlist.dart';
 import 'package:rinex/src/view/screens/bottom_sheet/addProperty_Page/addproperty.dart';
 import 'package:rinex/src/view/screens/bottom_sheet/requirementAdd_Page/requirements.dart';
 import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
+import 'package:rinex/src/view/screens/pms_Page/pms.dart';
 import 'package:rinex/src/view/screens/propertyListing_Page/propertylist.dart';
 import 'package:rinex/src/view/screens/search_Page/searchpage.dart';
 import 'package:rinex/src/view/screens/search_Page/shuffle.dart';
@@ -123,7 +124,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       {'icon': HugeIcons.strokeRoundedOffice, 'label': 'Offices'},
       {'icon': HugeIcons.strokeRoundedHome13, 'label': 'Resort'},
       {'icon': HugeIcons.strokeRoundedHotel02, 'label': 'Hotels'},
-      {'icon': HugeIcons.strokeRoundedRemoteControl, 'label': 'Rent'},
+      {
+        'icon': HugeIcons.strokeRoundedRemoteControl,
+        'label': 'Rent',
+        'onTap': () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TenantShell()),
+          );
+        },
+      },
       {'icon': HugeIcons.strokeRoundedAgreement01, 'label': 'Agent'},
     ];
   }
@@ -291,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
         ),
-        padding: const EdgeInsets.all(25),
+        padding: EdgeInsets.all(25),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -308,6 +318,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
             // Two main action buttons
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Post your property button (Blue/Filled)
                 Expanded(
@@ -1098,10 +1109,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         return Container(
           width: size.width,
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(item), 
-              fit: BoxFit.cover
-            ),
+            image: DecorationImage(image: AssetImage(item), fit: BoxFit.cover),
           ),
         );
       }).toList(),
@@ -1187,7 +1195,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCategoryCard(Map<String, dynamic> category, Size size, Function? onTap) {
+  Widget _buildCategoryCard(
+    Map<String, dynamic> category,
+    Size size,
+    Function? onTap,
+  ) {
     return GestureDetector(
       onTap: onTap as void Function()?,
       child: Column(

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "329769199370",
+    "project_id": "rinex-7142c",
+    "storage_bucket": "rinex-7142c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329769199370:android:24d504f8aa40be96a67cf3",
+        "android_client_info": {
+          "package_name": "com.example.rinex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329769199370-n41aed15t3vn2dqe3gvv2a13aaejtd3p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxRV_FMmk8nU40oZEMlSGCp-ZSizWIZrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "329769199370-n41aed15t3vn2dqe3gvv2a13aaejtd3p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
