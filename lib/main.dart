@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'firebase_options.dart';
 import 'package:rinex/src/view/onboard.dart';
 import 'package:rinex/src/view/navigation/bottomAppBar.dart';
@@ -12,7 +13,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // Initialize Firebase
     await Firebase.initializeApp(
       options: FirebaseOptions(
         apiKey: "AIzaSyBmQ2YV4kX2x5ZwY1kZT9OwLx6VZKsLJL4",
@@ -27,11 +27,16 @@ void main() async {
     debugPrint('Firebase initialization error: $e');
   }
 
-  runApp(const MyApp());
+  // Read onboarding flag before running app
+  final prefs = await SharedPreferences.getInstance();
+  final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
+
+  runApp(MyApp(onboardingComplete: onboardingComplete));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool onboardingComplete;
+  const MyApp({super.key, required this.onboardingComplete});
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +54,9 @@ class MyApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.blue),
         ),
       ),
-      // Set initial route based on authentication state
-      home: const AuthWrapper(),
-      // Define all named routes
+      home: AuthWrapper(onboardingComplete: onboardingComplete),
       routes: {
-        '/onboard': (context) => const OnboardScreen(),
+        '/onboard': (context) => const OnboardingScreen(),
         '/getstart': (context) => const GetStartScreen(),
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const HomeScreen(),
@@ -63,16 +66,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Auth Wrapper to check authentication state
+/// Decides the initial screen:
+///   1. If Firebase says user is logged in → NavigationPage
+///   2. Else if onboarding was completed before → LoginScreen
+///   3. Otherwise → OnboardScreen (first-ever launch)
 class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({Key? key}) : super(key: key);
+  final bool onboardingComplete;
+  const AuthWrapper({Key? key, required this.onboardingComplete})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // Show loading indicator while checking auth state
+        // Loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             backgroundColor: Color(0xFF1A1A1A),
@@ -80,22 +88,25 @@ class AuthWrapper extends StatelessWidget {
           );
         }
 
-        // If user is logged in, show NavigationPage (home)
+        // ① Already logged in
         if (snapshot.hasData && snapshot.data != null) {
           return const NavigationPage();
         }
 
-        // If user is not logged in, show onboarding/login flow
-        // You can change this to OnboardScreen() if you want to show onboarding first
-        return const NavigationPage();
+        // ② Onboarding done but not logged in
+        if (onboardingComplete) {
+          return const LoginScreen();
+        }
+
+        // ③ Fresh install — show onboarding
+        return const OnboardingScreen();
       },
     );
   }
 }
 
-// Placeholder screens (replace with your actual screens)
+// ── Placeholder screens (keep until you replace with real files) ─────────────
 
-// OnboardScreen - Replace with your actual onboard screen
 class OnboardScreen extends StatelessWidget {
   const OnboardScreen({Key? key}) : super(key: key);
 
@@ -122,9 +133,7 @@ class OnboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/getstart');
-              },
+              onPressed: () => Navigator.pushNamed(context, '/getstart'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 padding: const EdgeInsets.symmetric(
@@ -144,76 +153,12 @@ class OnboardScreen extends StatelessWidget {
   }
 }
 
-// GetStartScreen - Replace with your actual get started screen
-class GetStartScreen extends StatelessWidget {
-  const GetStartScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1A1A),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.blue),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.shopping_bag, color: Colors.blue, size: 100),
-            const SizedBox(height: 20),
-            const Text(
-              'Ready to Start?',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
-              child: Text(
-                'Join our community of buyers and sellers',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-              ),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 15,
-                ),
-              ),
-              child: const Text(
-                'Continue to Login',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// HomeScreen - Replace with your actual home screen
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
@@ -271,102 +216,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// NavigationPage - Replace with your actual bottom navigation
-// class NavigationPage extends StatefulWidget {
-//   const NavigationPage({Key? key}) : super(key: key);
-
-//   @override
-//   State<NavigationPage> createState() => _NavigationPageState();
-// }
-
-// class _NavigationPageState extends State<NavigationPage> {
-//   int _currentIndex = 0;
-
-//   final List<Widget> _screens = [
-//     const HomeScreen(),
-//     const SearchScreen(),
-//     const AddItemScreen(),
-//     const MessagesScreen(),
-//     const ProfileScreen(),
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xFF1A1A1A),
-//       body: _screens[_currentIndex],
-//       bottomNavigationBar: BottomNavigationBar(
-//         currentIndex: _currentIndex,
-//         onTap: (index) {
-//           setState(() {
-//             _currentIndex = index;
-//           });
-//         },
-//         type: BottomNavigationBarType.fixed,
-//         backgroundColor: const Color(0xFF2A2A2A),
-//         selectedItemColor: Colors.blue,
-//         unselectedItemColor: Colors.white54,
-//         showSelectedLabels: true,
-//         showUnselectedLabels: true,
-//         items: const [
-//           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-//           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.add_circle_outline),
-//             label: 'Sell',
-//           ),
-//           BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Messages'),
-//           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// // Additional placeholder screens for bottom navigation
-
-// class SearchScreen extends StatelessWidget {
-//   const SearchScreen({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xFF1A1A1A),
-//       appBar: AppBar(
-//         backgroundColor: const Color(0xFF1A1A1A),
-//         title: const Text('Search', style: TextStyle(color: Colors.white)),
-//       ),
-//       body: const Center(
-//         child: Text(
-//           'Search Screen',
-//           style: TextStyle(color: Colors.white, fontSize: 20),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class AddItemScreen extends StatelessWidget {
-//   const AddItemScreen({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xFF1A1A1A),
-//       appBar: AppBar(
-//         backgroundColor: const Color(0xFF1A1A1A),
-//         title: const Text('Add Item', style: TextStyle(color: Colors.white)),
-//       ),
-//       body: const Center(
-//         child: Text(
-//           'Add Item Screen',
-//           style: TextStyle(color: Colors.white, fontSize: 20),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({Key? key}) : super(key: key);
 
@@ -394,7 +243,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
