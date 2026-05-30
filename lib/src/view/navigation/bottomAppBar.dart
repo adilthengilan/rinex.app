@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 import 'package:iconly/iconly.dart';
+import 'package:rinex/src/view/screens/chat/chat_screen.dart';
 import 'package:rinex/src/view/screens/favorites_Page/favourites.dart';
 import 'package:rinex/src/view/screens/home.dart';
 import 'package:rinex/src/view/screens/profile_Page/profile.dart';
@@ -50,17 +51,23 @@ class _NavigationPageState extends State<NavigationPage>
 
   final pages = [
     HomeScreen(),
-    Searchpage(),
+    ChatInboxPage(),
     FavoriteScreen(),
     ReelsScreen(),
     ProfilePage(),
   ];
-  
+
   int selectedIndex = 0;
-  final navigationName = ['Home', 'Properties', 'Favorites', 'Supreme', 'Profile'];
+  final navigationName = [
+    'Home',
+    'Messages',
+    'Favorites',
+    'Supreme',
+    'Profile',
+  ];
   final icons = [
     HugeIcons.strokeRoundedHome01,
-    HugeIcons.strokeRoundedBuilding05,
+    HugeIcons.strokeRoundedMessage01,
     HugeIcons.strokeRoundedChart01,
     HugeIcons.strokeRoundedVideo01,
     HugeIcons.strokeRoundedUser,
@@ -162,10 +169,10 @@ class _NavigationPageState extends State<NavigationPage>
                     // Left side items (0, 1)
                     _buildNavItem(0, screenWidth),
                     _buildNavItem(1, screenWidth),
-                    
+
                     // Center spacer for the button
                     SizedBox(width: 60),
-                    
+
                     // Right side items (3, 4)
                     _buildNavItem(3, screenWidth),
                     _buildNavItem(4, screenWidth),
@@ -220,7 +227,9 @@ class _NavigationPageState extends State<NavigationPage>
         });
       },
       child: Container(
-        width: (screenWidth - 120) / 4, // Subtract center button space and divide by 4 items
+        width:
+            (screenWidth - 120) /
+            4, // Subtract center button space and divide by 4 items
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
